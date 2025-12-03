@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import Link from "next/link"
 
 export async function getPost(slug: string) {
   try {
