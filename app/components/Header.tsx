@@ -8,7 +8,7 @@ export default async function Header() {
   return (
     <>
 
-      {/* TOP BAR */}
+      {/* TOP BAR 
       <div className="topbar">
         <div className="container topbar-inner">
           <div className="top-left">New Delhi • 12°C</div>
@@ -18,57 +18,48 @@ export default async function Header() {
             <a href="#" className="signin">SIGN IN</a>
           </div>
         </div>
-      </div>
+      </div>   */}
 
-      {/* HEADER */}
-      <header className="site-header">
-        <div className="container header-inner">
-          <div className="brand">
-  <Link href="/" className="brand-logo">
-    <img src="/logo.svg" className="logo-img" />
-  </Link>
-
-  <div className="brand-slogan">
-    Stories That See Beyond Headlines
-  </div>
-</div>
+      {/* BBC HEADER (Centered Logo) */}
+      <header className="bbc-header">
+        <div className="container bbc-header-inner">
+          <Link href="/" className="bbc-logo-link">
+            <img src="/logo.svg" className="bbc-logo" alt="The Ground Narrative" />
+          </Link>
         </div>
       </header>
 
-      {/* NAVIGATION */}
-      <nav className="main-nav">
-        <div className="container nav-inner">
-          <div className="mobile-menu-toggle"> <MobileNavToggle /></div>
+      {/* BBC NAVIGATION */}
+      <nav className="bbc-nav">
+        <div className="container bbc-nav-inner">
 
-          {/* Dynamic category navigation */}
-          <ul className="nav-list">
+          {/* MOBILE TOGGLE */}
+          <MobileNavToggle />
 
-  {/* Fixed Homepage Link */}
-  <li className="nav-item">
-    <Link href="/">Home</Link>
-  </li>
+          {/* CATEGORY LIST */}
+          <ul className="bbc-nav-list">
 
-  {/* Dynamic Categories from Sanity */}
-  {categories.map((cat: any) => (
-    <li key={cat.slug} className="nav-item">
-      <Link href={`/category/${cat.slug}`}>
-        {cat.title}
-      </Link>
-    </li>
-  ))}
+            {/* HOME */}
+            <li><Link href="/">Home</Link></li>
 
-</ul>
+            {/* Dynamic Sanity categories */}
+            {categories.map((cat: any) => (
+              <li key={cat.slug}>
+                <Link href={`/category/${cat.slug}`}>
+                  {cat.title}
+                </Link>
+              </li>
+            ))}
 
-          <div className="nav-tools">
+          </ul>
+
+          {/* SEARCH */}
+          <div className="bbc-nav-tools">
             <form action="/search" method="GET">
-  <input 
-    type="search" 
-    name="q" 
-    placeholder="Search…" 
-    className="search-input"
-  />
-</form>
+              <input type="search" name="q" placeholder="Search…" />
+            </form>
           </div>
+
         </div>
       </nav>
 

@@ -2,7 +2,7 @@
 
 export default function MobileNavToggle() {
   const toggleMenu = () => {
-    const nav = document.querySelector(".nav-list")
+    const nav = document.querySelector(".bbc-nav-list")
     if (nav) nav.classList.toggle("mobile-open")
   }
 
