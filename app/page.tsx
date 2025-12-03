@@ -34,173 +34,163 @@ export default async function HomePage() {
     <>
       
 
-      {/* PAGE GRID START */}
-      <main className="container page-grid">
+      {/* BBC HOMEPAGE START */}
+<main className="container bbc-home">
 
-        {/* HERO SECTION */}
-       
-  <section className="hero-col" id="hero">
-  <article className="hero-card">
-    <Link 
-      href={`/story/${hero.slug}`} 
-      className="hero-link-wrapper"
-    >
+  {/* ============================== */}
+  {/* 1. BIG TOP FEATURE (YOUR HERO) */}
+  {/* ============================== */}
+  <section className="bbc-hero">
+    <Link href={`/story/${hero.slug}`} className="bbc-hero-link">
       {hero.image && (
-        <img 
-          src={urlFor(hero.image).url()} 
-          alt={hero.title || "Featured image"} 
+        <img
+          src={urlFor(hero.image).width(1200).url()}
+          alt={hero.title}
+          className="bbc-hero-img"
         />
       )}
 
-      <div className="hero-content">
+      <div className="bbc-hero-overlay">
         <div className="kicker">FEATURE</div>
         <h1>{hero.title}</h1>
         <p className="meta">
-  {timeAgo(hero.publishedAt)} • By {hero.author}
+  {timeAgo(hero.publishedAt)} • By {hero.author?.name}
 </p>
       </div>
     </Link>
-  </article>
-</section>
+  </section>
 
 
-        {/* BREAKING NEWS */}
-        <aside className="mid-col">
-          <div className="breaking">
-  <div className="breaking-header"><span>BREAKING NEWS</span>
- 
-  </div>
 
-  <ul className="breaking-list">
-    {breaking.map((post: any) => (
-      <li key={post.slug}>
-        <Link 
-          href={`/story/${post.slug}`} 
-          className="breaking-link"
-        >
-          {post.title}
-        </Link>
+  {/* ================================ */}
+  {/* 2. BBC MAIN 3-COLUMN NEWS LAYOUT */}
+  {/* ================================ */}
+  <section className="bbc-grid">
 
-        <div className="time">{timeAgo(post.publishedAt)}</div>
-      </li>
-    ))}
-  </ul>
-</div>
-                {/* BREAKING NEWS */}
+    {/* LEFT COLUMN — BREAKING NEWS */}
+    <aside className="bbc-left">
+      <h2 className="section-title">Breaking</h2>
 
-                {/* Trending */}
-          <div className="section-block trending-block">
-  <h3 className="section-title">Trending</h3>
+      <ul className="bbc-breaking-list">
+        {breaking.map((post: any) => (
+          <li key={post.slug}>
+            <Link href={`/story/${post.slug}`} className="breaking-link">
+              {post.title}
+            </Link>
+            <span className="time">{timeAgo(post.publishedAt)}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
 
-  <div className="list-cards">
-    {trending.map((post: any) => (
-      <article className="card" key={post.slug}>
-        <Link 
-          href={`/story/${post.slug}`}
-          className="card-link"
-        >
-          {post.image && (
-            <img 
-              src={urlFor(post.image).width(400).url()} 
-              alt={post.title}
+
+
+    {/* MIDDLE COLUMN — TRENDING GRID */}
+    <section className="bbc-middle">
+      <h2 className="section-title">Top Stories</h2>
+
+      <div className="bbc-grid-3">
+        {trending.map((post: any) => (
+          <article className="bbc-card" key={post.slug}>
+            <Link href={`/story/${post.slug}`} className="bbc-card-link">
+              {post.image && (
+                <img
+                  src={urlFor(post.image).width(350).url()}
+                  alt={post.title}
+                />
+              )}
+              <h4>{post.title}</h4>
+              <p className="muted">{timeAgo(post.publishedAt)}</p>
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
+
+
+
+    {/* RIGHT COLUMN — YOUR EXISTING RIGHT SECTION */}
+    <aside className="bbc-right">
+      <h2 className="section-title">Latest</h2>
+
+      <article className="side-card">
+        <Link href={`/story/${rightColumn.slug}`} className="right-link">
+          {rightColumn.image && (
+            <img
+              src={urlFor(rightColumn.image).width(300).url()}
+              alt={rightColumn.title}
             />
           )}
 
-          <h4>{post.title}</h4>
-          <p className="muted">{timeAgo(post.publishedAt)}</p>
+          <h4>{rightColumn.title}</h4>
+
+          {rightColumn.subtitle && (
+            <p className="muted">{rightColumn.subtitle}</p>
+          )}
+
+          <p className="muted">{timeAgo(rightColumn.publishedAt)}</p>
         </Link>
       </article>
-    ))}
-  </div>
-</div>
+    </aside>
 
-        </aside>
+  </section>
 
-        {/* SPECIAL */}
-        <div className="special">
-  <article className="special-card">
-    <Link href={`/story/${special.slug}`} className="special-link">
 
-      <div className="special-image">
-        {special.image && (
-          <img 
-            src={urlFor(special.image).width(600).url()} 
-            alt={special.title}
-          />
-        )}
-      </div>
 
-      <div className="special-text">
-        <div className="tag">
-          {special.specialTag || "SPECIAL"}
+  {/* SPECIAL STORY */}
+  <section className="bbc-special">
+    <h2 className="section-title">Special Report</h2>
+
+    <article className="special-card">
+      <Link href={`/story/${special.slug}`} className="special-link">
+        <div className="special-image">
+          {special.image && (
+            <img
+              src={urlFor(special.image).width(600).url()}
+              alt={special.title}
+            />
+          )}
         </div>
 
-        <h3>{special.title}</h3>
-
-        <p className="muted">{special.subtitle}</p>
-      </div>
-
-    </Link>
-  </article>
-</div>
-
-
-
-
-        {/* OPINIONS */}
-        <div className="section-block opinions">
-  <h3 className="section-title">Opinions</h3>
-
-  <div className="opinion-list">
-    {opinion.map((post: any) => (
-      <article className="op-item" key={post.slug}>
-        <Link 
-          href={`/story/${post.slug}`} 
-          className="opinion-link"
-        >
-          {post.image && (
-            <img 
-              src={urlFor(post.image).width(80).height(80).url()}
-              alt={post.title}
-            />
-          )}
-
-          <div>
-            <h4>{post.title}</h4>
-            <p className="muted">{post.subtitle}</p>
-          </div>
-        </Link>
-      </article>
-    ))}
-  </div>
-</div>
-
-
-        {/* RIGHT COLUMN */}
-        <aside className="right-col">
-  <div className="side-top">
-    <article className="side-card">
-      <Link href={`/story/${rightColumn.slug}`} className="right-link">
-        
-        {rightColumn.image && (
-          <img 
-            src={urlFor(rightColumn.image).width(380).url()}
-            alt={rightColumn.title}
-          />
-        )}
-
-        <h4>{rightColumn.title}</h4>
-        {rightColumn.subtitle && (
-          <p className="muted">{rightColumn.subtitle}</p>
-        )}
-
-        <p className="muted">{timeAgo(rightColumn.publishedAt)}</p>
+        <div className="special-text">
+          <div className="tag">{special.specialTag || "SPECIAL"}</div>
+          <h3>{special.title}</h3>
+          <p className="muted">{special.subtitle}</p>
+        </div>
       </Link>
     </article>
-  </div>
-</aside>
+  </section>
 
-      </main>
+
+
+  {/* OPINIONS ROW */}
+  <section className="bbc-opinions">
+    <h3 className="section-title">Opinions</h3>
+
+    <div className="bbc-opinion-row">
+      {opinion.map((post: any) => (
+        <article className="op-item" key={post.slug}>
+          <Link href={`/story/${post.slug}`} className="opinion-link">
+            {post.image && (
+              <img
+                src={urlFor(post.image).width(80).height(80).url()}
+                alt={post.title}
+              />
+            )}
+
+            <div>
+              <h4>{post.title}</h4>
+              <p className="muted">{post.subtitle}</p>
+            </div>
+          </Link>
+        </article>
+      ))}
+    </div>
+  </section>
+
+</main>
+{/* BBC HOMEPAGE END */}
+
 
       {/* FOOTER */}
       

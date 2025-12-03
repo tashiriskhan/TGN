@@ -486,6 +486,155 @@ a:hover {
 }
 
 
+/* ===================== */
+/* BBC HOMEPAGE LAYOUT   */
+/* ===================== */
+
+.bbc-home {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+/* HERO */
+.bbc-hero {
+  position: relative;
+  
+}
+
+.bbc-hero-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.bbc-hero-overlay {
+ position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  text-shadow: 0px 2px 6px rgba(0,0,0,0.6);
+}
+.bbc-hero-overlay h1 {
+  font-size: 38px;
+  max-width: 60%;
+}
+/* MAIN BBC GRID */
+.bbc-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 30px;
+}
+
+/* BREAKING LIST */
+.bbc-left {
+  background: #f8f8f8;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.bbc-breaking-list {
+  list-style: none;
+  padding: 0;
+}
+
+.bbc-breaking-list li {
+  margin-bottom: 12px;
+}
+
+.bbc-breaking-list .time {
+  font-size: 12px;
+  color: gray;
+}
+
+/* MIDDLE GRID */
+.bbc-middle .bbc-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.bbc-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+/* RIGHT SIDEBAR */
+.bbc-right img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.bbc-right .side-card {
+  background: #fafafa;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+/* SPECIAL */
+.bbc-special {
+  background: #eeeeee;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.special-image img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* OPINIONS */
+.bbc-opinion-row {
+  display: flex;
+  gap: 20px;
+}
+
+.op-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+.opinion-link {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+}
+@media (max-width: 900px) {
+  .bbc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bbc-middle .bbc-grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bbc-hero img {
+    height: 280px;
+  }
+
+  .bbc-hero-overlay h1 {
+    font-size: 28px;
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 600px) {
+  .bbc-middle .bbc-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .bbc-opinion-row {
+    flex-direction: column;
+  }
+}
+
+
 /* ------------------------------- */
 /* BBC ARTICLE LAYOUT */
 /* ------------------------------- */

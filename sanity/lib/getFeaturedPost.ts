@@ -6,9 +6,12 @@ export async function getFeaturedPost() {
       title,
       content,
       image,
-      author,
       publishedAt,
-      "slug": slug.current
+      "slug": slug.current,
+
+      author->{ name, "slug": slug.current, image },
+      category->{ title, "slug": slug.current },
+      tags[]->{ title, "slug": slug.current }
     }
   `)
 }

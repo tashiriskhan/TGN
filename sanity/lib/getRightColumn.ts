@@ -7,7 +7,11 @@ export async function getRightColumn() {
       subtitle,
       image,
       publishedAt,
-      "slug": slug.current
+      "slug": slug.current,
+
+      author->{ name, "slug": slug.current },
+      category->{ title, "slug": slug.current },
+      tags[]->{ title, "slug": slug.current }
     }
   `)
 }

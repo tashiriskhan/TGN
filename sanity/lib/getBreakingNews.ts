@@ -6,8 +6,9 @@ export async function getBreakingNews() {
       title,
       "slug": slug.current,
       image,
-      publishedAt
+      publishedAt,
+
+      author->{ name, "slug": slug.current }
     }
   `)
 }
-

@@ -5,7 +5,10 @@ export async function getAllFeatured() {
     *[_type == "post" && isFeatured == true]{
       title,
       "slug": slug.current,
-      image
+      image,
+      author->{ name, "slug": slug.current, image },
+      category->{ title, "slug": slug.current },
+      tags[]->{ title, "slug": slug.current }
     }
   `)
 }

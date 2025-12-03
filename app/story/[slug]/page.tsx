@@ -117,7 +117,7 @@ export default async function StoryPage({ params }: any) {
     {breaking.map((post: any) => (
       <li key={post.slug}>
         <Link 
-          href={`/breaking/${post.slug}`} 
+          href={`/story/${post.slug}`} 
           className="breaking-link"
         >
           {post.title}
