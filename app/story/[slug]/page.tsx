@@ -4,10 +4,37 @@ import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import Link from "next/link"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 
+// ⬇️ ADD THIS HERE
+export async function generateMetadata({ params }: any) {
+  const { slug } = await params
+
+  const post = await client.fetch(
+    `*[_type == "post" && slug.current == $slug][0]{
+       title,
+       subtitle,
+       "description": content
+     }`,
+    { slug }
+  )
+
+  return {
+    title: post?.title || "The Ground Narrative",
+    description:
+      post?.subtitle ||
+      (post?.description ? post.description.slice(0, 120) : "Latest news from The Ground Narrative"),
+  }
+}
+// ⬆️ END OF METADATA
+
 
 const breaking = await getBreakingNews() 
 export default async function StoryPage({ params }: any) {
   const { slug } = await params
+
+
+
+ 
+
 
   const post = await client.fetch(
     `*[_type == "post" && slug.current == $slug][0]{
@@ -30,6 +57,8 @@ export default async function StoryPage({ params }: any) {
   if (!post) return <div>Story not found</div>
 
   return (
+
+    
     // MAIN: 2 columns (center article + right sidebar placeholder)
     <main className="container">
       <div className="b-page-grid">

@@ -24,7 +24,7 @@ export default async function Header() {
         <div className="container header-inner">
           <div className="brand">
   <Link href="/" className="brand-logo">
-    <img src="/logo.svg" className="logo-img" />
+    <img src="logo.svg" className="logo-img" />
   </Link>
 
   <div className="brand-slogan">
