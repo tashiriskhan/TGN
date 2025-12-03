@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { getFooterCategories } from "@/sanity/lib/getFooterCategories"
+import MobileNavToggle from "@/app/components/MobileNavToggle"
 
 export default async function Header() {
   const categories = await getFooterCategories()
@@ -24,7 +25,7 @@ export default async function Header() {
         <div className="container header-inner">
           <div className="brand">
   <Link href="/" className="brand-logo">
-    <img src="logo.svg" className="logo-img" />
+    <img src="/logo.svg" className="logo-img" />
   </Link>
 
   <div className="brand-slogan">
@@ -37,7 +38,7 @@ export default async function Header() {
       {/* NAVIGATION */}
       <nav className="main-nav">
         <div className="container nav-inner">
-          <div className="mobile-menu-toggle">☰</div>
+          <div className="mobile-menu-toggle"> <MobileNavToggle /></div>
 
           {/* Dynamic category navigation */}
           <ul className="nav-list">
