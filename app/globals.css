@@ -234,6 +234,13 @@ a:hover {
 /* MOBILE */
 /* ------------------------ */
 @media (max-width: 900px) {
+ .bbc-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
   .bbc-nav-list {
     display: none;
     position: absolute;
@@ -271,16 +278,33 @@ a:hover {
   }
 }
 
-/* DESKTOP NAV */
-@media (min-width: 901px) {
-  .mobile-menu-toggle {
-    display: none;
+/* ========================================= */
+/* LARGE TABLET / SMALL DESKTOP (901–1100px) */
+/* ========================================= */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .bbc-top {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr; /* more balanced but hero still dominates */
+    gap: 20px;
   }
 
-  .bbc-nav-list {
-    display: flex;
+  .bbc-hero img {
+    height: 300px;
+  }
+
+  .bbc-center-col .bbc-hero h1 {
+    font-size: 24px !important;
+  }
+
+  .bbc-3col-grid,
+  .bbc-special-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns start here */
     gap: 20px;
-    position: static;
+  }
+
+  .bbc-opinion-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 }
 
@@ -1095,67 +1119,94 @@ a:hover {
 /* MIDDLE HERO TEXT FIX - STRONGER TARGETING */
 /* ========================================= */
 
-@media (max-width: 900px) {
-  /* STRONGER SELECTOR for middle hero text */
-  .bbc-center-col .bbc-hero h1,
-  .bbc-hero-overlay h1,
-  .bbc-hero h1 {
-    font-size: 24px !important;
-    line-height: 1.2 !important;
-    margin: 8px 0 !important;
+
+
+/* ========================================= */
+/* SMALL TABLET (601px – 900px)              */
+/* ========================================= */
+@media (min-width: 601px) and (max-width: 900px) {
+  /* Top: hero + one column of stories + narrow right column */
+  .bbc-top {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr 0.9fr; /* left | hero | right */
+    gap: 18px;
   }
 
-  .bbc-center-col .bbc-hero .summary {
-    font-size: 12px !important;
-    line-height: 1.3 !important;
+  .bbc-hero img {
+    height: 260px;
+    object-fit: cover;
   }
 
-  .bbc-center-col .bbc-hero .muted {
-    font-size: 10px !important;
+  .bbc-center-col .bbc-hero h1 {
+    font-size: 22px !important;
+    line-height: 1.25 !important;
+  }
+
+  .bbc-left-card h3,
+  .bbc-right-item h4 {
+    font-size: 15px !important;
+  }
+
+  /* “More stories” grid: 2 columns, like BBC tablet */
+  .bbc-3col-grid,
+  .bbc-special-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  /* Opinion as single column list */
+  .bbc-opinion-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 
-@media (max-width: 700px) {
-  .bbc-center-col .bbc-hero h1,
-  .bbc-hero-overlay h1,
-  .bbc-hero h1 {
-    font-size: 20px !important;
-  }
 
-  .bbc-center-col .bbc-hero .summary {
-    font-size: 11px !important;
-  }
-}
 
+
+/* ========================================= */
+/* LAYOUT: PHONE (<= 600px)                  */
+/* ========================================= */
 @media (max-width: 600px) {
-  .bbc-center-col .bbc-hero h1,
-  .bbc-hero-overlay h1,
-  .bbc-hero h1 {
-    font-size: 18px !important;
-    max-width: 95% !important;
+  /* Top block -> single column */
+  .bbc-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .bbc-center-col .bbc-hero .summary {
-    font-size: 10px !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
+  .bbc-left-col,
+  .bbc-right-col {
+    order: 2;              /* hero first, side columns after */
   }
 
-  .bbc-center-col .bbc-hero .muted {
-    font-size: 9px !important;
+  .bbc-center-col {
+    order: 1;
+  }
+
+  .bbc-hero img {
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .bbc-center-col .bbc-hero h1 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+  }
+
+  .bbc-center-col .summary {
+    font-size: 12px !important;
+  }
+
+  /* Story grids -> single column */
+  .bbc-3col-grid,
+  .bbc-special-grid,
+  .bbc-opinion-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
-@media (max-width: 480px) {
-  .bbc-center-col .bbc-hero h1,
-  .bbc-hero-overlay h1,
-  .bbc-hero h1 {
-    font-size: 16px !important;
-  }
-
-  .bbc-center-col .bbc-hero .summary {
-    font-size: 9px !important;
-  }
-}
