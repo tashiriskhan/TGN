@@ -599,9 +599,11 @@ a:hover {
 }
 
 .special-card-2 img {
-  width: 100%;
+  width: 65%;
   border-radius: 8px;
-  margin-bottom: 10px;
+  height: 200px;       /* make all images same height */
+  object-fit: cover;   /* crop nicely */
+ 
 }
 
 .special-card-2 h3 {
@@ -617,6 +619,7 @@ a:hover {
   border-radius: 3px;
   display: inline-block;
   margin-bottom: 6px;
+  margin-right: 200px;
 }
 
 
