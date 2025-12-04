@@ -634,6 +634,213 @@ a:hover {
   }
 }
 
+/* TOP ROW - 3 COLUMNS */
+.bbc-top-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+}
+
+/* TRENDING COLUMN */
+.bbc-trending-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+/* FEATURE HERO */
+.bbc-hero-big {
+  position: relative;
+}
+
+.bbc-hero-img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.bbc-hero-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0,0,0,0.55);
+  padding: 14px;
+  border-radius: 6px;
+  color: white;
+}
+
+/* BREAKING LIST */
+.bbc-breaking ul,
+.bbc-breaking-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.bbc-breaking-list li {
+  margin-bottom: 12px;
+}
+
+/* TOP STORIES GRID */
+.bbc-top-stories .bbc-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+}
+
+/* SPECIAL */
+.bbc-special img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* OPINIONS */
+.bbc-opinion-row {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
+}
+
+
+/* 3 Column BBC Top Layout */
+.bbc-top {
+  display: grid;
+  grid-template-columns: 1.1fr 2fr 1fr;
+  gap: 26px;
+  margin-bottom: 40px;
+}
+
+/* ---------------- LEFT COLUMN (Trending) ---------------- */
+
+.bbc-left-card {
+  margin-bottom: 24px;
+}
+
+.bbc-left-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.bbc-left-card h3 {
+  font-size: 20px;
+  margin: 6px 0;
+}
+
+.bbc-left-card .summary {
+  font-size: 14px;
+  color: #555;
+}
+
+/* ---------------- CENTER COLUMN (Feature) ---------------- */
+
+.bbc-center-col img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.bbc-center-col h1 {
+  font-size: 34px;
+  margin: 8px 0;
+  font-weight: 700;
+}
+
+.bbc-center-col .summary {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+/* ---------------- RIGHT COLUMN (Breaking List) ---------------- */
+
+.bbc-right-item {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 18px;
+}
+
+.bbc-right-item h4 {
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.bbc-right-item .muted {
+  font-size: 13px;
+  color: #777;
+}
+
+
+/* ----------------  3-COLUMN RIGHT STORIES GRID---------------- */
+
+.bbc-3col-section {
+  margin-top: 50px;
+}
+
+.bbc-3col-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.bbc-3col-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.bbc-3col-card h4 {
+  font-size: 18px;
+  margin: 6px 0;
+}
+
+
+.bbc-special-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+}
+
+.special-card-2 img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.special-card-2 h3 {
+  font-size: 22px;
+  margin-top: 6px;
+}
+
+.special-card-2 .tag {
+  background: red;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+
+
+.bbc-opinion-grid {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+}
+
+.op-item-row {
+  display: flex;
+  gap: 10px;
+}
+
+.op-item-row img {
+  border-radius: 4px;
+}
+
+
 
 /* ------------------------------- */
 /* BBC ARTICLE LAYOUT */

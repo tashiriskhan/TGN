@@ -9,7 +9,8 @@ import { getTrending } from "@/sanity/lib/getTrending"
 import { getOpinion } from "@/sanity/lib/getOpinion"
 import { getSpecial } from "@/sanity/lib/getSpecial"
 import { getRightColumn } from "@/sanity/lib/getRightColumn"
-
+import { getAllRightColumn } from "@/sanity/lib/getAllRightColumn"
+import { getAllSpecial } from "@/sanity/lib/getAllSpecial"
 
 
 
@@ -22,6 +23,9 @@ export default async function HomePage() {
   const opinion = await getOpinion()
   const special = await getSpecial()
   const rightColumn = await getRightColumn()
+  const rightColumnList = await getAllRightColumn()
+const specialList = await getAllSpecial()
+
 
 
 
@@ -38,157 +42,150 @@ export default async function HomePage() {
 <main className="container bbc-home">
 
   {/* ============================== */}
-  {/* 1. BIG TOP FEATURE (YOUR HERO) */}
+  {/* 1. TOP BBC LAYOUT: TRENDING | FEATURE | BREAKING */}
   {/* ============================== */}
-  <section className="bbc-hero">
-    <Link href={`/story/${hero.slug}`} className="bbc-hero-link">
-      {hero.image && (
-        <img
-          src={urlFor(hero.image).width(1200).url()}
-          alt={hero.title}
-          className="bbc-hero-img"
-        />
-      )}
+  <section className="bbc-top">
 
-      <div className="bbc-hero-overlay">
-        <div className="kicker">FEATURE</div>
-        <h1>{hero.title}</h1>
-        <p className="meta">
-  {timeAgo(hero.publishedAt)} • By {hero.author?.name}
-</p>
-      </div>
-    </Link>
-  </section>
-
-
-
-  {/* ================================ */}
-  {/* 2. BBC MAIN 3-COLUMN NEWS LAYOUT */}
-  {/* ================================ */}
-  <section className="bbc-grid">
-
-    {/* LEFT COLUMN — BREAKING NEWS */}
-    <aside className="bbc-left">
-      <h2 className="section-title">Breaking</h2>
-
-      <ul className="bbc-breaking-list">
-        {breaking.map((post: any) => (
-          <li key={post.slug}>
-            <Link href={`/story/${post.slug}`} className="breaking-link">
-              {post.title}
-            </Link>
-            <span className="time">{timeAgo(post.publishedAt)}</span>
-          </li>
-        ))}
-      </ul>
-    </aside>
-
-
-
-    {/* MIDDLE COLUMN — TRENDING GRID */}
-    <section className="bbc-middle">
-      <h2 className="section-title">Top Stories</h2>
-
-      <div className="bbc-grid-3">
-        {trending.map((post: any) => (
-          <article className="bbc-card" key={post.slug}>
-            <Link href={`/story/${post.slug}`} className="bbc-card-link">
-              {post.image && (
-                <img
-                  src={urlFor(post.image).width(350).url()}
-                  alt={post.title}
-                />
-              )}
-              <h4>{post.title}</h4>
-              <p className="muted">{timeAgo(post.publishedAt)}</p>
-            </Link>
-          </article>
-        ))}
-      </div>
-    </section>
-
-
-
-    {/* RIGHT COLUMN — YOUR EXISTING RIGHT SECTION */}
-    <aside className="bbc-right">
-      <h2 className="section-title">Latest</h2>
-
-      <article className="side-card">
-        <Link href={`/story/${rightColumn.slug}`} className="right-link">
-          {rightColumn.image && (
-            <img
-              src={urlFor(rightColumn.image).width(300).url()}
-              alt={rightColumn.title}
-            />
+  {/* LEFT COLUMN → TRENDING */}
+  <div className="bbc-left-col">
+    {trending.map((post:any) => (
+      <article className="bbc-left-card" key={post.slug}>
+        <Link href={`/story/${post.slug}`}>
+          <img 
+            src={urlFor(post.image).width(400).url()}
+            alt={post.title}
+          />
+          <h3>{post.title}</h3>
+          {post.subtitle && (
+            <p className="summary">{post.subtitle}</p>
           )}
-
-          <h4>{rightColumn.title}</h4>
-
-          {rightColumn.subtitle && (
-            <p className="muted">{rightColumn.subtitle}</p>
-          )}
-
-          <p className="muted">{timeAgo(rightColumn.publishedAt)}</p>
         </Link>
       </article>
-    </aside>
-
-  </section>
-
+    ))}
+  </div>
 
 
-  {/* SPECIAL STORY */}
-  <section className="bbc-special">
-    <h2 className="section-title">Special Report</h2>
+  {/* CENTER COLUMN → BIG FEATURE */}
+  <div className="bbc-center-col">
+    <article className="bbc-hero">
+      <Link href={`/story/${hero.slug}`}>
+        <img 
+          src={urlFor(hero.image).width(900).url()} 
+          alt={hero.title}
+        />
+        <h1>{hero.title}</h1>
 
-    <article className="special-card">
-      <Link href={`/story/${special.slug}`} className="special-link">
-        <div className="special-image">
-          {special.image && (
-            <img
-              src={urlFor(special.image).width(600).url()}
-              alt={special.title}
-            />
-          )}
-        </div>
+        <p className="summary">{hero.content?.slice(0,120)}...</p>
 
-        <div className="special-text">
-          <div className="tag">{special.specialTag || "SPECIAL"}</div>
-          <h3>{special.title}</h3>
-          <p className="muted">{special.subtitle}</p>
-        </div>
+        <p className="muted">
+          {timeAgo(hero.publishedAt)} • {hero.author?.name}
+        </p>
       </Link>
     </article>
-  </section>
+  </div>
+
+
+  {/* RIGHT COLUMN → BREAKING */}
+  <div className="bbc-right-col">
+    {breaking.map((post:any) => (
+      <article className="bbc-right-item" key={post.slug}>
+        <Link href={`/story/${post.slug}`}>
+          <h4>{post.title}</h4>
+        </Link>
+        <p className="muted">{timeAgo(post.publishedAt)}</p>
+      </article>
+    ))}
+  </div>
+
+</section>
+
+  {/* END TOP ROW */}
+
+
+  {/* ============================== */}
+  {/* 2. TOP STORIES GRID */}
+  {/* ============================== */}
+  <section className="bbc-3col-section">
+  <h2 className="section-title">More Stories</h2>
+
+  <div className="bbc-3col-grid">
+    {rightColumnList.map((post: any) => (
+      <article key={post.slug} className="bbc-3col-card">
+        <Link href={`/story/${post.slug}`}>
+          {post.image && (
+            <img
+              src={urlFor(post.image).width(400).url()}
+              alt={post.title}
+            />
+          )}
+
+          <h4>{post.title}</h4>
+          {post.subtitle && <p className="muted">{post.subtitle}</p>}
+          <p className="muted">{timeAgo(post.publishedAt)}</p>
+        </Link>
+      </article>
+    ))}
+  </div>
+</section>
 
 
 
-  {/* OPINIONS ROW */}
-  <section className="bbc-opinions">
-    <h3 className="section-title">Opinions</h3>
 
-    <div className="bbc-opinion-row">
-      {opinion.map((post: any) => (
-        <article className="op-item" key={post.slug}>
-          <Link href={`/story/${post.slug}`} className="opinion-link">
-            {post.image && (
-              <img
-                src={urlFor(post.image).width(80).height(80).url()}
-                alt={post.title}
-              />
-            )}
+  {/* ============================== */}
+  {/* 3. SPECIAL REPORT */}
+  {/* ============================== */}
+ <section className="bbc-special-2">
+  <h2 className="section-title">Special Reports</h2>
 
-            <div>
-              <h4>{post.title}</h4>
-              <p className="muted">{post.subtitle}</p>
-            </div>
-          </Link>
-        </article>
-      ))}
-    </div>
-  </section>
+  <div className="bbc-special-grid">
+    {specialList.map((post: any) => (
+      <article key={post.slug} className="special-card-2">
+        <Link href={`/story/${post.slug}`}>
+          <img 
+            src={urlFor(post.image).width(600).url()}
+            alt={post.title}
+          />
+          <div className="tag">{post.specialTag || "SPECIAL"}</div>
+          <h3>{post.title}</h3>
+        </Link>
+      </article>
+    ))}
+  </div>
+</section>
+
+
+
+
+
+  {/* ============================== */}
+  {/* 4. OPINIONS GRID */}
+  {/* ============================== */}
+  <section className="bbc-opinions-row">
+  <h2 className="section-title">Opinion</h2>
+
+  <div className="bbc-opinion-grid">
+    {opinion.map((post: any) => (
+      <article key={post.slug} className="op-item-row">
+        <Link href={`/story/${post.slug}`}>
+          {post.image && (
+            <img
+              src={urlFor(post.image).width(80).height(80).url()}
+              alt={post.title}
+            />
+          )}
+          <div>
+            <h4>{post.title}</h4>
+            <p className="muted">{post.subtitle}</p>
+          </div>
+        </Link>
+      </article>
+    ))}
+  </div>
+</section>
+
 
 </main>
+
 {/* BBC HOMEPAGE END */}
 
 

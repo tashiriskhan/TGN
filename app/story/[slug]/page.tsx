@@ -64,7 +64,7 @@ export default async function StoryPage({ params }: any) {
 
   {/* Author line */}
   <div className="bbc-meta-line">
-    <span>By:</span>
+    <span>By</span>
     <Link href={`/author/${post.author.slug}`} className="bbc-author">
       {post.author.name}
     </Link>
