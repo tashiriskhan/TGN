@@ -87,6 +87,7 @@ const specialList = await getAllSpecial()
 
   {/* RIGHT COLUMN → BREAKING */}
   <div className="bbc-right-col">
+    <div className="breaking-header"><span>BREAKING NEWS</span> </div>
     {breaking.map((post:any) => (
       <article className="bbc-right-item" key={post.slug}>
         <Link href={`/story/${post.slug}`}>
