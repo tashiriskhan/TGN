@@ -48,6 +48,7 @@ const specialList = await getAllSpecial()
 
   {/* LEFT COLUMN → TRENDING */}
   <div className="bbc-left-col">
+    
     {trending.map((post:any) => (
       <article className="bbc-left-card" key={post.slug}>
         <Link href={`/story/${post.slug}`}>

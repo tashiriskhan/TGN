@@ -90,10 +90,20 @@ export default async function StoryPage({ params }: any) {
   )}
 
   {/* ARTICLE CONTENT */}
-  <article className="bbc-article-body">
-    {post.content}
-  </article>
 
+  <article className="bbc-article-body">
+    <div
+  style={{
+    fontSize: 17,
+    lineHeight: "1.8",
+    whiteSpace: "pre-wrap"
+  }}
+>
+  {post.content}
+</div>
+
+  </article>
+ 
   {/* TAGS */}
   {post.tags && post.tags.length > 0 && (
     <div className="bbc-tags">
