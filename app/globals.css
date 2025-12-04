@@ -840,6 +840,83 @@ a:hover {
   border-radius: 4px;
 }
 
+/*   CATEGORIES PAGE------------*/
+.category-page {
+  padding: 40px 0;
+}
+
+.category-header h1 {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.category-header .muted {
+  color: #666;
+}
+
+.category-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.category-card {
+   display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cat-img {
+  width: 100%;
+  height: 160px;       /* make all images same height */
+  object-fit: cover;   /* crop nicely */
+  border-radius: 6px;
+}
+
+
+.cat-link {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+.category-card h3 {
+ font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;           /* limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.category-card .muted {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.time-tag {
+  margin-top: auto;
+  color: #999;
+  font-size: 12px;
+}
+
+.pagination-box {
+  margin-top: 40px;
+  display: flex;
+  gap: 12px;
+}
+
+.pagination-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
 
 /* ------------------------------- */

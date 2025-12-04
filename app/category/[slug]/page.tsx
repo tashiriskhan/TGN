@@ -15,13 +15,13 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  // Category title
+  // Get category title
   const category = await client.fetch(
     `*[_type == "category" && slug.current == $slug][0]{ title }`,
     { slug }
   )
 
-  // Posts in category with pagination
+  // Fetch posts inside this category
   const posts = await client.fetch(
     `*[_type == "post" && category->slug.current == $slug]
       | order(publishedAt desc)[$start...$end] {
@@ -34,7 +34,6 @@ export default async function CategoryPage({ params, searchParams }: any) {
     { slug, start, end }
   )
 
-  // total number of posts
   const totalPosts = await client.fetch(
     `count(*[_type == "post" && category->slug.current == $slug])`,
     { slug }
@@ -43,29 +42,48 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
   return (
-    <main className="container" style={{ padding: "40px 0" }}>
-      <h1>Category: {category?.title || slug}</h1>
+    <main className="container category-page">
 
-      <div className="list-cards" style={{ marginTop: 20 }}>
+      {/* CATEGORY HEADER */}
+      <header className="category-header">
+        <h1>{category?.title || slug}</h1>
+        <p className="muted">{totalPosts} articles</p>
+      </header>
+
+      {/* POSTS GRID (BBC STYLE) */}
+      <section className="category-grid">
+        {posts?.length === 0 && (
+          <p>No stories found in this category.</p>
+        )}
+
         {posts.map((post: any) => (
-          <article key={post.slug} className="card">
-            <Link href={`/story/${post.slug}`} className="card-link">
+          <article key={post.slug} className="category-card">
+            <Link href={`/story/${post.slug}`} className="cat-link">
+
               {post.image && (
                 <img
-                  src={urlFor(post.image).width(200).url()}
+                  src={urlFor(post.image).width(400).url()}
                   alt={post.title}
-                  
+                  className="cat-img"
                 />
               )}
+
               <h3>{post.title}</h3>
-              {post.subtitle && <p>{post.subtitle}</p>}
+
+              {post.subtitle && (
+                <p className="muted">{post.subtitle}</p>
+              )}
+
+              <span className="time-tag">
+                {new Date(post.publishedAt).toDateString()}
+              </span>
             </Link>
           </article>
         ))}
-      </div>
+      </section>
 
-      {/* PAGINATION BUTTONS */}
-      <div style={{ marginTop: "30px", display: "flex", gap: "10px" }}>
+      {/* PAGINATION */}
+      <div className="pagination-box">
         {page > 1 && (
           <Link href={`/category/${slug}?page=${page - 1}`} className="pagination-btn">
             ⬅ Previous
