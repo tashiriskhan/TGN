@@ -515,11 +515,16 @@ a:hover {
   width: 100%;
   border-radius: 6px;
   margin-bottom: 8px;
+  
 }
 
 .bbc-left-card h3 {
   font-size: 20px;
-  margin: 6px 0;
+  margin: 6px;
+  width: auto;
+  margin-left: 0px;
+  margin-right: auto;
+  
 }
 
 .bbc-left-card .summary {
@@ -581,34 +586,45 @@ a:hover {
 
 .bbc-3col-card img {
   width: 100%;
+  height: 190px;
   border-radius: 6px;
   margin-bottom: 8px;
+  
 }
 
 .bbc-3col-card h4 {
   font-size: 18px;
-  margin: 6px 0;
+  margin: 6px;
+  width: 80%;
+  margin-left: 0px;
+  margin-right: auto;
 }
 
 
 .bbc-special-grid {
-  margin-top: 30px;
+  
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 26px;
+  gap: 0px;
+  margin-right: 100px;
 }
 
 .special-card-2 img {
   width: 65%;
-  border-radius: 8px;
+  border-radius: 6px;
   height: 200px;       /* make all images same height */
-  object-fit: cover;   /* crop nicely */
+   
  
 }
 
 .special-card-2 h3 {
   font-size: 22px;
   margin-top: 6px;
+    width: 70%;          /* Match the image width */
+  margin-left: 0px;   /* Center horizontally */
+  margin-right: auto;  /* Center horizontally */
+    /* Optional: center the text inside the box */
+
 }
 
 .special-card-2 .tag {
@@ -665,6 +681,7 @@ a:hover {
    display: flex;
   flex-direction: column;
   height: 100%;
+  margin-left: 10px;
 }
 
 .cat-img {
@@ -1066,6 +1083,7 @@ a:hover {
   .special-card-2 h3,
   .op-item-row h4 {
     font-size: 12px !important;
+   
   }
 
   .summary {
