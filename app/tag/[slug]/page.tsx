@@ -6,7 +6,6 @@ import { timeAgo } from "@/sanity/lib/timeAgo"
 const PAGE_SIZE = 10
 
 export default async function TagPage({ params, searchParams }: any) {
-  // FIX: unwrap async params (Next.js 15/16)
   const p = await params
   const s = await searchParams
 
@@ -16,13 +15,11 @@ export default async function TagPage({ params, searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  // Tag name
   const tag = await client.fetch(
     `*[_type == "tag" && slug.current == $slug][0]{ title }`,
     { slug }
   )
 
-  // Posts with this tag (paginated)
   const posts = await client.fetch(
     `*[_type == "post" && $slug in tags[]->slug.current]
       | order(publishedAt desc)[$start...$end]{
@@ -31,12 +28,10 @@ export default async function TagPage({ params, searchParams }: any) {
         image,
         publishedAt,
         "slug": slug.current
-      }
-    `,
+      }`,
     { slug, start, end }
   )
 
-  // Total number of posts with this tag → FIXED!
   const totalPosts = await client.fetch(
     `count(*[_type == "post" && $slug in tags[]->slug.current])`,
     { slug }
@@ -45,25 +40,37 @@ export default async function TagPage({ params, searchParams }: any) {
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
   return (
-    <main className="container" style={{ padding: "40px 0" }}>
-      <h1>#{tag?.title || slug}</h1>
+    <main className="container tag-container">
+      <h1 className="tag-title">#{tag?.title || slug}</h1>
 
-      <div className="list-cards" style={{ marginTop: 20 }}>
+      {/* BBC-STYLE GRID */}
+      <div className="category-grid">
         {posts.map((post: any) => (
-          <article key={post.slug} className="card">
-            <Link href={`/story/${post.slug}`} className="card-link">
+          <article key={post.slug} className="category-card">
+            <Link href={`/story/${post.slug}`} className="cat-link">
+
               {post.image && (
-                <img src={urlFor(post.image).url()} alt={post.title} />
+                <img
+                  src={urlFor(post.image).width(600).url()}
+                  className="cat-img"
+                  alt={post.title}
+                />
               )}
+
               <h3>{post.title}</h3>
-              <p className="muted">{timeAgo(post.publishedAt)}</p>
+
+              {post.subtitle && (
+                <p className="muted">{post.subtitle}</p>
+              )}
+
+              <p className="time-tag">{timeAgo(post.publishedAt)}</p>
             </Link>
           </article>
         ))}
       </div>
 
-      {/* Pagination */}
-      <div style={{ marginTop: "30px", display: "flex", gap: "10px" }}>
+      {/* PAGINATION */}
+      <div className="pagination-box">
         {page > 1 && (
           <Link href={`/tag/${slug}?page=${page - 1}`} className="pagination-btn">
             ⬅ Previous

@@ -8,17 +8,6 @@ export default async function Header() {
   return (
     <>
 
-      {/* TOP BAR 
-      <div className="topbar">
-        <div className="container topbar-inner">
-          <div className="top-left">New Delhi • 12°C</div>
-          <div className="top-right">
-            <a href="#" className="icon">🔔</a>
-            <a href="#" className="icon">✉️</a>
-            <a href="#" className="signin">SIGN IN</a>
-          </div>
-        </div>
-      </div>   */}
 
       {/* BBC HEADER (Centered Logo) */}
       <header className="bbc-header">
