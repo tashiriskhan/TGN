@@ -52,6 +52,9 @@ export default function Header() {
             <li><Link href="/category/technology" onClick={closeMenu}>Technology</Link></li>
             <li><Link href="/category/sports" onClick={closeMenu}>Sports</Link></li>
             <li><Link href="/category/business" onClick={closeMenu}>Business</Link></li>
+            <li><Link href="/opinion" onClick={closeMenu}>Opinion</Link></li>
+            <li><Link href="/features" onClick={closeMenu}>Features</Link></li>
+            <li><Link href="/breaking" onClick={closeMenu}>Breaking</Link></li>
 
           </ul>
 

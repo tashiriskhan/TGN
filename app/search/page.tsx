@@ -10,9 +10,9 @@ export default async function SearchPage({ searchParams }: any) {
 
   if (!query || query.trim().length < 1) {
     return (
-      <main className="container" style={{ padding: "40px 0" }}>
-        <h1>Search Articles</h1>
-        <p>Type something in the search box.</p>
+      <main className="container search-page">
+        <h1 className="search-title">Search Articles</h1>
+        <p className="search-instruction">Type something in the search box.</p>
       </main>
     )
   }
@@ -36,26 +36,27 @@ export default async function SearchPage({ searchParams }: any) {
   )
 
   return (
-    <main className="container" style={{ padding: "40px 0" }}>
-      <h1>Search results for: "{query}"</h1>
+    <main className="container search-page">
+      <h1 className="search-results-title">Search results for: "{query}"</h1>
 
       {results.length === 0 && (
-        <p>No results found.</p>
+        <p className="no-results">No results found.</p>
       )}
 
-      <div className="list-cards" style={{ marginTop: 20 }}>
+      <div className="search-results-grid">
         {results.map((post: any) => (
-          <article key={post.slug} className="card">
-            <Link href={`/story/${post.slug}`} className="card-link">
+          <article key={post.slug} className="search-result-card">
+            <Link href={`/story/${post.slug}`} className="search-result-link">
               {post.image && (
-                <img 
-                  src={urlFor(post.image).url()} 
-                  alt={post.title} 
+                <img
+                  src={urlFor(post.image).url()}
+                  alt={post.title}
+                  className="search-result-image"
                 />
               )}
 
-              <h3>{post.title}</h3>
-              <p className="muted">{timeAgo(post.publishedAt)}</p>
+              <h3 className="search-result-title">{post.title}</h3>
+              <p className="search-result-date">{timeAgo(post.publishedAt)}</p>
             </Link>
           </article>
         ))}
