@@ -49,96 +49,78 @@ export default async function StoryPage({ params }: any) {
 
   if (!post) return <div>Story not found</div>
 
-  return (    
-    // MAIN: 2 columns (center article + right sidebar placeholder)
+  return (
+    // MAIN: 2 columns (center article + right sidebar)
     <main className="container">
-      <div className="b-page-grid">      
-          
-                      <section className="article-container">
+      <div className="b-page-grid">
 
-  {/* HEADLINE */}
-  <h1 className="bbc-headline">{post.title}</h1>
+        <section className="article-container">
+          {/* HEADLINE */}
+          <h1 className="bbc-headline">{post.title}</h1>
 
- {/* META BAR (BBC Style, Clean Layout) */}
-<div className="bbc-meta">
+          {/* META */}
+          <div className="bbc-article-meta">
+            <span>By</span>
+            <Link href={`/author/${post.author.slug}`} className="author">
+              {post.author.name}
+            </Link>
+            <span>•</span>
+            <span className="date">{new Date(post.publishedAt).toLocaleDateString()}</span>
+            <span>•</span>
+            <span className="time">
+              {new Date(post.publishedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </span>
+          </div>
 
-  {/* Author line */}
-  <div className="bbc-meta-line">
-    <span>By</span>
-    <Link href={`/author/${post.author.slug}`} className="bbc-author">
-      {post.author.name}
-    </Link>
-  </div>
+          {/* HERO IMAGE */}
+          {post.image && (
+            <div className="bbc-hero-wrapper">
+              <img
+                src={urlFor(post.image).url()}
+                alt={post.title}
+                className="article-image"
+              />
+            </div>
+          )}
 
-  {/* Date + Time line */}
-  <div className="bbc-meta-line">
-    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-    <span>•</span>
-    <span>{new Date(post.publishedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-  </div>
-</div>
+          {/* ARTICLE CONTENT */}
+          <article className="bbc-article-body">
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              {post.content}
+            </div>
+          </article>
 
-  {/* HERO IMAGE */}
-  {post.image && (
-    <div className="bbc-hero-wrapper">
-      <img
-        src={urlFor(post.image).url()}
-        alt={post.title}
-        className="article-image"
-      />
-    </div>
-  )}
-
-  {/* ARTICLE CONTENT */}
-
-  <article className="bbc-article-body">
-    <div
-  style={{
-    fontSize: 17,
-    lineHeight: "1.8",
-    whiteSpace: "pre-wrap"
-  }}
->
-  {post.content}
-</div>
-
-  </article>
- 
-  {/* TAGS */}
-  {post.tags && post.tags.length > 0 && (
-    <div className="bbc-tags">
-      {post.tags.map((tag: any) => (
-        <Link key={tag.slug} href={`/tag/${tag.slug}`} className="tag-pill">
-  {tag.title}
-</Link>
-      ))}
-    </div>
-  )}    
+          {/* TAGS */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="bbc-tags">
+              {post.tags.map((tag: any) => (
+                <Link key={tag.slug} href={`/tag/${tag.slug}`} className="tag-pill">
+                  {tag.title}
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* RIGHT SIDEBAR: TOP NEWS */}
-          <aside className="right-col">
+        {/* RIGHT SIDEBAR: BREAKING NEWS */}
+        <aside className="right-col">
           <div className="side-top">
-  <div className="breaking-header"><span>BREAKING NEWS</span>
- 
-  </div>
+            <div className="breaking-header">
+              <span>BREAKING NEWS</span>
+            </div>
 
-  <ul className="breaking-list">
-    {breaking.map((post: any) => (
-      <li key={post.slug}>
-        <Link 
-          href={`/story/${post.slug}`} 
-          className="breaking-link"
-        >
-          {post.title}
-        </Link>
-
-        <div className="time">{timeAgo(post.publishedAt)}</div>
-      </li>
-    ))}
-  </ul>
-</div>
-          </aside>
+            <ul className="breaking-list">
+              {breaking.map((post: any) => (
+                <li key={post.slug}>
+                  <Link href={`/story/${post.slug}`} className="breaking-link">
+                    {post.title}
+                  </Link>
+                  <div className="time">{timeAgo(post.publishedAt)}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
       </div>
     </main>
   )

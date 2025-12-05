@@ -41,46 +41,56 @@ export default async function HomePage() {
       {/* BBC HOMEPAGE */}
       <main className="container bbc-home">
 
-        {/* 1. TOP: TRENDING | FEATURE | BREAKING */}
+        {/* 1. TOP: FEATURE | TRENDING | BREAKING */}
         <section className="bbc-top">
 
-          {/* TRENDING */}
-          <div className="bbc-left-col">
-            {trending?.map((post: any) => (
-              <article className="bbc-left-card" key={post.slug}>
-                <Link href={`/story/${post.slug}`}>
-                  <img 
-                    src={urlFor(post.image).width(400).url()}
-                    alt={post.title}
-                  />
-                  <h3>{post.title}</h3>
-                  {post.subtitle && (
-                    <p className="summary">{post.subtitle}</p>
-                  )}
-                </Link>
-              </article>
-            ))}
-          </div>
-
-          {/* FEATURE */}
+          {/* FEATURE - Featured story FIRST */}
           <div className="bbc-center-col">
             <article className="bbc-hero">
               <Link href={`/story/${hero.slug}`}>
-                <img 
-                  src={urlFor(hero.image).width(900).url()} 
+                <img
+                  className="bbc-hero-img"
+                  src={urlFor(hero.image).width(900).url()}
                   alt={hero.title}
                 />
-                <h1>{hero.title}</h1>
-                {hero.content && (
-                  <p className="summary">
-                    {hero.content.slice(0, 120)}...
+                <div className="bbc-hero-content">
+                  <h1>{hero.title}</h1>
+                  {hero.content && (
+                    <p className="summary">
+                      {hero.content.slice(0, 120)}...
+                    </p>
+                  )}
+                  <p className="meta">
+                    {timeAgo(hero.publishedAt)} • {hero.author?.name}
                   </p>
-                )}
-                <p className="muted">
-                  {timeAgo(hero.publishedAt)} • {hero.author?.name}
-                </p>
+                </div>
               </Link>
             </article>
+          </div>
+
+          {/* TRENDING - Below feature */}
+          <div className="bbc-left-col">
+            {trending?.map((post: any) => (
+              <article className="trending-horizontal" key={post.slug}>
+                <Link href={`/story/${post.slug}`}>
+                  {post.image && (
+                    <div className="trending-image-wrapper">
+                      <img
+                        className="trending-img-small"
+                        src={urlFor(post.image).width(200).url()}
+                        alt={post.title}
+                      />
+                    </div>
+                  )}
+                  <div className="trending-content">
+                    <h3>{post.title}</h3>
+                    {post.subtitle && (
+                      <p className="summary">{post.subtitle}</p>
+                    )}
+                  </div>
+                </Link>
+              </article>
+            ))}
           </div>
 
           {/* BREAKING */}
@@ -88,39 +98,42 @@ export default async function HomePage() {
             <div className="breaking-header">
               <span>BREAKING NEWS</span>
             </div>
-
-            {breaking?.map((post: any) => (
-              <article className="bbc-right-item" key={post.slug}>
-                <Link href={`/story/${post.slug}`}>
-                  <h4>{post.title}</h4>
-                </Link>
-                <p className="muted">{timeAgo(post.publishedAt)}</p>
-              </article>
-            ))}
+            <ul className="breaking-list">
+              {breaking?.map((post: any) => (
+                <li key={post.slug}>
+                  <Link href={`/story/${post.slug}`}>
+                    <span className="breaking-link">{post.title}</span>
+                  </Link>
+                  <p className="time">{timeAgo(post.publishedAt)}</p>
+                </li>
+              ))}
+            </ul>
           </div>
 
         </section>
 
         {/* 2. MORE STORIES */}
-        <section className="bbc-3col-section">
+        <section>
           <h2 className="section-title">More Stories</h2>
 
           <div className="bbc-3col-grid">
             {rightColumnList?.map((post: any) => (
-              <article key={post.slug} className="bbc-3col-card">
+              <article key={post.slug} className="bbc-card">
                 <Link href={`/story/${post.slug}`}>
                   {post.image && (
                     <img
+                      className="bbc-card-img"
                       src={urlFor(post.image).width(400).url()}
                       alt={post.title}
                     />
                   )}
-
-                  <h4>{post.title}</h4>
-                  {post.subtitle && (
-                    <p className="muted">{post.subtitle}</p>
-                  )}
-                  <p className="muted">{timeAgo(post.publishedAt)}</p>
+                  <div className="bbc-card-content">
+                    <h4>{post.title}</h4>
+                    {post.subtitle && (
+                      <p className="summary">{post.subtitle}</p>
+                    )}
+                    <p className="meta">{timeAgo(post.publishedAt)}</p>
+                  </div>
                 </Link>
               </article>
             ))}
@@ -135,12 +148,14 @@ export default async function HomePage() {
             {specialList?.map((post: any) => (
               <article key={post.slug} className="special-card-2">
                 <Link href={`/story/${post.slug}`}>
-                  <img 
+                  <img
                     src={urlFor(post.image).width(600).url()}
                     alt={post.title}
                   />
-                  <div className="tag">{post.specialTag || "SPECIAL"}</div>
-                  <h3>{post.title}</h3>
+                  <div className="special-card-2-content">
+                    <span className="special-tag">{post.specialTag || "SPECIAL"}</span>
+                    <h3>{post.title}</h3>
+                  </div>
                 </Link>
               </article>
             ))}
@@ -148,7 +163,7 @@ export default async function HomePage() {
         </section>
 
         {/* 4. OPINION SECTION */}
-        <section className="bbc-opinions-row">
+        <section>
           <h2 className="section-title">Opinion</h2>
 
           <div className="bbc-opinion-grid">
@@ -161,9 +176,11 @@ export default async function HomePage() {
                       alt={post.title}
                     />
                   )}
-                  <div>
+                  <div className="op-item-content">
                     <h4>{post.title}</h4>
-                    <p className="muted">{post.subtitle}</p>
+                    {post.subtitle && (
+                      <p className="summary">{post.subtitle}</p>
+                    )}
                   </div>
                 </Link>
               </article>
