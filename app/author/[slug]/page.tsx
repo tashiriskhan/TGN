@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
+import Image from "next/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 
 const PAGE_SIZE = 10
@@ -54,10 +55,12 @@ export default async function AuthorPage({ params, searchParams }: any) {
       {/* Author Header */}
       <section className="author-header">
         {author.image && (
-          <img
-            src={urlFor(author.image).width(200).url()}
+          <Image
+            src={urlFor(author.image).width(200).height(200).url()}
             alt={author.name}
             className="author-image"
+            width={200}
+            height={200}
           />
         )}
 
@@ -88,10 +91,12 @@ export default async function AuthorPage({ params, searchParams }: any) {
           <article key={post.slug} className="author-post-card">
             <Link href={`/story/${post.slug}`} className="author-post-link">
               {post.image && (
-                <img
-                  src={urlFor(post.image).width(500).url()}
+                <Image
+                  src={urlFor(post.image).width(500).height(350).url()}
                   alt={post.title}
                   className="author-post-image"
+                  width={500}
+                  height={350}
                 />
               )}
 

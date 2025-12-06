@@ -28,7 +28,7 @@ export default async function Footer() {
           <h4>Quick Links</h4>
           <Link href="/about" className="footer-link">About</Link>
           <Link href="/contact" className="footer-link">Contact</Link>
-          <Link href="/privacy-policy" className="footer-link">Privacy Policy</Link>
+          <Link href="/privacy" className="footer-link">Privacy Policy</Link>
           <Link href="/terms" className="footer-link">Terms & Conditions</Link>
         </div>
 

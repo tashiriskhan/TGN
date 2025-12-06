@@ -1,5 +1,6 @@
 import { client } from "@/sanity/lib/sanity"
 import Link from "next/link"
+import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 
@@ -50,10 +51,12 @@ export default async function TagPage({ params, searchParams }: any) {
             <Link href={`/story/${post.slug}`} className="cat-link">
 
               {post.image && (
-                <img
-                  src={urlFor(post.image).width(600).url()}
+                <Image
+                  src={urlFor(post.image).width(600).height(400).url()}
                   className="cat-img"
                   alt={post.title}
+                  width={600}
+                  height={400}
                 />
               )}
 

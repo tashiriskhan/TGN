@@ -2,6 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
+import Image from "next/image";
 import "./globals.css";
 
 import { getFeaturedPost } from "@/sanity/lib/getFeaturedPost";
@@ -48,10 +49,13 @@ export default async function HomePage() {
           <div className="bbc-center-col">
             <article className="bbc-hero">
               <Link href={`/story/${hero.slug}`}>
-                <img
+                <Image
                   className="bbc-hero-img"
-                  src={urlFor(hero.image).width(900).url()}
+                  src={urlFor(hero.image).width(900).height(506).url()}
                   alt={hero.title}
+                  width={900}
+                  height={506}
+                  priority
                 />
                 <div className="bbc-hero-content">
                   <h1>{hero.title}</h1>
@@ -75,10 +79,12 @@ export default async function HomePage() {
                 <Link href={`/story/${post.slug}`}>
                   {post.image && (
                     <div className="trending-image-wrapper">
-                      <img
+                      <Image
                         className="trending-img-small"
-                        src={urlFor(post.image).width(200).url()}
+                        src={urlFor(post.image).width(200).height(160).url()}
                         alt={post.title}
+                        width={200}
+                        height={160}
                       />
                     </div>
                   )}
@@ -121,10 +127,12 @@ export default async function HomePage() {
               <article key={post.slug} className="bbc-card">
                 <Link href={`/story/${post.slug}`}>
                   {post.image && (
-                    <img
+                    <Image
                       className="bbc-card-img"
-                      src={urlFor(post.image).width(400).url()}
+                      src={urlFor(post.image).width(400).height(300).url()}
                       alt={post.title}
+                      width={400}
+                      height={300}
                     />
                   )}
                   <div className="bbc-card-content">
@@ -148,9 +156,11 @@ export default async function HomePage() {
             {specialList?.map((post: any) => (
               <article key={post.slug} className="special-card-2">
                 <Link href={`/story/${post.slug}`}>
-                  <img
-                    src={urlFor(post.image).width(600).url()}
+                  <Image
+                    src={urlFor(post.image).width(600).height(338).url()}
                     alt={post.title}
+                    width={600}
+                    height={338}
                   />
                   <div className="special-card-2-content">
                     <span className="special-tag">{post.specialTag || "SPECIAL"}</span>
@@ -171,9 +181,11 @@ export default async function HomePage() {
               <article key={post.slug} className="op-item-row">
                 <Link href={`/story/${post.slug}`}>
                   {post.image && (
-                    <img
+                    <Image
                       src={urlFor(post.image).width(80).height(80).url()}
                       alt={post.title}
+                      width={80}
+                      height={80}
                     />
                   )}
                   <div className="op-item-content">

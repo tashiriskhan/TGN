@@ -1,5 +1,6 @@
 import { client } from "@/sanity/lib/sanity"
 import Link from "next/link"
+import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 
@@ -48,10 +49,12 @@ export default async function SearchPage({ searchParams }: any) {
           <article key={post.slug} className="search-result-card">
             <Link href={`/story/${post.slug}`} className="search-result-link">
               {post.image && (
-                <img
-                  src={urlFor(post.image).url()}
+                <Image
+                  src={urlFor(post.image).width(500).height(350).url()}
                   alt={post.title}
                   className="search-result-image"
+                  width={500}
+                  height={350}
                 />
               )}
 

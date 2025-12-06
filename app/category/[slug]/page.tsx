@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
+import Image from "next/image"
 
 const PAGE_SIZE = 10
 
@@ -61,10 +62,12 @@ export default async function CategoryPage({ params, searchParams }: any) {
             <Link href={`/story/${post.slug}`} className="cat-link">
 
               {post.image && (
-                <img
-                  src={urlFor(post.image).width(400).url()}
+                <Image
+                  src={urlFor(post.image).width(400).height(300).url()}
                   alt={post.title}
                   className="cat-img"
+                  width={400}
+                  height={300}
                 />
               )}
 
