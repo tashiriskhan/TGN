@@ -225,6 +225,7 @@ a:hover {
   transition: all 0.3s ease;
   flex-shrink: 0;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .social-icon-circle:hover {
@@ -232,6 +233,14 @@ a:hover {
   border-color: var(--color-primary);
   color: white;
   transform: scale(1.1);
+}
+
+/* Ensure SVG icons are perfectly centered and sized */
+.social-icon-circle svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  margin: 0 auto;
 }
 
 .social-icon-text {
@@ -257,6 +266,7 @@ a:hover {
   color: var(--color-text-muted);
   cursor: pointer;
   transition: all 0.3s ease;
+  overflow: hidden;
   flex-shrink: 0;
 }
 
@@ -271,6 +281,18 @@ a:hover {
   outline-offset: 2px;
 }
 
+/* Toggle Icon (the › or ⋮ symbol) */
+.toggle-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
 /* Extra Icons - Horizontal Transition */
 .social-icons-extra {
   display: flex;
@@ -283,8 +305,15 @@ a:hover {
 }
 
 .social-icons-container.expanded .social-icons-extra {
-  max-width: 200px;
+  max-width: 280px;
   opacity: 1;
+}
+
+/* Ensure all icons align properly in the container */
+.social-icons-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
 /* Mobile responsiveness */
@@ -299,21 +328,61 @@ a:hover {
 
   .social-icon-circle,
   .social-toggle-circle {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
   }
 
   .social-icon-text {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .toggle-icon {
-    font-size: 10px;
+    font-size: 13px;
   }
 
-  /* On small screens, keep single row */
+  /* On small screens, keep single row with proper spacing */
   .social-icons-container {
     justify-content: flex-end;
+    gap: 4px;
+    align-items: center;
+  }
+
+  /* Ensure expandable icons align with primary icons */
+  .social-icons-extra {
+    gap: 4px;
+    align-items: center;
+  }
+
+  /* Mobile SVG sizing - ensure icons scale properly */
+  .social-icon-circle svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* On mobile, allow more width for expanded icons */
+  .social-icons-container.expanded .social-icons-extra {
+    max-width: 240px;
+  }
+
+  /* Adjust date display for mobile */
+  .date-display {
+    align-items: flex-end;
+    gap: 1px;
+  }
+
+  .gregorian-date {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .date-separator {
+    font-size: 6px;
+    line-height: 1;
+  }
+
+  .hijri-date {
+    font-size: 9px;
+    line-height: 1.2;
   }
 
   /* Hide the bbc-header on mobile */
@@ -412,6 +481,7 @@ a:hover {
 @media (max-width: 400px) {
   .social-icons-container {
     max-width: 100%;
+    gap: 2px;
   }
 
   .social-icons-extra {
@@ -420,6 +490,39 @@ a:hover {
 
   .social-icons-container.expanded .social-icons-extra {
     max-width: 150px;
+  }
+
+  .social-icon-circle,
+  .social-toggle-circle {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Small mobile SVG sizing */
+  .social-icon-circle svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .toggle-icon {
+    font-size: 12px;
+  }
+
+  /* Adjust date for very small screens */
+  .date-display {
+    gap: 0;
+  }
+
+  .gregorian-date {
+    font-size: 8px;
+  }
+
+  .date-separator {
+    font-size: 5px;
+  }
+
+  .hijri-date {
+    font-size: 7px;
   }
 }
 
