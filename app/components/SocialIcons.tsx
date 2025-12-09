@@ -73,7 +73,7 @@ export default function SocialIcons({ showToggle = true }: SocialIconsProps) {
             onClick={toggleExpanded}
             className="social-toggle-circle"
             aria-label={isExpanded ? 'Hide extra social links' : 'Show more social links'}
-            aria-expanded={isExpanded.toString()}
+            aria-expanded={isExpanded}
           >
             <span className="toggle-icon">{isExpanded ? '›' : '⋮'}</span>
           </button>
