@@ -185,9 +185,7 @@ export default async function StoryPage({ params }: any) {
 
           {/* ARTICLE CONTENT */}
           <article className="bbc-article-body">
-            <div style={{ whiteSpace: "pre-wrap" }}>
-              {post.content}
-            </div>
+            <div>{post.content}</div>
           </article>
 
           {/* TAGS */}

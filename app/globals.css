@@ -696,6 +696,7 @@ a:hover {
   font-size: var(--font-size-lg);
   line-height: 1.8;
   color: var(--color-text);
+  white-space: pre-wrap;
 }
 
 .bbc-article-body p {

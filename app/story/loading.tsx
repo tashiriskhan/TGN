@@ -1,6 +1,12 @@
 import { ArticleMetaSkeleton, BreakingNewsSkeleton } from "@/app/components/Skeleton"
+import { useMemo } from "react"
 
 export default function Loading() {
+  // Generate stable random widths once to avoid impure function calls during render
+  const skeletonWidths = useMemo(
+    () => Array.from({ length: 8 }, () => Math.random() * 40 + 60),
+    []
+  )
   return (
     <main className="container">
       <div className="b-page-grid">
@@ -23,11 +29,11 @@ export default function Loading() {
           {/* ARTICLE CONTENT SKELETON */}
           <article className="bbc-article-body">
             <div className="space-y-4 animate-pulse">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {skeletonWidths.map((width, i) => (
                 <div
                   key={i}
                   className="h-4 bg-gray-200 dark:bg-gray-700 rounded"
-                  style={{ width: `${Math.random() * 40 + 60}%` }}
+                  style={{ width: `${width}%` }}
                 ></div>
               ))}
             </div>
