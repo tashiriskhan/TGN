@@ -22,7 +22,11 @@ const extraIcons: SocialLink[] = [
   { name: 'Platform G', icon: 'G', url: '#' },
 ]
 
-export default function SocialIcons() {
+interface SocialIconsProps {
+  showToggle?: boolean // Whether to show the expand/collapse toggle
+}
+
+export default function SocialIcons({ showToggle = true }: SocialIconsProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleExpanded = () => {
@@ -31,7 +35,7 @@ export default function SocialIcons() {
 
   return (
     <div className="social-icons-wrapper">
-      <div className={`social-icons-container ${isExpanded ? 'expanded' : ''}`}>
+      <div className={`social-icons-container ${isExpanded ? 'expanded' : ''} ${!showToggle ? 'no-toggle' : ''}`}>
         {/* Primary icons (always visible) */}
         {primaryIcons.map((link) => (
           <a
@@ -62,15 +66,18 @@ export default function SocialIcons() {
           ))}
         </div>
 
-        {/* Toggle button - always at the end */}
-        <button
-          onClick={toggleExpanded}
-          className="social-toggle-circle"
-          aria-label={isExpanded ? 'Hide extra social links' : 'Show more social links'}
-          aria-expanded={isExpanded}
-        >
-          <span className="toggle-icon">{isExpanded ? '›' : '⋮'}</span>
-        </button>
+        {/* Toggle button - only show if showToggle is true */}
+        {showToggle && (
+          <button
+            type="button"
+            onClick={toggleExpanded}
+            className="social-toggle-circle"
+            aria-label={isExpanded ? 'Hide extra social links' : 'Show more social links'}
+            aria-expanded={isExpanded.toString()}
+          >
+            <span className="toggle-icon">{isExpanded ? '›' : '⋮'}</span>
+          </button>
+        )}
       </div>
     </div>
   )

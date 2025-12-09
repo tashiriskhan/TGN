@@ -4,10 +4,12 @@ import Image from "next/image"
 import { useState } from "react"
 import ThemeToggle from "./ThemeToggle"
 import SocialIcons from "./SocialIcons"
-import { getFormattedTodayDate } from "@/app/lib/dateHelper"
+import { getFormattedTodayDate, getFormattedHijriDate } from "@/app/lib/dateHelper"
+import { useTheme } from "./ThemeProvider"
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { theme } = useTheme()
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
@@ -19,18 +21,18 @@ export default function Header() {
 
   return (
     <>
-      {/* BBC HEADER (Centered Logo with date and social icons) */}
+      {/* BBC HEADER (Centered Logo with date and social icons) - Desktop Only */}
       <header className="bbc-header">
         <div className="container bbc-header-inner-enhanced">
-          {/* Left: Date */}
+          {/* Left: Social Icons (swapped with date) */}
           <div className="header-date">
-            {getFormattedTodayDate()}
+            <SocialIcons />
           </div>
 
           {/* Center: Logo */}
           <Link href="/" className="bbc-logo-link">
             <Image
-              src="/logo.svg"
+              src={theme === "dark" ? "/logo-w.svg" : "/logo.svg"}
               className="bbc-logo"
               alt="The Ground Narrative"
               width={200}
@@ -39,8 +41,14 @@ export default function Header() {
             />
           </Link>
 
-          {/* Right: Social Icons */}
-          <SocialIcons />
+          {/* Right: Date (swapped with social icons) */}
+          <div className="header-date">
+            <div className="date-display">
+              <div className="gregorian-date">{getFormattedTodayDate()}</div>
+              <div className="date-separator">----------------------</div>
+              <div className="hijri-date">{getFormattedHijriDate()}</div>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -48,7 +56,7 @@ export default function Header() {
       <nav className="bbc-nav">
         <div className="container bbc-nav-inner">
 
-          {/* LEFT SIDE */}
+          {/* LEFT SIDE - Hamburger and Theme Toggle */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {/* MOBILE TOGGLE */}
             <button
@@ -61,8 +69,27 @@ export default function Header() {
               ☰
             </button>
 
-            {/* THEME TOGGLE - Desktop */}
-            <ThemeToggle />
+            {/* THEME TOGGLE - Visible on mobile and desktop */}
+            <div className="mobile-theme-toggle-inline">
+              <ThemeToggle />
+            </div>
+          </div>
+
+          {/* CENTER - Logo (Mobile Only) */}
+          <Link href="/" className="bbc-logo-link mobile-nav-logo mobile-only">
+            <Image
+              src={theme === "dark" ? "/logo-w.svg" : "/logo.svg"}
+              className="bbc-logo"
+              alt="The Ground Narrative"
+              width={150}
+              height={39}
+              priority
+            />
+          </Link>
+
+          {/* RIGHT SIDE - Date (Mobile Only) */}
+          <div className="header-date mobile-nav-date mobile-only">
+            {getFormattedTodayDate()}
           </div>
 
           {/* CATEGORY LIST */}
@@ -82,8 +109,10 @@ export default function Header() {
             <li><Link href="/features" onClick={closeMenu}>Features</Link></li>
             <li><Link href="/breaking" onClick={closeMenu}>Breaking</Link></li>
 
-            {/* THEME TOGGLE - Mobile */}
-            
+            {/* SOCIAL ICONS - Mobile (inside hamburger menu) */}
+            <li className="mobile-social-icons">
+              <SocialIcons showToggle={true} />
+            </li>
 
           </ul>
 

@@ -165,10 +165,40 @@ a:hover {
   white-space: nowrap;
 }
 
+/* Dual Calendar Display */
+.date-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  line-height: 1.3;
+}
+
+.gregorian-date {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.date-separator {
+  font-size: 8px;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  letter-spacing: -1px;
+  overflow: hidden;
+  max-width: 100px;
+}
+
+.hijri-date {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
 /* Social Icons Wrapper */
 .social-icons-wrapper {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
@@ -208,6 +238,10 @@ a:hover {
   font-size: 11px;
   font-weight: 600;
   line-height: 1;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Toggle Button Circle */
@@ -281,6 +315,91 @@ a:hover {
   .social-icons-container {
     justify-content: flex-end;
   }
+
+  /* Hide the bbc-header on mobile */
+  .bbc-header {
+    display: none;
+  }
+
+  /* Mobile navigation layout: hamburger | theme toggle | logo | date */
+  .bbc-nav-inner {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--container-padding);
+  }
+
+  /* Mobile logo styling */
+  .mobile-nav-logo {
+    justify-self: center;
+  }
+
+  .mobile-nav-logo .bbc-logo {
+    height: 32px;
+  }
+
+  /* Mobile date styling */
+  .mobile-nav-date {
+    font-size: 11px;
+    color: #333;
+    justify-self: end;
+  }
+
+  /* Mobile hamburger menu background */
+  .bbc-nav-list.mobile-open {
+    background: var(--color-surface);
+  }
+
+  /* Category list items in hamburger - dark color on white background */
+  .bbc-nav-list.mobile-open a {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  /* Mobile social icons - use EXACT same styles as desktop */
+  .mobile-social-icons {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-lg) var(--space-md);
+    margin-top: var(--space-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Use all default styles - don't override anything */
+}
+
+/* Very small screens - keep same social icons as desktop */
+@media (max-width: 400px) {
+  /* Show mobile-only elements */
+  .mobile-only {
+    display: block;
+  }
+
+  /* Hide desktop-only elements on mobile */
+  .desktop-only {
+    display: none;
+  }
+
+  /* Show inline theme toggle on mobile */
+  .mobile-theme-toggle-inline {
+    display: block;
+  }
+
+  /* Hamburger and theme toggle use theme colors */
+  .mobile-menu-toggle {
+    font-size: 24px;
+  }
+
+  .theme-toggle {
+    /* Uses base theme color */
+  }
+}
+
+/* Small to medium mobile screens (400px - 600px) */
+@media (min-width: 400px) and (max-width: 600px) {
+  /* Keep social icons same as desktop - no overrides needed */
 }
 
 @media (max-width: 400px) {
@@ -315,8 +434,8 @@ a:hover {
 }
 
 .bbc-nav {
-  background: #111;
-  color: #fff;
+  background: var(--color-surface);
+  color: var(--color-text);
   position: relative;
   z-index: 999;
 }
@@ -342,7 +461,7 @@ a:hover {
   top: 100%;
   left: 0;
   width: 100%;
-  background: #121212;
+  background: var(--color-surface);
   padding: var(--space-md);
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -353,13 +472,13 @@ a:hover {
 }
 
 .bbc-nav-list a {
-  color: white;
+  color: var(--color-text);
   font-weight: 600;
   text-transform: uppercase;
   font-size: var(--font-size-sm);
   padding: var(--space-md) 0;
   display: block;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .bbc-nav-list a:hover {
@@ -370,7 +489,7 @@ a:hover {
 .mobile-menu-toggle {
   display: block;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--color-text);
   cursor: pointer;
   background: none;
   border: none;
@@ -385,7 +504,7 @@ a:hover {
 .theme-toggle {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--color-text);
   cursor: pointer;
   padding: var(--space-sm);
   display: flex;
@@ -396,7 +515,7 @@ a:hover {
 }
 
 .theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .theme-toggle svg {
@@ -407,7 +526,7 @@ a:hover {
 .bbc-nav-tools input {
   padding: 0.5rem 0.75rem;
   border-radius: 4px;
-  border: none;
+  border: 1px solid var(--color-border);
   font-size: var(--font-size-sm);
 }
 
@@ -1456,10 +1575,48 @@ a:hover {
   .bbc-nav-list a {
     border: none;
     padding: var(--space-md);
+    color: var(--color-text);
   }
 
   .bbc-nav-tools {
     display: block;
+  }
+
+  /* Hide mobile-only elements on desktop */
+  .mobile-only {
+    display: none !important;
+  }
+
+  /* Show desktop-only elements on desktop */
+  .desktop-only {
+    display: block !important;
+  }
+
+  /* Show inline theme toggle on desktop too */
+  .mobile-theme-toggle-inline {
+    display: block !important;
+  }
+
+  /* Reset nav background for desktop - use theme colors */
+  .bbc-nav {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  /* Reset nav-inner to flex for desktop */
+  .bbc-nav-inner {
+    display: flex !important;
+    grid-template-columns: none !important;
+  }
+
+  /* Hide social icons in nav-bar on desktop (they're in the header above) */
+  .bbc-nav .social-icons-wrapper {
+    display: none;
+  }
+
+  /* Theme toggle should use theme colors */
+  .bbc-nav .theme-toggle {
+    color: var(--color-text);
   }
 }
 
@@ -1510,6 +1667,46 @@ a:hover {
   .bbc-hero h1 {
     font-size: var(--font-size-2xl);
   }
+}
+
+/* ========== RESPONSIVE - TABLET TO SMALL DESKTOP (600px - 1000px) ========== */
+@media (min-width: 600px) and (max-width: 1000px) {
+  /* Hide the top bbc-header (Date | Logo | Social) on tablet */
+  .bbc-header {
+    display: none;
+  }
+
+  /* Show inline theme toggle on tablet too */
+  .mobile-theme-toggle-inline {
+    display: block !important;
+  }
+
+  /* Nav background should use theme colors on tablet */
+  .bbc-nav {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  /* Category list items in nav should use theme colors */
+  .bbc-nav-list a {
+    color: var(--color-text);
+  }
+
+  /* Theme toggle should use theme colors */
+  .theme-toggle {
+    color: var(--color-text);
+  }
+
+  /* Hamburger menu background should use theme colors when open */
+  .bbc-nav-list.mobile-open {
+    background: var(--color-surface);
+  }
+
+  .bbc-nav-list.mobile-open a {
+    color: var(--color-text);
+  }
+
+  /* Keep social icons same as desktop - no customizations */
 }
 
 /* ========== RESPONSIVE - DESKTOP (1024px+) ========== */
