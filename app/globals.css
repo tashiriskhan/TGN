@@ -387,6 +387,13 @@ a:hover {
     display: block;
   }
 
+  /* Left side controls container */
+  .nav-left-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
   /* Hamburger and theme toggle use theme colors */
   .mobile-menu-toggle {
     font-size: 24px;

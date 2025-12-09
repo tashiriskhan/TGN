@@ -57,7 +57,7 @@ export default function Header() {
         <div className="container bbc-nav-inner">
 
           {/* LEFT SIDE - Hamburger and Theme Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="nav-left-controls">
             {/* MOBILE TOGGLE */}
             <button
               className="mobile-menu-toggle"
@@ -89,7 +89,11 @@ export default function Header() {
 
           {/* RIGHT SIDE - Date (Mobile Only) */}
           <div className="header-date mobile-nav-date mobile-only">
-            {getFormattedTodayDate()}
+            <div className="date-display">
+              <div className="gregorian-date">{getFormattedTodayDate()}</div>
+              <div className="date-separator">----------------------</div>
+              <div className="hijri-date">{getFormattedHijriDate()}</div>
+            </div>
           </div>
 
           {/* CATEGORY LIST */}
