@@ -48,22 +48,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/opinion`,
+      url: `${baseUrl}/about`,
       lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
     },
     {
-      url: `${baseUrl}/features`,
+      url: `${baseUrl}/contact`,
       lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
     },
     {
-      url: `${baseUrl}/breaking`,
+      url: `${baseUrl}/privacy`,
       lastModified: new Date(),
-      changeFrequency: 'hourly' as const,
-      priority: 0.9,
+      changeFrequency: 'yearly' as const,
+      priority: 0.2,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.2,
     },
   ]
 
@@ -82,7 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const categoryEntries = categories.map((category: any) => ({
-    url: `${baseUrl}/category/${category.slug}`,
+    url: `${baseUrl}/${category.slug}`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 0.7,

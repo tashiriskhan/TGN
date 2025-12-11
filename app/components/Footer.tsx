@@ -36,9 +36,9 @@ export default async function Footer() {
         <div className="footer-col">
           <h4>Categories</h4>
           {categories.map((cat: any) => (
-            <Link 
+            <Link
               key={cat.slug}
-              href={`/category/${cat.slug}`}
+              href={`/${cat.slug}`}
               className="footer-link"
             >
               {cat.title}

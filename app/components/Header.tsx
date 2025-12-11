@@ -104,14 +104,14 @@ export default function Header() {
 
             {/* Dynamic categories from Sanity */}
             {/* Note: In production, fetch these from your CMS */}
-            <li><Link href="/category/world" onClick={closeMenu}>World</Link></li>
-            <li><Link href="/category/politics" onClick={closeMenu}>Politics</Link></li>
-            <li><Link href="/category/technology" onClick={closeMenu}>Technology</Link></li>
-            <li><Link href="/category/sports" onClick={closeMenu}>Sports</Link></li>
-            <li><Link href="/category/business" onClick={closeMenu}>Business</Link></li>
-            <li><Link href="/opinion" onClick={closeMenu}>Opinion</Link></li>
-            <li><Link href="/features" onClick={closeMenu}>Features</Link></li>
-            <li><Link href="/breaking" onClick={closeMenu}>Breaking</Link></li>
+            <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li>
+            <li><Link href="/india" onClick={closeMenu}>India</Link></li>
+            <li><Link href="/world" onClick={closeMenu}>World</Link></li>
+            <li><Link href="/business" onClick={closeMenu}>Business</Link></li>
+            <li><Link href="/technology" onClick={closeMenu}>Technology</Link></li>
+            <li><Link href="/sports" onClick={closeMenu}>Sports</Link></li>
+            <li><Link href="/entertainment" onClick={closeMenu}>Entertainment</Link></li>
+            <li><Link href="/culture" onClick={closeMenu}>Culture</Link></li>
 
             {/* SOCIAL ICONS - Mobile (inside hamburger menu) */}
             <li className="mobile-social-icons">

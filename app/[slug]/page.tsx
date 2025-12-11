@@ -2,8 +2,22 @@ import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 
 const PAGE_SIZE = 10
+
+// Reserved route names that should not be treated as categories
+const RESERVED_ROUTES = [
+  'story',
+  'tag',
+  'author',
+  'search',
+  'about',
+  'contact',
+  'privacy',
+  'terms',
+  'sanity'
+]
 
 export default async function CategoryPage({ params, searchParams }: any) {
   // FIX: unwrap async params
@@ -11,6 +25,12 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const s = await searchParams
 
   const slug = p.slug
+
+  // Prevent conflicts with reserved routes
+  if (RESERVED_ROUTES.includes(slug)) {
+    notFound()
+  }
+
   const page = Number(s.page) || 1
 
   const start = (page - 1) * PAGE_SIZE
@@ -21,6 +41,11 @@ export default async function CategoryPage({ params, searchParams }: any) {
     `*[_type == "category" && slug.current == $slug][0]{ title }`,
     { slug }
   )
+
+  // If no category found, return 404
+  if (!category) {
+    notFound()
+  }
 
   // Fetch posts inside this category
   const posts = await client.fetch(
@@ -88,13 +113,13 @@ export default async function CategoryPage({ params, searchParams }: any) {
       {/* PAGINATION */}
       <div className="pagination-box">
         {page > 1 && (
-          <Link href={`/category/${slug}?page=${page - 1}`} className="pagination-btn">
+          <Link href={`/${slug}?page=${page - 1}`} className="pagination-btn">
             ⬅ Previous
           </Link>
         )}
 
         {page < totalPages && (
-          <Link href={`/category/${slug}?page=${page + 1}`} className="pagination-btn">
+          <Link href={`/${slug}?page=${page + 1}`} className="pagination-btn">
             Next ➜
           </Link>
         )}
