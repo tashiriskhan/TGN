@@ -1,39 +1,86 @@
 export default {
-  name: "photoStory",
-  title: "Photo Story",
-  type: "document",
+  name: 'photoStory',
+  title: 'Photo Story',
+  type: 'document',
   fields: [
-    { name: "title", type: "string", title: "Title" },
-    { name: "slug", type: "slug", title: "Slug", options: { source: "title" } },
-    { name: "description", type: "text", title: "Description" },
     {
-      name: "images",
-      type: "array",
-      title: "Images",
-      of: [{ type: "image" }]
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "author",
-      type: "reference",
-      title: "Author",
-      to: [{ type: "author" }]
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "category",
-      type: "reference",
-      title: "Category",
-      to: [{ type: "category" }]
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{ type: 'author' }],
     },
     {
-      name: "tags",
-      type: "array",
-      title: "Tags",
-      of: [{ type: "reference", to: [{ type: "tag" }] }]
+      name: 'mainImage',
+      title: 'Main Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "publishedAt",
-      type: "datetime",
-      title: "Published At"
-    }
-  ]
-};
+      name: 'gallery',
+      title: 'Gallery',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
+    },
+    {
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'category' } }],
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'tag' } }],
+    },
+    {
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 4,
+    },
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      author: 'author.name',
+      media: 'mainImage',
+    },
+    prepare(selection) {
+      const { author } = selection
+      return { ...selection, subtitle: author && `by ${author}` }
+    },
+  },
+}

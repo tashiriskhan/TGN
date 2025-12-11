@@ -1,40 +1,86 @@
 export default {
-  name: "podcast",
-  title: "Podcast",
-  type: "document",
+  name: 'podcast',
+  title: 'Podcast',
+  type: 'document',
   fields: [
-    { name: "title", type: "string", title: "Title" },
-    { name: "slug", type: "slug", title: "Slug", options: { source: "title" } },
-    { name: "description", type: "text", title: "Description" },
-    { name: "audioUrl", type: "url", title: "Audio URL" },
-    { name: "duration", type: "string", title: "Duration" },
     {
-      name: "thumbnail",
-      type: "image",
-      title: "Thumbnail"
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "author",
-      type: "reference",
-      title: "Author",
-      to: [{ type: "author" }]
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "category",
-      type: "reference",
-      title: "Category",
-      to: [{ type: "category" }]
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{ type: 'author' }],
     },
     {
-      name: "tags",
-      type: "array",
-      title: "Tags",
-      of: [{ type: "reference", to: [{ type: "tag" }] }]
+      name: 'thumbnail',
+      title: 'Thumbnail',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: "publishedAt",
-      type: "datetime",
-      title: "Published At"
-    }
-  ]
-};
+      name: 'audioUrl',
+      title: 'Audio URL',
+      type: 'url',
+      description: 'URL to the audio file (MP3, etc.)',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'duration',
+      title: 'Duration',
+      type: 'string',
+      description: 'Podcast duration (e.g., 45:30)',
+    },
+    {
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'category' } }],
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'tag' } }],
+    },
+    {
+      name: 'publishedAt',
+      title: 'Published at',
+      type: 'datetime',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 4,
+    },
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      author: 'author.name',
+      media: 'thumbnail',
+    },
+    prepare(selection) {
+      const { author } = selection
+      return { ...selection, subtitle: author && `by ${author}` }
+    },
+  },
+}
