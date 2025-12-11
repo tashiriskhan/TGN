@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import ThemeToggle from "./ThemeToggle"
 import SocialIcons from "./SocialIcons"
 import { getFormattedTodayDate, getFormattedHijriDate } from "@/app/lib/dateHelper"
@@ -9,7 +9,11 @@ import { useTheme } from "./ThemeProvider"
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [newsDropdownOpen, setNewsDropdownOpen] = useState(false)
+  const [mediaDropdownOpen, setMediaDropdownOpen] = useState(false)
   const { theme } = useTheme()
+  const newsDropdownRef = useRef<HTMLDivElement>(null)
+  const mediaDropdownRef = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
@@ -18,6 +22,23 @@ export default function Header() {
   const closeMenu = () => {
     setMenuOpen(false)
   }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (newsDropdownRef.current && !newsDropdownRef.current.contains(event.target as Node)) {
+        setNewsDropdownOpen(false)
+      }
+      if (mediaDropdownRef.current && !mediaDropdownRef.current.contains(event.target as Node)) {
+        setMediaDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <>
@@ -102,16 +123,41 @@ export default function Header() {
             {/* HOME */}
             <li><Link href="/" onClick={closeMenu}>Home</Link></li>
 
-            {/* MEDIA SECTIONS */}
-            <li><Link href="/photos" onClick={closeMenu}>Photos</Link></li>
-            <li><Link href="/videos" onClick={closeMenu}>Videos</Link></li>
-            <li><Link href="/podcasts" onClick={closeMenu}>Podcasts</Link></li>
+            {/* News Dropdown */}
+            <li className="nav-dropdown" ref={newsDropdownRef}>
+              <button
+                className="nav-dropdown-toggle"
+                onClick={() => setNewsDropdownOpen(!newsDropdownOpen)}
+                aria-expanded={newsDropdownOpen}
+                aria-haspopup="true"
+              >
+                News <span className="dropdown-arrow">{newsDropdownOpen ? '▲' : '▼'}</span>
+              </button>
+              <ul className={`nav-dropdown-menu ${newsDropdownOpen ? 'open' : ''}`}>
+                <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li>
+                <li><Link href="/india" onClick={closeMenu}>India</Link></li>
+                <li><Link href="/world" onClick={closeMenu}>World</Link></li>
+              </ul>
+            </li>
 
-            {/* Dynamic categories from Sanity */}
-            {/* Note: In production, fetch these from your CMS */}
-            <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li>
-            <li><Link href="/india" onClick={closeMenu}>India</Link></li>
-            <li><Link href="/world" onClick={closeMenu}>World</Link></li>
+            {/* Media Dropdown */}
+            <li className="nav-dropdown" ref={mediaDropdownRef}>
+              <button
+                className="nav-dropdown-toggle"
+                onClick={() => setMediaDropdownOpen(!mediaDropdownOpen)}
+                aria-expanded={mediaDropdownOpen}
+                aria-haspopup="true"
+              >
+                Media <span className="dropdown-arrow">{mediaDropdownOpen ? '▲' : '▼'}</span>
+              </button>
+              <ul className={`nav-dropdown-menu ${mediaDropdownOpen ? 'open' : ''}`}>
+                <li><Link href="/photos" onClick={closeMenu}>Photos</Link></li>
+                <li><Link href="/videos" onClick={closeMenu}>Videos</Link></li>
+                <li><Link href="/podcasts" onClick={closeMenu}>Podcasts</Link></li>
+              </ul>
+            </li>
+
+            {/* Other Categories */}
             <li><Link href="/business" onClick={closeMenu}>Business</Link></li>
             <li><Link href="/technology" onClick={closeMenu}>Technology</Link></li>
             <li><Link href="/sports" onClick={closeMenu}>Sports</Link></li>
