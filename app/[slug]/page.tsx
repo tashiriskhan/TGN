@@ -16,7 +16,10 @@ const RESERVED_ROUTES = [
   'contact',
   'privacy',
   'terms',
-  'sanity'
+  'sanity',
+  'photos',
+  'videos',
+  'podcasts'
 ]
 
 export default async function CategoryPage({ params, searchParams }: any) {

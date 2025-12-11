@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Sanity Schema</title>
+</head>
+<body>
+    <h1>Sanity Schema Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Try to fetch from Sanity
+        fetch('https://bkexk006.api.sanity.io/v2022-06-30/data/production', {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        })
+        .catch(err => {
+            document.getElementById('result').innerHTML = '<p style="color: red;">Error: ' + err.message + '</p>';
+        });
+    </script>
+</body>
+</html>

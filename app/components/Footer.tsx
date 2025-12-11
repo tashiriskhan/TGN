@@ -32,7 +32,15 @@ export default async function Footer() {
           <Link href="/terms" className="footer-link">Terms & Conditions</Link>
         </div>
 
-        {/* COLUMN 3 — CATEGORIES (Dynamic from Sanity) */}
+        {/* COLUMN 3 — MEDIA */}
+        <div className="footer-col">
+          <h4>Media</h4>
+          <Link href="/photos" className="footer-link">Photos</Link>
+          <Link href="/videos" className="footer-link">Videos</Link>
+          <Link href="/podcasts" className="footer-link">Podcasts</Link>
+        </div>
+
+        {/* COLUMN 4 — CATEGORIES (Dynamic from Sanity) */}
         <div className="footer-col">
           <h4>Categories</h4>
           {categories.map((cat: any) => (

@@ -102,6 +102,11 @@ export default function Header() {
             {/* HOME */}
             <li><Link href="/" onClick={closeMenu}>Home</Link></li>
 
+            {/* MEDIA SECTIONS */}
+            <li><Link href="/photos" onClick={closeMenu}>Photos</Link></li>
+            <li><Link href="/videos" onClick={closeMenu}>Videos</Link></li>
+            <li><Link href="/podcasts" onClick={closeMenu}>Podcasts</Link></li>
+
             {/* Dynamic categories from Sanity */}
             {/* Note: In production, fetch these from your CMS */}
             <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li>

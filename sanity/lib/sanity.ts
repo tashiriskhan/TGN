@@ -5,7 +5,7 @@ import { getFooterCategories } from "@/sanity/lib/getFooterCategories"
 export const client = createClient({
   projectId: "bkexk006",
   dataset: "production",
-  apiVersion: "2023-01-01",
+  apiVersion: "2022-06-30",
   useCdn: true,
 })
  

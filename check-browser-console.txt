@@ -1,0 +1,29 @@
+INSTRUCTIONS TO CHECK BROWSER CONSOLE:
+
+1. Open Sanity Studio: http://localhost:3000/sanity
+2. Press F12 to open Developer Tools
+3. Go to the CONSOLE tab
+4. Look for these types of messages:
+
+ERRORS TO LOOK FOR:
+- "Failed to load schema"
+- "Cannot find module"
+- "Unexpected token"
+- "photoStory is not defined"
+- "videoStory is not defined"
+- "podcast is not defined"
+
+SUCCESS MESSAGES:
+- "Schema loaded with 7 types"
+- "Photo Stories" in the sidebar
+- "Video Stories" in the sidebar
+- "Podcasts" in the sidebar
+
+WHAT TO COPY:
+If you see any RED errors, copy them here.
+If you see the schemas in the sidebar, SUCCESS!
+
+WEB SOCKET ERROR:
+The wss://... error is NOT the problem.
+It's just a real-time connection issue.
+The schemas should still load despite this error.
