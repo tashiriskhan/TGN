@@ -12,8 +12,8 @@ export default function Header() {
   const [newsDropdownOpen, setNewsDropdownOpen] = useState(false)
   const [mediaDropdownOpen, setMediaDropdownOpen] = useState(false)
   const { theme } = useTheme()
-  const newsDropdownRef = useRef<HTMLDivElement>(null)
-  const mediaDropdownRef = useRef<HTMLDivElement>(null)
+  const newsDropdownRef = useRef<HTMLLIElement>(null)
+  const mediaDropdownRef = useRef<HTMLLIElement>(null)
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
