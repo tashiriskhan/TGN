@@ -25,7 +25,8 @@
       "Bash(taskkill:*)",
       "Bash(tasklist)",
       "Bash(wmic:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(git diff:*)"
     ],
     "deny": [],
     "ask": []
