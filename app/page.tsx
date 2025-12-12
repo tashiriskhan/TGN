@@ -15,6 +15,19 @@ import { getAllSpecial } from "@/sanity/lib/getAllSpecial";
 import { urlFor } from "@/sanity/lib/image";
 import { timeAgo } from "@/sanity/lib/timeAgo";
 
+// Helper function to truncate text by word boundary
+function truncateText(text: string, maxLength: number): string {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+
+  const truncated = text.slice(0, maxLength);
+  const lastSpaceIndex = truncated.lastIndexOf(' ');
+
+  return lastSpaceIndex > 0
+    ? truncated.slice(0, lastSpaceIndex) + '...'
+    : truncated + '...';
+}
+
 export default async function HomePage() {
   // Fetch all data in parallel → faster
   const [
@@ -61,11 +74,13 @@ export default async function HomePage() {
                   <h1>{hero.title}</h1>
                   {hero.content && (
                     <p className="summary">
-                      {hero.content.slice(0, 120)}...
+                      {truncateText(hero.content, 150)}
                     </p>
                   )}
                   <p className="meta">
-                    {timeAgo(hero.publishedAt)} • {hero.author?.name}
+                    <span className="meta-time">{timeAgo(hero.publishedAt)}</span>
+                    <span className="meta-separator">•</span>
+                    <span className="meta-author">{hero.author?.name}</span>
                   </p>
                 </div>
               </Link>
@@ -89,9 +104,9 @@ export default async function HomePage() {
                     </div>
                   )}
                   <div className="trending-content">
-                    <h3>{post.title}</h3>
+                    <h3>{truncateText(post.title, 80)}</h3>
                     {post.subtitle && (
-                      <p className="summary">{post.subtitle}</p>
+                      <p className="summary">{truncateText(post.subtitle, 100)}</p>
                     )}
                   </div>
                 </Link>
@@ -127,20 +142,24 @@ export default async function HomePage() {
               <article key={post.slug} className="bbc-card">
                 <Link href={`/story/${post.slug}`}>
                   {post.image && (
-                    <Image
-                      className="bbc-card-img"
-                      src={urlFor(post.image).width(400).height(300).url()}
-                      alt={post.title}
-                      width={400}
-                      height={300}
-                    />
+                    <div className="card-image-wrapper">
+                      <Image
+                        className="bbc-card-img"
+                        src={urlFor(post.image).width(400).height(300).url()}
+                        alt={post.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
                   )}
                   <div className="bbc-card-content">
-                    <h4>{post.title}</h4>
+                    <h4 className="card-title">{truncateText(post.title, 70)}</h4>
                     {post.subtitle && (
-                      <p className="summary">{post.subtitle}</p>
+                      <p className="summary">{truncateText(post.subtitle, 90)}</p>
                     )}
-                    <p className="meta">{timeAgo(post.publishedAt)}</p>
+                    <p className="meta">
+                      <span className="meta-time">{timeAgo(post.publishedAt)}</span>
+                    </p>
                   </div>
                 </Link>
               </article>
@@ -156,15 +175,17 @@ export default async function HomePage() {
             {specialList?.map((post: any) => (
               <article key={post.slug} className="special-card-2">
                 <Link href={`/story/${post.slug}`}>
-                  <Image
-                    src={urlFor(post.image).width(600).height(338).url()}
-                    alt={post.title}
-                    width={600}
-                    height={338}
-                  />
+                  <div className="special-image-wrapper">
+                    <Image
+                      src={urlFor(post.image).width(600).height(338).url()}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  </div>
                   <div className="special-card-2-content">
                     <span className="special-tag">{post.specialTag || "SPECIAL"}</span>
-                    <h3>{post.title}</h3>
+                    <h3 className="special-card-title">{truncateText(post.title, 65)}</h3>
                   </div>
                 </Link>
               </article>
@@ -181,17 +202,19 @@ export default async function HomePage() {
               <article key={post.slug} className="op-item-row">
                 <Link href={`/story/${post.slug}`}>
                   {post.image && (
-                    <Image
-                      src={urlFor(post.image).width(80).height(80).url()}
-                      alt={post.title}
-                      width={80}
-                      height={80}
-                    />
+                    <div className="op-image-wrapper">
+                      <Image
+                        src={urlFor(post.image).width(100).height(100).url()}
+                        alt={post.title}
+                        width={100}
+                        height={100}
+                      />
+                    </div>
                   )}
                   <div className="op-item-content">
-                    <h4>{post.title}</h4>
+                    <h4 className="op-item-title">{truncateText(post.title, 75)}</h4>
                     {post.subtitle && (
-                      <p className="summary">{post.subtitle}</p>
+                      <p className="summary">{truncateText(post.subtitle, 85)}</p>
                     )}
                   </div>
                 </Link>
