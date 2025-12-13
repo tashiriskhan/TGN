@@ -2,11 +2,11 @@ import { client } from "./sanity"
 
 export async function getSpecial() {
   return client.fetch(`
-    *[_type == "post" && isSpecial == true][0]{
+    *[_type == "post" && isSpecial == true] | order(publishedAt desc)[0]{
       title,
       subtitle,
       specialTag,
-      image,
+      mainImage,
       publishedAt,
       "slug": slug.current,
 

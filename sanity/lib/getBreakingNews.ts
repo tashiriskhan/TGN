@@ -5,7 +5,7 @@ export async function getBreakingNews() {
     *[_type == "post" && isBreaking == true] | order(publishedAt desc) {
       title,
       "slug": slug.current,
-      image,
+      mainImage,
       publishedAt,
 
       author->{ name, "slug": slug.current }

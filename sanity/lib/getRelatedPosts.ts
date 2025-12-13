@@ -21,7 +21,7 @@ export async function getRelatedPosts(currentSlug: string, categorySlug?: string
   query += ` | order(publishedAt desc) [0...4] {
     title,
     "slug": slug.current,
-    image,
+    mainImage,
     publishedAt,
     subtitle,
 

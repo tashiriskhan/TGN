@@ -3,6 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import RightSidebar from "@/app/components/RightSidebar"
 
 const PAGE_SIZE = 10
 
@@ -41,50 +42,58 @@ export default async function TagPage({ params, searchParams }: any) {
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
   return (
-    <main className="container tag-container">
-      <h1 className="tag-title">#{tag?.title || slug}</h1>
+    <main className="main-content-with-sidebar">
+      <div className="container">
+        {/* LEFT: MAIN CONTENT */}
+        <div className="main-content">
+          <h1 className="tag-title">#{tag?.title || slug}</h1>
 
-      {/* BBC-STYLE GRID */}
-      <div className="category-grid">
-        {posts.map((post: any) => (
-          <article key={post.slug} className="category-card">
-            <Link href={`/story/${post.slug}`} className="cat-link">
+          {/* BBC-STYLE GRID */}
+          <div className="category-grid">
+            {posts.map((post: any) => (
+              <article key={post.slug} className="category-card">
+                <Link href={`/story/${post.slug}`} className="cat-link">
 
-              {post.image && (
-                <Image
-                  src={urlFor(post.image).width(600).height(400).url()}
-                  className="cat-img"
-                  alt={post.title}
-                  width={600}
-                  height={400}
-                />
-              )}
+                  {post.image && (
+                    <Image
+                      src={urlFor(post.image).width(600).height(400).url()}
+                      className="cat-img"
+                      alt={post.title}
+                      width={600}
+                      height={400}
+                    />
+                  )}
 
-              <h3>{post.title}</h3>
+                  <h3>{post.title}</h3>
 
-              {post.subtitle && (
-                <p className="muted">{post.subtitle}</p>
-              )}
+                  {post.subtitle && (
+                    <p className="muted">{post.subtitle}</p>
+                  )}
 
-              <p className="time-tag">{timeAgo(post.publishedAt)}</p>
-            </Link>
-          </article>
-        ))}
-      </div>
+                  <p className="time-tag">{timeAgo(post.publishedAt)}</p>
+                </Link>
+              </article>
+            ))}
+          </div>
 
-      {/* PAGINATION */}
-      <div className="pagination-box">
-        {page > 1 && (
-          <Link href={`/tag/${slug}?page=${page - 1}`} className="pagination-btn">
-            ⬅ Previous
-          </Link>
-        )}
+          {/* PAGINATION */}
+          <div className="pagination-box">
+            {page > 1 && (
+              <Link href={`/tag/${slug}?page=${page - 1}`} className="pagination-btn">
+                ⬅ Previous
+              </Link>
+            )}
 
-        {page < totalPages && (
-          <Link href={`/tag/${slug}?page=${page + 1}`} className="pagination-btn">
-            Next ➜
-          </Link>
-        )}
+            {page < totalPages && (
+              <Link href={`/tag/${slug}?page=${page + 1}`} className="pagination-btn">
+                Next ➜
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT: UNIFIED SIDEBAR */}
+        <RightSidebar />
       </div>
     </main>
   )

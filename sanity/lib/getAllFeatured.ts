@@ -2,10 +2,10 @@ import { client } from "./sanity"
 
 export async function getAllFeatured() {
   return client.fetch(`
-    *[_type == "post" && isFeatured == true]{
+    *[_type == "post" && isFeatured == true] | order(publishedAt desc){
       title,
       "slug": slug.current,
-      image,
+      mainImage,
       author->{ name, "slug": slug.current, image },
       category->{ title, "slug": slug.current },
       tags[]->{ title, "slug": slug.current }
