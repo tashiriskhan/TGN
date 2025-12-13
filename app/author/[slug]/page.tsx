@@ -1,3 +1,6 @@
+// Always fetch fresh data from Sanity
+export const dynamic = "force-dynamic";
+
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
@@ -35,7 +38,7 @@ export default async function AuthorPage({ params, searchParams }: any) {
         title,
         subtitle,
         publishedAt,
-        image,
+        mainImage,
         "slug": slug.current
       }`,
     { slug, start, end }
@@ -94,9 +97,9 @@ export default async function AuthorPage({ params, searchParams }: any) {
             {posts.map((post: any) => (
               <article key={post.slug} className="author-post-card">
                 <Link href={`/story/${post.slug}`} className="author-post-link">
-                  {post.image && (
+                  {post.mainImage && (
                     <Image
-                      src={urlFor(post.image).width(500).height(350).url()}
+                      src={urlFor(post.mainImage).width(500).height(350).url()}
                       alt={post.title}
                       className="author-post-image"
                       width={500}

@@ -1,3 +1,6 @@
+// Always fetch fresh data from Sanity
+export const dynamic = "force-dynamic";
+
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"

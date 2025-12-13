@@ -1,3 +1,6 @@
+// Always fetch fresh data from Sanity
+export const dynamic = "force-dynamic";
+
 import { client } from "@/sanity/lib/sanity"
 import Link from "next/link"
 import Image from "next/image"
@@ -24,17 +27,17 @@ export default async function SearchPage({ searchParams }: any) {
     )
   }
 
-  // Search in title + subtitle + content
+  // Search in title + subtitle + body
   const results = await client.fetch(
     `*[_type == "post" && (
         title match $q ||
         subtitle match $q ||
-        content match $q
-      )] 
+        pt::text(body) match $q
+      )]
       | order(publishedAt desc) {
         title,
         subtitle,
-        image,
+        mainImage,
         publishedAt,
         "slug": slug.current
       }
@@ -56,9 +59,9 @@ export default async function SearchPage({ searchParams }: any) {
             {results.map((post: any) => (
               <article key={post.slug} className="search-result-card">
                 <Link href={`/story/${post.slug}`} className="search-result-link">
-                  {post.image && (
+                  {post.mainImage && (
                     <Image
-                      src={urlFor(post.image).width(500).height(350).url()}
+                      src={urlFor(post.mainImage).width(500).height(350).url()}
                       alt={post.title}
                       className="search-result-image"
                       width={500}

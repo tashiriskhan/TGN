@@ -1,3 +1,6 @@
+// Always fetch fresh data from Sanity
+export const dynamic = "force-dynamic";
+
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
@@ -57,7 +60,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
       | order(publishedAt desc)[$start...$end] {
         title,
         subtitle,
-        image,
+        mainImage,
         publishedAt,
         "slug": slug.current
       }`,
@@ -115,9 +118,9 @@ export default async function CategoryPage({ params, searchParams }: any) {
                   <Link href={`/story/${post.slug}`} className="cat-link">
 
                     <div className="category-image-wrapper">
-                      {post.image && (
+                      {post.mainImage && (
                         <Image
-                          src={urlFor(post.image).width(600).height(400).url()}
+                          src={urlFor(post.mainImage).width(600).height(400).url()}
                           alt={post.title}
                           fill
                           className="cat-img"

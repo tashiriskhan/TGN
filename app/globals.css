@@ -1168,6 +1168,13 @@ a:hover {
   margin: 0;
 }
 
+@media (max-width: 640px) {
+  .article-excerpt {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
 /* Article Meta Row */
 .article-meta-row {
   display: flex;
