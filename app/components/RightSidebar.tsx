@@ -4,7 +4,11 @@ import { getTrending } from "@/sanity/lib/getTrending";
 import { timeAgo } from "@/sanity/lib/timeAgo";
 import { truncateText } from "./utils";
 
-export default async function RightSidebar() {
+interface RightSidebarProps {
+  hideMostRead?: boolean;
+}
+
+export default async function RightSidebar({ hideMostRead = false }: RightSidebarProps) {
   const [breaking, trending] = await Promise.all([
     getBreakingNews(),
     getTrending()
@@ -31,19 +35,22 @@ export default async function RightSidebar() {
         </div>
       </div>
 
-      <div className="global-sidebar-widget">
-        <h3>Most Read</h3>
-        <div className="most-read-list-compact">
-          {trending?.slice(0, 5).map((post: any, index: number) => (
-            <div key={post.slug} className="most-read-item-compact">
-              <Link href={`/story/${post.slug}`}>
-                <span className="most-read-rank">{index + 1}</span>
-                <span className="most-read-title">{truncateText(post.title, 50)}</span>
-              </Link>
-            </div>
-          ))}
+      {/* Only show Most Read when not hidden */}
+      {!hideMostRead && (
+        <div className="global-sidebar-widget">
+          <h3>Most Read</h3>
+          <div className="most-read-list-compact">
+            {trending?.slice(0, 5).map((post: any, index: number) => (
+              <div key={post.slug} className="most-read-item-compact">
+                <Link href={`/story/${post.slug}`}>
+                  <span className="most-read-rank">{index + 1}</span>
+                  <span className="most-read-title">{truncateText(post.title, 50)}</span>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="global-sidebar-widget">
         <h3>Newsletter</h3>
@@ -60,14 +67,6 @@ export default async function RightSidebar() {
         </form>
       </div>
 
-      <div className="global-sidebar-widget social-widget-compact">
-        <h3>Follow Us</h3>
-        <div className="social-links-compact">
-          <a href="#" className="social-link-compact">Twitter</a>
-          <a href="#" className="social-link-compact">Facebook</a>
-          <a href="#" className="social-link-compact">Instagram</a>
-        </div>
-      </div>
     </aside>
   );
 }

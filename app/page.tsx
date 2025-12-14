@@ -139,7 +139,7 @@ export default async function HomePage() {
             </div>
 
             {/* RIGHT: SIDEBAR */}
-            <RightSidebar />
+            <RightSidebar hideMostRead={true} />
           </div>
         </div>
       </section>
