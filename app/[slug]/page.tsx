@@ -7,6 +7,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import RightSidebar from "@/app/components/RightSidebar"
+import Breadcrumb from "@/app/components/Breadcrumb"
 
 const PAGE_SIZE = 10
 
@@ -56,7 +57,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
 
   // Fetch posts inside this category
   const posts = await client.fetch(
-    `*[_type == "post" && category->slug.current == $slug]
+    `*[_type == "post" && $slug in categories[]->slug.current]
       | order(publishedAt desc)[$start...$end] {
         title,
         subtitle,
@@ -68,7 +69,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   )
 
   const totalPosts = await client.fetch(
-    `count(*[_type == "post" && category->slug.current == $slug])`,
+    `count(*[_type == "post" && $slug in categories[]->slug.current])`,
     { slug }
   )
 
@@ -79,6 +80,14 @@ export default async function CategoryPage({ params, searchParams }: any) {
       <div className="container">
         {/* LEFT: MAIN CONTENT */}
         <div className="main-content">
+          {/* BREADCRUMB */}
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: category?.title || slug }
+            ]}
+          />
+
           <header className="category-header">
             <h1 className="category-title">{category?.title || slug}</h1>
             {category?.description && (

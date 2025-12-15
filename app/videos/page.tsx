@@ -3,19 +3,47 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link"
 import Image from "next/image"
-import { getAllVideoStories } from "@/sanity/lib/getAllVideoStories"
+import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
+import Pagination from "@/app/components/Pagination"
 
-export default async function VideosPage() {
-  const videoStories = await getAllVideoStories()
+const PAGE_SIZE = 12
+
+export default async function VideosPage({ searchParams }: any) {
+  const s = await searchParams
+  const page = Number(s.page) || 1
+  const start = (page - 1) * PAGE_SIZE
+  const end = start + PAGE_SIZE
+
+  const videoStories = await client.fetch(
+    `*[_type == "videoStory"]
+      | order(publishedAt desc)[$start...$end] {
+        title,
+        description,
+        thumbnail,
+        publishedAt,
+        "slug": slug.current,
+        author->{ name }
+      }`,
+    { start, end }
+  )
+
+  const totalVideos = await client.fetch(
+    `count(*[_type == "videoStory"])`
+  )
+
+  const totalPages = Math.ceil(totalVideos / PAGE_SIZE)
 
   return (
     <main className="main-content-with-sidebar">
       <div className="container">
         <div className="main-content">
           <h1 style={{ marginBottom: "30px" }}>Video Stories</h1>
+          <p className="category-count" style={{ marginBottom: "20px" }}>
+            {totalVideos} {totalVideos === 1 ? 'video' : 'videos'}
+          </p>
 
           <div className="bbc-3col-grid">
             {videoStories?.map((story: any) => (
@@ -72,6 +100,8 @@ export default async function VideosPage() {
               No video stories available yet.
             </p>
           )}
+
+          <Pagination currentPage={page} totalPages={totalPages} basePath="videos" />
         </div>
         <RightSidebar />
       </div>

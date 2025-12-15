@@ -7,6 +7,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
+import Breadcrumb from "@/app/components/Breadcrumb"
+import Pagination from "@/app/components/Pagination"
 
 const PAGE_SIZE = 10
 
@@ -59,6 +61,14 @@ export default async function AuthorPage({ params, searchParams }: any) {
       <div className="container">
         {/* LEFT: MAIN CONTENT */}
         <div className="main-content">
+          {/* BREADCRUMB */}
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: author.name }
+            ]}
+          />
+
           {/* Author Header */}
           <section className="author-header">
             {author.image && (
@@ -90,47 +100,64 @@ export default async function AuthorPage({ params, searchParams }: any) {
             </div>
           </section>
 
-          <h2 className="author-articles-title">Articles by {author.name}</h2>
+          <header className="category-header">
+            <h2 className="category-title">Articles by {author.name}</h2>
+            <p className="category-count">
+              {totalPosts} {totalPosts === 1 ? 'article' : 'articles'}
+            </p>
+          </header>
 
           {/* Author Articles */}
-          <div className="author-posts-grid">
-            {posts.map((post: any) => (
-              <article key={post.slug} className="author-post-card">
-                <Link href={`/story/${post.slug}`} className="author-post-link">
-                  {post.mainImage && (
-                    <Image
-                      src={urlFor(post.mainImage).width(500).height(350).url()}
-                      alt={post.title}
-                      className="author-post-image"
-                      width={500}
-                      height={350}
-                    />
-                  )}
+          <section className="category-grid">
+            {posts?.length === 0 && (
+              <p className="no-stories">No articles found by this author.</p>
+            )}
 
-                  <h3 className="author-post-title">{post.title}</h3>
-                  <p className="author-post-date">{timeAgo(post.publishedAt)}</p>
-                </Link>
-              </article>
-            ))}
-          </div>
+            <div className="category-grid-container">
+              {posts.map((post: any) => (
+                <article key={post.slug} className="category-card">
+                  <Link href={`/story/${post.slug}`} className="cat-link">
+
+                    <div className="category-image-wrapper">
+                      {post.mainImage && (
+                        <Image
+                          src={urlFor(post.mainImage).width(600).height(400).url()}
+                          alt={post.title}
+                          fill
+                          className="cat-img"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      )}
+                    </div>
+
+                    <div className="category-card-content">
+                      <h3 className="category-card-title">{post.title}</h3>
+
+                      {post.subtitle && (
+                        <p className="category-card-summary">{post.subtitle}</p>
+                      )}
+
+                      <span className="category-card-date">
+                        {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </section>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="pagination-box">
-              {page > 1 && (
-                <Link href={`/author/${slug}?page=${page - 1}`} className="pagination-btn">
-                  ⬅ Previous
-                </Link>
-              )}
-              <span className="pagination-info">
-                Page {page} of {totalPages}
-              </span>
-              {page < totalPages && (
-                <Link href={`/author/${slug}?page=${page + 1}`} className="pagination-btn">
-                  Next ➜
-                </Link>
-              )}
-            </div>
+          {totalPosts > 0 && (
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              basePath={`author/${slug}`}
+            />
           )}
         </div>
 

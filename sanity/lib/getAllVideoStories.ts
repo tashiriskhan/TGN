@@ -11,7 +11,7 @@ export async function getAllVideoStories() {
       publishedAt,
 
       author->{ name, "slug": slug.current },
-      category->{ title, "slug": slug.current },
+      categories[]->{ title, "slug": slug.current },
       tags[]->{ title, "slug": slug.current }
     }
   `)

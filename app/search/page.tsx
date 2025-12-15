@@ -7,11 +7,15 @@ import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
+import Pagination from "@/app/components/Pagination"
+
+const PAGE_SIZE = 12
 
 export default async function SearchPage({ searchParams }: any) {
   // Next.js 16 FIX
   const s = await searchParams
   const query = s.q || ""
+  const page = Number(s.page) || 1
 
   if (!query || query.trim().length < 1) {
     return (
@@ -28,13 +32,16 @@ export default async function SearchPage({ searchParams }: any) {
   }
 
   // Search in title + subtitle + body
+  const start = (page - 1) * PAGE_SIZE
+  const end = start + PAGE_SIZE
+
   const results = await client.fetch(
     `*[_type == "post" && (
         title match $q ||
         subtitle match $q ||
         pt::text(body) match $q
       )]
-      | order(publishedAt desc) {
+      | order(publishedAt desc)[$start...$end] {
         title,
         subtitle,
         mainImage,
@@ -42,14 +49,28 @@ export default async function SearchPage({ searchParams }: any) {
         "slug": slug.current
       }
     `,
-    { q: `${query}*` } // partial match
+    { q: `${query}*`, start, end } // partial match with pagination
   )
+
+  const totalResults = await client.fetch(
+    `count(*[_type == "post" && (
+        title match $q ||
+        subtitle match $q ||
+        pt::text(body) match $q
+      )])`,
+    { q: `${query}*` }
+  )
+
+  const totalPages = Math.ceil(totalResults / PAGE_SIZE)
 
   return (
     <main className="main-content-with-sidebar">
       <div className="container">
         <div className="main-content">
           <h1 className="search-results-title">Search results for: "{query}"</h1>
+          <p className="category-count" style={{ marginBottom: "20px" }}>
+            {totalResults} {totalResults === 1 ? 'result' : 'results'}
+          </p>
 
           {results.length === 0 && (
             <p className="no-results">No results found.</p>
@@ -75,6 +96,15 @@ export default async function SearchPage({ searchParams }: any) {
               </article>
             ))}
           </div>
+
+          {totalResults > 0 && (
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              basePath="search"
+              queryParams={{ q: query }}
+            />
+          )}
         </div>
         <RightSidebar />
       </div>

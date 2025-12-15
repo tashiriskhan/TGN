@@ -11,7 +11,7 @@ export async function getRelatedPosts(currentSlug: string, categorySlug?: string
   `
 
   if (categorySlug) {
-    query += ` && category->slug.current == $categorySlug`
+    query += ` && categories[]->slug.current == $categorySlug`
   }
 
   if (tagSlugs && tagSlugs.length > 0) {
@@ -29,7 +29,7 @@ export async function getRelatedPosts(currentSlug: string, categorySlug?: string
       name,
       "slug": slug.current
     },
-    category->{
+    categories[]->{
       title,
       "slug": slug.current
     }

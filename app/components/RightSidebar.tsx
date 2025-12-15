@@ -3,6 +3,7 @@ import { getBreakingNews } from "@/sanity/lib/getBreakingNews";
 import { getTrending } from "@/sanity/lib/getTrending";
 import { timeAgo } from "@/sanity/lib/timeAgo";
 import { truncateText } from "./utils";
+import NewsletterForm from "./NewsletterForm";
 
 interface RightSidebarProps {
   hideMostRead?: boolean;
@@ -55,16 +56,7 @@ export default async function RightSidebar({ hideMostRead = false }: RightSideba
       <div className="global-sidebar-widget">
         <h3>Newsletter</h3>
         <p>Get the latest news in your inbox</p>
-        <form className="newsletter-form-compact" action="/api/newsletter" method="POST">
-          <input
-            type="email"
-            name="email"
-            placeholder="Your email"
-            className="newsletter-input-compact"
-            required
-          />
-          <button type="submit" className="newsletter-submit-compact">Subscribe</button>
-        </form>
+        <NewsletterForm />
       </div>
 
     </aside>

@@ -318,7 +318,7 @@ a:hover {
 }
 
 /* Mobile responsiveness */
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .header-date {
     font-size: 10px;
   }
@@ -1176,6 +1176,10 @@ a:hover {
   margin-bottom: var(--space-lg);
 }
 
+.breadcrumb {
+  margin-bottom: var(--space-lg);
+}
+
 .breadcrumb-list {
   display: flex;
   align-items: center;
@@ -1183,21 +1187,45 @@ a:hover {
   gap: var(--space-xs);
   flex-wrap: wrap;
   font-size: var(--font-size-sm);
+  padding: 0;
+  margin: 0;
 }
 
-.breadcrumb-item a {
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link,
+.breadcrumb-current {
   color: var(--color-text-muted);
   transition: color 0.2s ease;
 }
 
-.breadcrumb-item a:hover {
+.breadcrumb-link:hover {
   color: var(--color-primary);
   text-decoration: none;
+}
+
+.breadcrumb-current.breadcrumb-active {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.breadcrumb-home {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.breadcrumb-icon {
+  font-size: var(--font-size-base);
 }
 
 .breadcrumb-separator {
   color: var(--color-text-light);
   font-size: var(--font-size-xs);
+  margin: 0 var(--space-xs);
 }
 
 /* Article Excerpt */
@@ -2661,14 +2689,24 @@ a:hover {
   }
 }
 
-/* ========== RESPONSIVE - SMALL DESKTOP (1000px+) ========== */
-@media (min-width: 1000px) {
+/* ========== RESPONSIVE - DESKTOP (1024px+) ========== */
+@media (min-width: 1024px) {
   :root {
     --container-padding: 2rem;
   }
 
+  /* Show bbc-header on desktop */
+  .bbc-header {
+    display: block;
+  }
+
   /* Show nav list and hide toggle on desktop */
   .mobile-menu-toggle {
+    display: none;
+  }
+
+  /* Hide mobile-only elements on desktop */
+  .mobile-menu-close {
     display: none;
   }
 
@@ -2857,10 +2895,7 @@ a:hover {
   }
 
   /* Keep social icons same as desktop - no customizations */
-}
 
-/* ========== RESPONSIVE - DESKTOP (1024px+) ========== */
-@media (min-width: 1024px) {
   /* Featured: Make it smaller like BBC */
   .bbc-hero-img {
     height: 260px;
@@ -4248,7 +4283,7 @@ a:hover {
   letter-spacing: 0.5px;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE - MAX WIDTH 1024px ========== */
 @media (max-width: 1024px) {
   .top-grid-with-sidebar {
     grid-template-columns: 1fr;  /* Stack sidebar below on tablet */
@@ -4258,34 +4293,6 @@ a:hover {
   .top-grid {
     grid-template-columns: 1fr;  /* Stack trending above feature on tablet */
     gap: var(--space-xl);
-  }
-
-  /* For screens 640px and above, keep 3-column grid layout */
-  @media (min-width: 640px) {
-    .top-grid-3col {
-      display: grid;
-      grid-template-columns: 1fr 2fr 280px;
-      gap: var(--space-xl);
-      align-items: start;
-      position: relative;
-      padding-right: 0;
-    }
-
-    .top-grid-3col .global-right-sidebar {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 280px;
-      order: 0;
-    }
-
-    .top-grid-3col .top-grid-center {
-      order: 0;
-    }
-
-    .top-grid-3col .top-grid-left {
-      order: 0;
-    }
   }
 
   /* For screens below 640px, use stacked flex layout */
@@ -5905,6 +5912,25 @@ a:hover {
 
 .newsletter-submit-compact:hover {
   background: var(--color-primary-dark);
+}
+
+/* Newsletter Message Status */
+.newsletter-message {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--space-xs);
+  border-radius: 4px;
+}
+
+.newsletter-success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.newsletter-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
 }
 
 /* Most Read Widget */

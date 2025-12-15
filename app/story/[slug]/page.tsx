@@ -11,6 +11,7 @@ import { timeAgo } from "@/sanity/lib/timeAgo"
 import { calculateReadingTime } from "@/sanity/lib/readingTime"
 import SocialShare from "@/app/components/SocialShare"
 import RightSidebar from "@/app/components/RightSidebar"
+import Breadcrumb from "@/app/components/Breadcrumb"
 import { PortableText } from "@portabletext/react"
 
 // Helper function to truncate text
@@ -18,25 +19,6 @@ function truncateText(text: string, maxLength: number): string {
   if (!text) return "";
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + '...';
-}
-
-// Breadcrumb component
-function Breadcrumb({ category }: { category?: any }) {
-  if (!category) return null;
-
-  return (
-    <nav className="article-breadcrumb" aria-label="Breadcrumb">
-      <ol className="breadcrumb-list">
-        <li className="breadcrumb-item">
-          <Link href="/">Home</Link>
-        </li>
-        <li className="breadcrumb-separator">›</li>
-        <li className="breadcrumb-item">
-          <Link href={`/category/${category.slug}`}>{category.title}</Link>
-        </li>
-      </ol>
-    </nav>
-  );
 }
 
 export async function generateMetadata({ params }: any) {
@@ -53,10 +35,10 @@ export async function generateMetadata({ params }: any) {
          name,
          image
        },
-       category->{
+       categories[]->{
          title,
          "slug": slug.current
-       }
+       }[0]
      }`,
     { slug }
   )
@@ -113,7 +95,7 @@ export default async function StoryPage({ params }: any) {
       image
     },
       mainImage,
-      category->{ title, "slug": slug.current },
+      categories[]->{ title, "slug": slug.current }[0],
       tags[]->{ title, "slug": slug.current }
     }`,
     { slug }
@@ -124,7 +106,7 @@ export default async function StoryPage({ params }: any) {
   // Get related posts based on category and tags
   const relatedPosts = await getRelatedPosts(
     slug,
-    post?.category?.slug,
+    post?.categories?.slug,
     post?.tags?.map((tag: any) => tag.slug) || []
   )
 
@@ -167,7 +149,7 @@ export default async function StoryPage({ params }: any) {
       "@type": "WebPage",
       "@id": url,
     },
-    "articleSection": post.category?.title,
+    "articleSection": post.categories?.title,
     "keywords": post.tags?.map((tag: any) => tag.title).join(", "),
   }
 
@@ -183,7 +165,14 @@ export default async function StoryPage({ params }: any) {
 
         <article className="article-container">
           {/* BREADCRUMB */}
-          <Breadcrumb category={post.category} />
+          {post.categories && (
+            <Breadcrumb
+              items={[
+                { label: 'Home', href: '/' },
+                { label: post.categories.title, href: `/${post.categories.slug}` }
+              ]}
+            />
+          )}
 
           {/* HEADLINE */}
           <h1 className="bbc-headline">{post.title}</h1>
@@ -212,8 +201,8 @@ export default async function StoryPage({ params }: any) {
                 <span className="meta-date">{timeAgo(post.publishedAt)}</span>
                 <span className="meta-separator">•</span>
                 <span className="meta-category">
-                  {post.category?.title && (
-                    <Link href={`/category/${post.category.slug}`}>{post.category.title}</Link>
+                  {post.categories?.title && (
+                    <Link href={`/${post.categories.slug}`}>{post.categories.title}</Link>
                   )}
                 </span>
               </div>
@@ -296,7 +285,7 @@ export default async function StoryPage({ params }: any) {
           {/* MORE FROM CATEGORY */}
           {relatedPosts && relatedPosts.length > 0 && (
             <section className="more-from-category">
-              <h2 className="section-heading">More from {post.category?.title}</h2>
+              <h2 className="section-heading">More from {post.categories?.title}</h2>
               <div className="more-articles-grid">
                 {relatedPosts.slice(0, 3).map((relatedPost: any) => (
                   <Link

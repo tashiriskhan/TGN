@@ -7,7 +7,7 @@ export async function getAllFeatured() {
       "slug": slug.current,
       mainImage,
       author->{ name, "slug": slug.current, image },
-      category->{ title, "slug": slug.current },
+      categories[]->{ title, "slug": slug.current },
       tags[]->{ title, "slug": slug.current }
     }
   `)

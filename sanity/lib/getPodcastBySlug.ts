@@ -12,7 +12,7 @@ export async function getPodcastBySlug(slug: string) {
       publishedAt,
 
       author->{ name, "slug": slug.current, image },
-      category->{ title, "slug": slug.current },
+      categories[]->{ title, "slug": slug.current },
       tags[]->{ title, "slug": slug.current }
     }
   `, { slug })

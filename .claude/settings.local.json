@@ -34,7 +34,8 @@
       "Bash(powershell:*)",
       "Bash(git rm:*)",
       "Bash(git reset)",
-      "Bash(NEXT_DISABLE_TURBOPACK=1 npm run:*)"
+      "Bash(NEXT_DISABLE_TURBOPACK=1 npm run:*)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

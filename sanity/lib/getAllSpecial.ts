@@ -12,7 +12,7 @@ export async function getAllSpecial() {
         "slug": slug.current,
 
         author->{ name, "slug": slug.current },
-        category->{ title, "slug": slug.current },
+        categories[]->{ title, "slug": slug.current },
         tags[]->{ title, "slug": slug.current }
       }
   `)

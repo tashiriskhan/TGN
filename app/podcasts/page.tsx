@@ -3,19 +3,48 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link"
 import Image from "next/image"
-import { getAllPodcasts } from "@/sanity/lib/getAllPodcasts"
+import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
+import Pagination from "@/app/components/Pagination"
 
-export default async function PodcastsPage() {
-  const podcasts = await getAllPodcasts()
+const PAGE_SIZE = 12
+
+export default async function PodcastsPage({ searchParams }: any) {
+  const s = await searchParams
+  const page = Number(s.page) || 1
+  const start = (page - 1) * PAGE_SIZE
+  const end = start + PAGE_SIZE
+
+  const podcasts = await client.fetch(
+    `*[_type == "podcast"]
+      | order(publishedAt desc)[$start...$end] {
+        title,
+        description,
+        duration,
+        thumbnail,
+        publishedAt,
+        "slug": slug.current,
+        author->{ name }
+      }`,
+    { start, end }
+  )
+
+  const totalPodcasts = await client.fetch(
+    `count(*[_type == "podcast"])`
+  )
+
+  const totalPages = Math.ceil(totalPodcasts / PAGE_SIZE)
 
   return (
     <main className="main-content-with-sidebar">
       <div className="container">
         <div className="main-content">
           <h1 style={{ marginBottom: "30px" }}>Podcasts</h1>
+          <p className="category-count" style={{ marginBottom: "20px" }}>
+            {totalPodcasts} {totalPodcasts === 1 ? 'podcast' : 'podcasts'}
+          </p>
 
           <div className="podcast-list">
             {podcasts?.map((podcast: any) => (
@@ -69,6 +98,8 @@ export default async function PodcastsPage() {
               No podcasts available yet.
             </p>
           )}
+
+          <Pagination currentPage={page} totalPages={totalPages} basePath="podcasts" />
         </div>
         <RightSidebar />
       </div>
