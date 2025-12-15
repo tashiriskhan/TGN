@@ -13,6 +13,9 @@ import SocialShare from "@/app/components/SocialShare"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import { PortableText } from "@portabletext/react"
+import TableOfContents from "@/app/components/TableOfContents"
+import ReadingProgressBar from "@/app/components/ReadingProgressBar"
+import BackToTop from "@/app/components/BackToTop"
 
 // Helper function to truncate text
 function truncateText(text: string, maxLength: number): string {
@@ -154,14 +157,18 @@ export default async function StoryPage({ params }: any) {
   }
 
   return (
-    <main className="container">
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <>
+      {/* Reading Progress Bar */}
+      <ReadingProgressBar />
 
-      <div className="b-page-grid">
+      <main className="container">
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+
+        <div className="b-page-grid">
 
         <article className="article-container">
           {/* BREADCRUMB */}
@@ -226,6 +233,9 @@ export default async function StoryPage({ params }: any) {
             </div>
           )}
 
+          {/* TABLE OF CONTENTS */}
+          <TableOfContents body={post.body} />
+
           {/* ARTICLE CONTENT */}
           <div className="bbc-article-body">
             <div className="article-content">
@@ -258,6 +268,28 @@ export default async function StoryPage({ params }: any) {
                       );
                     },
                   },
+                  block: {
+                    h1: ({ value }) => {
+                      const text = value.children.map((child: any) => child.text).join(' ');
+                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                      return <h1 id={id}>{value.children}</h1>;
+                    },
+                    h2: ({ value }) => {
+                      const text = value.children.map((child: any) => child.text).join(' ');
+                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                      return <h2 id={id}>{value.children}</h2>;
+                    },
+                    h3: ({ value }) => {
+                      const text = value.children.map((child: any) => child.text).join(' ');
+                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                      return <h3 id={id}>{value.children}</h3>;
+                    },
+                    h4: ({ value }) => {
+                      const text = value.children.map((child: any) => child.text).join(' ');
+                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                      return <h4 id={id}>{value.children}</h4>;
+                    },
+                  },
                 }}
               />
             </div>
@@ -279,7 +311,7 @@ export default async function StoryPage({ params }: any) {
 
           {/* SOCIAL SHARE */}
           <div className="article-share">
-            <SocialShare url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/story/${slug}`} title={post.title} />
+            <SocialShare title={post.title} />
           </div>
 
           {/* MORE FROM CATEGORY */}
@@ -318,5 +350,9 @@ export default async function StoryPage({ params }: any) {
         <RightSidebar />
       </div>
     </main>
+
+    {/* Back to Top Button */}
+    <BackToTop />
+    </>
   )
 }

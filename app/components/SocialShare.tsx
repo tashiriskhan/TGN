@@ -1,16 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 type SocialShareProps = {
-  url: string
   title: string
 }
 
-export default function SocialShare({ url, title }: SocialShareProps) {
+export default function SocialShare({ title }: SocialShareProps) {
   const [copied, setCopied] = useState(false)
+  const [currentUrl, setCurrentUrl] = useState('')
 
-  const encodedUrl = encodeURIComponent(url)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentUrl(window.location.href)
+    }
+  }, [])
+
+  const encodedUrl = encodeURIComponent(currentUrl)
   const encodedTitle = encodeURIComponent(title)
 
   const shareLinks = {
@@ -21,7 +27,7 @@ export default function SocialShare({ url, title }: SocialShareProps) {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(url)
+      await navigator.clipboard.writeText(currentUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
