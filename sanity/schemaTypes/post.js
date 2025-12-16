@@ -89,8 +89,8 @@ export default {
       initialValue: false,
     },
     {
-      name: 'isRightColumn',
-      title: 'Right Column',
+      name: 'isInDepth',
+      title: 'In Depth',
       type: 'boolean',
       initialValue: false,
     },

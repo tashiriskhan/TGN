@@ -9,7 +9,7 @@ import { getFeaturedPost } from "@/sanity/lib/getFeaturedPost";
 import { getTrending } from "@/sanity/lib/getTrending";
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews";
 import { getOpinion } from "@/sanity/lib/getOpinion";
-import { getAllRightColumn } from "@/sanity/lib/getAllRightColumn";
+import { getAllInDepth } from "@/sanity/lib/getAllInDepth";
 import { getAllSpecial } from "@/sanity/lib/getAllSpecial";
 import { getAllPhotoStories } from "@/sanity/lib/getAllPhotoStories";
 
@@ -62,7 +62,7 @@ export default async function HomePage() {
     trending,
     breaking,
     opinion,
-    rightColumnList,
+    inDepthList,
     specialList,
     photoStories
   ] = await Promise.all([
@@ -70,7 +70,7 @@ export default async function HomePage() {
     getTrending(),
     getBreakingNews(),
     getOpinion(),
-    getAllRightColumn(),
+    getAllInDepth(),
     getAllSpecial(),
     getAllPhotoStories()
   ]);
@@ -148,11 +148,11 @@ export default async function HomePage() {
       <section className="main-content-full">
         <div className="container">
           <div className="main-content">
-            {/* MORE STORIES - SMALLER */}
+            {/* IN DEPTH - SMALLER */}
             <section className="content-section-compact">
-              <h2 className="section-title-compact">More Stories</h2>
+              <h2 className="section-title-compact">In Depth</h2>
               <div className="stories-grid-smaller">
-                {rightColumnList?.filter((post: any) => post.mainImage).map((post: any) => (
+                {inDepthList?.filter((post: any) => post.mainImage).map((post: any) => (
                   <article key={post.slug} className="story-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       {post.mainImage && (

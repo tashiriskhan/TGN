@@ -38,7 +38,9 @@
       "Bash(xargs:*)",
       "Bash(mkdir:*)",
       "Bash(echo:*)",
-      "Bash(git show:*)"
+      "Bash(git show:*)",
+      "Bash(npx sanity --version:*)",
+      "Bash(npx sanity:*)"
     ],
     "deny": [],
     "ask": []

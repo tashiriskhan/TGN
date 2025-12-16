@@ -30,9 +30,9 @@ export default function Loading() {
 
         </section>
 
-        {/* MORE STORIES SKELETON */}
+        {/* IN DEPTH SKELETON */}
         <section>
-          <h2 className="section-title">More Stories</h2>
+          <h2 className="section-title">In Depth</h2>
           <div className="bbc-3col-grid">
             {Array.from({ length: 6 }).map((_, i) => (
               <ArticleCardSkeleton key={i} />

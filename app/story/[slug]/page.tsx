@@ -272,22 +272,46 @@ export default async function StoryPage({ params }: any) {
                     h1: ({ value }) => {
                       const text = value.children.map((child: any) => child.text).join(' ');
                       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return <h1 id={id}>{value.children}</h1>;
+                      return (
+                        <h1 id={id}>
+                          {value.children.map((child: any, index: number) => (
+                            <span key={index}>{child.text}</span>
+                          ))}
+                        </h1>
+                      );
                     },
                     h2: ({ value }) => {
                       const text = value.children.map((child: any) => child.text).join(' ');
                       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return <h2 id={id}>{value.children}</h2>;
+                      return (
+                        <h2 id={id}>
+                          {value.children.map((child: any, index: number) => (
+                            <span key={index}>{child.text}</span>
+                          ))}
+                        </h2>
+                      );
                     },
                     h3: ({ value }) => {
                       const text = value.children.map((child: any) => child.text).join(' ');
                       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return <h3 id={id}>{value.children}</h3>;
+                      return (
+                        <h3 id={id}>
+                          {value.children.map((child: any, index: number) => (
+                            <span key={index}>{child.text}</span>
+                          ))}
+                        </h3>
+                      );
                     },
                     h4: ({ value }) => {
                       const text = value.children.map((child: any) => child.text).join(' ');
                       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return <h4 id={id}>{value.children}</h4>;
+                      return (
+                        <h4 id={id}>
+                          {value.children.map((child: any, index: number) => (
+                            <span key={index}>{child.text}</span>
+                          ))}
+                        </h4>
+                      );
                     },
                   },
                 }}
