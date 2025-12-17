@@ -35,6 +35,12 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'cloudinaryId',
+      title: 'Cloudinary Public ID',
+      type: 'string',
+      description: 'Public ID from Cloudinary (e.g., v1766005149/River_rhvmae). Leave empty to use Sanity image.',
+    },
+    {
       name: 'gallery',
       title: 'Gallery',
       type: 'array',

@@ -6,6 +6,8 @@ export async function getPhotoStoryBySlug(slug: string) {
       title,
       "slug": slug.current,
       description,
+      mainImage,
+      gallery,
       images,
       publishedAt,
 

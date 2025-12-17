@@ -40,7 +40,11 @@
       "Bash(echo:*)",
       "Bash(git show:*)",
       "Bash(npx sanity --version:*)",
-      "Bash(npx sanity:*)"
+      "Bash(npx sanity:*)",
+      "Bash(npm i:*)",
+      "Bash(npx:*)",
+      "Bash(timeout 15 npx sanity dev)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

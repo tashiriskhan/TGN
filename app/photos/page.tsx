@@ -5,9 +5,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
-import { timeAgo } from "@/sanity/lib/timeAgo"
-import RightSidebar from "@/app/components/RightSidebar"
-import Pagination from "@/app/components/Pagination"
+import SocialIcons from "@/app/components/SocialIcons"
+import "@/app/styles/photos.css"
 
 const PAGE_SIZE = 12
 
@@ -22,7 +21,8 @@ export default async function PhotosPage({ searchParams }: any) {
       | order(publishedAt desc)[$start...$end] {
         title,
         description,
-        images,
+        mainImage,
+        gallery,
         publishedAt,
         "slug": slug.current,
         author->{ name }
@@ -37,53 +37,130 @@ export default async function PhotosPage({ searchParams }: any) {
   const totalPages = Math.ceil(totalStories / PAGE_SIZE)
 
   return (
-    <main className="main-content-with-sidebar">
-      <div className="container">
-        <div className="main-content">
-          <h1 style={{ marginBottom: "30px" }}>Photo Stories</h1>
-          <p className="category-count" style={{ marginBottom: "20px" }}>
-            {totalStories} {totalStories === 1 ? 'story' : 'stories'}
-          </p>
+    <>
+      {/* Site Top - Header and Banner */}
+      <div className="site-top">
+        {/* Site Header */}
+        <div className="site-header">
+          <div className="container">
+            <Link href="/" className="site-brand">
+              <strong>The Ground Narrative</strong>
+            </Link>
+            <div className="social-icons pull-right">
+              <SocialIcons showToggle={true} />
+            </div>
+          </div>
+        </div>
 
-          <div className="bbc-3col-grid">
-            {photoStories?.map((story: any) => (
-              <article key={story.slug} className="bbc-card">
-                <Link href={`/photos/${story.slug}`}>
-                  {story.images && story.images.length > 0 && (
-                    <Image
-                      className="bbc-card-img"
-                      src={urlFor(story.images[0]).width(400).height(300).url()}
-                      alt={story.title}
-                      width={400}
-                      height={300}
-                    />
-                  )}
-                  <div className="bbc-card-content">
-                    <h4>{story.title}</h4>
-                    {story.description && (
-                      <p className="summary">
-                        {story.description.slice(0, 100)}...
-                      </p>
-                    )}
-                    <p className="meta">
-                      {timeAgo(story.publishedAt)} • {story.author?.name}
-                    </p>
+        {/* Site Banner */}
+        <div className="site-banner">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-offset-2 col-md-8 text-center">
+                <h2>Photo <span className="blue">Stories</span></h2>
+                <p>Visual narratives and photography from our journalists around the world.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Gallery - exactly like template */}
+      <div className="main-posts">
+        <div className="container">
+          <div className="row">
+            <div className="blog-masonry masonry-true">
+              {photoStories?.length > 0 ? (
+                photoStories.map((story: any) => (
+                  <div key={story.slug} className="post-masonry col-md-3 col-sm-6">
+                    <div className="post-thumb">
+                      <Link href={`/photos/${story.slug}`}>
+                        {story.mainImage && (
+                          <Image
+                            src={urlFor(story.mainImage).width(280).height(210).url()}
+                            alt={story.title}
+                            width={280}
+                            height={210}
+                          />
+                        )}
+                      </Link>
+
+                      {/* Always visible title */}
+                      <div className="title-over">
+                        <h4><Link href={`/photos/${story.slug}`}>{story.title}</Link></h4>
+                      </div>
+
+                      {/* Hover overlay */}
+                      <div className="post-hover text-center">
+                        <div className="inside">
+                          <span>{new Date(story.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                          <h4><Link href={`/photos/${story.slug}`}>{story.title}</Link></h4>
+                          {story.description && (
+                            <p>{story.description.slice(0, 100)}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </Link>
-              </article>
-            ))}
+                ))
+              ) : (
+                <div className="col-md-12">
+                  <div className="photos-empty">
+                    No photo stories available yet.
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          {photoStories?.length === 0 && (
-            <p style={{ textAlign: "center", padding: "40px" }}>
-              No photo stories available yet.
-            </p>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="photos-pagination">
+              <div className="pagination-controls">
+                {page > 1 && (
+                  <Link href={`/photos?page=${page - 1}`} className="pagination-btn pagination-prev">
+                    ← Previous
+                  </Link>
+                )}
+                <span className="pagination-info">
+                  Page {page} of {totalPages}
+                </span>
+                {page < totalPages && (
+                  <Link href={`/photos?page=${page + 1}`} className="pagination-btn pagination-next">
+                    Next →
+                  </Link>
+                )}
+              </div>
+            </div>
           )}
-
-          <Pagination currentPage={page} totalPages={totalPages} basePath="photos" />
         </div>
-        <RightSidebar />
       </div>
-    </main>
+
+      {/* Footer - Template style with unique class name */}
+      <footer className="photos-page-footer">
+        <div className="container">
+          {/* Newsletter Section */}
+          <div className="photos-newsletter">
+            <h3>Subscribe to Our Newsletter</h3>
+            <p>Stay updated with our latest photo stories and visual narratives from around the world.</p>
+            <form className="photos-newsletter-form" action="/api/newsletter" method="POST">
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+
+          <div className="row">
+            <div className="col-md-12 text-center">
+              <p className="photos-copyright">Copyright &copy; 2025 The Ground Narrative</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
   )
 }
