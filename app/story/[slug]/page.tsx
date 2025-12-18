@@ -16,6 +16,7 @@ import { PortableText } from "@portabletext/react"
 import TableOfContents from "@/app/components/TableOfContents"
 import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
+import { getTrending } from "@/sanity/lib/getTrending"
 
 // Helper function to truncate text
 function truncateText(text: string, maxLength: number): string {
@@ -113,6 +114,12 @@ export default async function StoryPage({ params }: any) {
     post?.tags?.map((tag: any) => tag.slug) || []
   )
 
+  // Fetch data for sidebar
+  const [breaking, trending] = await Promise.all([
+    getBreakingNews(),
+    getTrending()
+  ])
+
   // Calculate reading time from Portable Text
   const bodyText = post?.body
     ? post.body.map((block: any) => {
@@ -182,7 +189,7 @@ export default async function StoryPage({ params }: any) {
           )}
 
           {/* HEADLINE */}
-          <h1 className="bbc-headline">{post.title}</h1>
+          <h1 className="tgn-headline">{post.title}</h1>
 
           {/* EXCERPT */}
           {post.excerpt && (
@@ -237,7 +244,7 @@ export default async function StoryPage({ params }: any) {
           <TableOfContents body={post.body} />
 
           {/* ARTICLE CONTENT */}
-          <div className="bbc-article-body">
+          <div className="tgn-article-body">
             <div className="article-content">
               <PortableText
                 value={post.body}
@@ -371,7 +378,7 @@ export default async function StoryPage({ params }: any) {
         </article>
 
         {/* RIGHT SIDEBAR */}
-        <RightSidebar />
+        <RightSidebar breaking={breaking} trending={trending} />
       </div>
     </main>
 

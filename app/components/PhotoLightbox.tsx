@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 
 interface PhotoLightboxProps {
@@ -12,6 +12,9 @@ export default function PhotoLightbox({ images, title }: PhotoLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
@@ -50,12 +53,42 @@ export default function PhotoLightbox({ images, title }: PhotoLightboxProps) {
     setCarouselIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
   };
 
+  // Swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && carouselIndex < images.length - 1) {
+      nextCarouselSlide();
+    }
+    if (isRightSwipe && carouselIndex > 0) {
+      prevCarouselSlide();
+    }
+  };
+
   return (
     <>
       {/* Carousel Gallery */}
       <div className="photo-gallery-carousel">
         {/* Main Carousel */}
-        <div className="carousel-container">
+        <div
+          className="carousel-container"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="carousel-wrapper">
             <div
               className="carousel-slide-container"
@@ -112,6 +145,13 @@ export default function PhotoLightbox({ images, title }: PhotoLightboxProps) {
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
+            </div>
+          )}
+
+          {/* Swipe Hint for Mobile */}
+          {images.length > 1 && (
+            <div className="carousel-swipe-hint">
+              <span>⟵ Swipe ⟶</span>
             </div>
           )}
         </div>

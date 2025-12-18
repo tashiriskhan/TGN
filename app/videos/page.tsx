@@ -8,6 +8,8 @@ import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
 import Pagination from "@/app/components/Pagination"
+import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
+import { getTrending } from "@/sanity/lib/getTrending"
 
 const PAGE_SIZE = 12
 
@@ -36,6 +38,12 @@ export default async function VideosPage({ searchParams }: any) {
 
   const totalPages = Math.ceil(totalVideos / PAGE_SIZE)
 
+  // Fetch data for sidebar
+  const [breaking, trending] = await Promise.all([
+    getBreakingNews(),
+    getTrending()
+  ])
+
   return (
     <main className="main-content-with-sidebar">
       <div className="container">
@@ -45,14 +53,14 @@ export default async function VideosPage({ searchParams }: any) {
             {totalVideos} {totalVideos === 1 ? 'video' : 'videos'}
           </p>
 
-          <div className="bbc-3col-grid">
+          <div className="tgn-3col-grid">
             {videoStories?.map((story: any) => (
-              <article key={story.slug} className="bbc-card">
+              <article key={story.slug} className="tgn-card">
                 <Link href={`/videos/${story.slug}`}>
                   <div style={{ position: "relative" }}>
                     {story.thumbnail && (
                       <Image
-                        className="bbc-card-img"
+                        className="tgn-card-img"
                         src={urlFor(story.thumbnail).width(400).height(300).url()}
                         alt={story.title}
                         width={400}
@@ -79,7 +87,7 @@ export default async function VideosPage({ searchParams }: any) {
                       ▶
                     </div>
                   </div>
-                  <div className="bbc-card-content">
+                  <div className="tgn-card-content">
                     <h4>{story.title}</h4>
                     {story.description && (
                       <p className="summary">
@@ -103,7 +111,7 @@ export default async function VideosPage({ searchParams }: any) {
 
           <Pagination currentPage={page} totalPages={totalPages} basePath="videos" />
         </div>
-        <RightSidebar />
+        <RightSidebar breaking={breaking} trending={trending} />
       </div>
     </main>
   )

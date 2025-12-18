@@ -8,6 +8,8 @@ import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
 import Pagination from "@/app/components/Pagination"
+import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
+import { getTrending } from "@/sanity/lib/getTrending"
 
 const PAGE_SIZE = 12
 
@@ -36,6 +38,12 @@ export default async function PodcastsPage({ searchParams }: any) {
   )
 
   const totalPages = Math.ceil(totalPodcasts / PAGE_SIZE)
+
+  // Fetch data for sidebar
+  const [breaking, trending] = await Promise.all([
+    getBreakingNews(),
+    getTrending()
+  ])
 
   return (
     <main className="main-content-with-sidebar">
@@ -101,7 +109,7 @@ export default async function PodcastsPage({ searchParams }: any) {
 
           <Pagination currentPage={page} totalPages={totalPages} basePath="podcasts" />
         </div>
-        <RightSidebar />
+        <RightSidebar breaking={breaking} trending={trending} />
       </div>
     </main>
   )

@@ -9,7 +9,7 @@ export default function MobileNavToggle() {
   }
 
   useEffect(() => {
-    const nav = document.querySelector(".bbc-nav-list")
+    const nav = document.querySelector(".tgn-nav-list")
 
     if (nav) {
       if (menuOpen) {
@@ -46,7 +46,7 @@ export default function MobileNavToggle() {
       className="mobile-menu-toggle"
       onClick={toggleMenu}
       aria-expanded={menuOpen}
-      aria-controls="bbc-nav-list"
+      aria-controls="tgn-nav-list"
       role="button"
       tabIndex={0}
       onKeyDown={e => { if (e.key === "Enter" || e.key === " ") toggleMenu() }}

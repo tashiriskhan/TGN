@@ -4,8 +4,8 @@
    ============================================ */
 
 /* Hide global header/footer on photo pages */
-body[data-page="photos"] .bbc-header,
-body[data-page="photos"] .bbc-nav,
+body[data-page="photos"] .tgn-header,
+body[data-page="photos"] .tgn-nav,
 body[data-page="photos"] .footer {
   display: none !important;
 }
@@ -506,6 +506,40 @@ body[data-page="photos"] .carousel-thumbnail.active::after {
 
   body[data-page="photos"] .carousel-slide img {
     max-height: 50vh;
+  }
+}
+
+/* Swipe Hint */
+body[data-page="photos"] .carousel-swipe-hint {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+body[data-page="photos"] .carousel-swipe-hint span {
+  animation: swipeHint 2s ease-in-out infinite;
+}
+
+@keyframes swipeHint {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(5px);
+  }
+}
+
+/* Show swipe hint only on mobile */
+@media (max-width: 768px) {
+  body[data-page="photos"] .carousel-swipe-hint {
+    display: flex;
   }
 }
 

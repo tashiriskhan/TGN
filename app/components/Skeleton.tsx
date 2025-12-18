@@ -12,9 +12,9 @@ export function Skeleton({ className = '' }: SkeletonProps) {
 
 export function ArticleCardSkeleton() {
   return (
-    <article className="bbc-card">
-      <Skeleton className="bbc-card-img w-full h-48" />
-      <div className="bbc-card-content">
+    <article className="tgn-card">
+      <Skeleton className="tgn-card-img w-full h-48" />
+      <div className="tgn-card-content">
         <Skeleton className="h-6 w-3/4 mb-2" />
         <Skeleton className="h-4 w-full mb-2" />
         <Skeleton className="h-4 w-2/3 mb-2" />
@@ -26,9 +26,9 @@ export function ArticleCardSkeleton() {
 
 export function HeroSkeleton() {
   return (
-    <article className="bbc-hero">
-      <Skeleton className="bbc-hero-img w-full h-64 md:h-80" />
-      <div className="bbc-hero-content">
+    <article className="tgn-hero">
+      <Skeleton className="tgn-hero-img w-full h-64 md:h-80" />
+      <div className="tgn-hero-content">
         <Skeleton className="h-8 w-3/4 mb-3" />
         <Skeleton className="h-5 w-full mb-2" />
         <Skeleton className="h-5 w-5/6 mb-3" />
@@ -65,7 +65,7 @@ export function BreakingNewsSkeleton() {
 
 export function ArticleMetaSkeleton() {
   return (
-    <div className="bbc-article-meta">
+    <div className="tgn-article-meta">
       <Skeleton className="h-4 w-16" />
       <Skeleton className="h-4 w-24" />
       <Skeleton className="h-4 w-4" />

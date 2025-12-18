@@ -27,7 +27,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node
-      const navList = document.getElementById('bbc-nav-list')
+      const navList = document.getElementById('tgn-nav-list')
       const menuToggle = document.querySelector('.mobile-menu-toggle')
 
       // Close hamburger menu when clicking outside
@@ -53,18 +53,18 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
   return (
     <>
       {/* BBC HEADER (Centered Logo with date and social icons) - Desktop Only */}
-      <header className="bbc-header">
-        <div className="container bbc-header-inner-enhanced">
+      <header className="tgn-header">
+        <div className="container tgn-header-inner-enhanced">
           {/* Left: Social Icons (swapped with date) */}
           <div className="header-date">
             <SocialIcons />
           </div>
 
           {/* Center: Logo */}
-          <Link href="/" className="bbc-logo-link">
+          <Link href="/" className="tgn-logo-link">
             <Image
               src={theme === "dark" ? "/logo-w.svg" : "/logo.svg"}
-              className="bbc-logo"
+              className="tgn-logo"
               alt="The Ground Narrative"
               width={200}
               height={52}
@@ -84,8 +84,8 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
       </header>
 
       {/* BBC NAVIGATION */}
-      <nav className="bbc-nav">
-        <div className="container bbc-nav-inner">
+      <nav className="tgn-nav">
+        <div className="container tgn-nav-inner">
 
           {/* LEFT SIDE - Hamburger and Theme Toggle */}
           <div className="nav-left-controls">
@@ -94,7 +94,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
               className="mobile-menu-toggle"
               onClick={toggleMenu}
               aria-expanded={menuOpen}
-              aria-controls="bbc-nav-list"
+              aria-controls="tgn-nav-list"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             >
               {menuOpen ? '✕' : '☰'}
@@ -107,10 +107,10 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           </div>
 
           {/* CENTER - Logo (Mobile Only) */}
-          <Link href="/" className="bbc-logo-link mobile-nav-logo mobile-only">
+          <Link href="/" className="tgn-logo-link mobile-nav-logo mobile-only">
             <Image
               src={theme === "dark" ? "/logo-w.svg" : "/logo.svg"}
-              className="bbc-logo"
+              className="tgn-logo"
               alt="The Ground Narrative"
               width={150}
               height={39}
@@ -128,7 +128,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           </div>
 
           {/* CATEGORY LIST */}
-          <ul id="bbc-nav-list" className={`bbc-nav-list ${menuOpen ? 'mobile-open' : ''}`}>
+          <ul id="tgn-nav-list" className={`tgn-nav-list ${menuOpen ? 'mobile-open' : ''}`}>
 
             {/* HOME */}
             <li><Link href="/" onClick={closeMenu}>Home</Link></li>
@@ -196,7 +196,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           </ul>
 
           {/* SEARCH */}
-          <div className="bbc-nav-tools">
+          <div className="tgn-nav-tools">
             <form action="/search" method="GET">
               <input type="search" name="q" placeholder="Search…" />
             </form>

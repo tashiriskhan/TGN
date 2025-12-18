@@ -3,18 +3,18 @@ import { HeroSkeleton, TrendingCardSkeleton, BreakingNewsSkeleton, ArticleCardSk
 export default function Loading() {
   return (
     <>
-      <main className="container bbc-home">
+      <main className="container tgn-home">
 
         {/* TOP SECTION SKELETON */}
-        <section className="bbc-top">
+        <section className="tgn-top">
 
           {/* FEATURE SKELETON */}
-          <div className="bbc-center-col">
+          <div className="tgn-center-col">
             <HeroSkeleton />
           </div>
 
           {/* TRENDING SKELETON */}
-          <div className="bbc-left-col">
+          <div className="tgn-left-col">
             <div className="breaking-header">
               <span>TRENDING</span>
             </div>
@@ -24,7 +24,7 @@ export default function Loading() {
           </div>
 
           {/* BREAKING SKELETON */}
-          <div className="bbc-right-col">
+          <div className="tgn-right-col">
             <BreakingNewsSkeleton />
           </div>
 
@@ -33,7 +33,7 @@ export default function Loading() {
         {/* IN DEPTH SKELETON */}
         <section>
           <h2 className="section-title">In Depth</h2>
-          <div className="bbc-3col-grid">
+          <div className="tgn-3col-grid">
             {Array.from({ length: 6 }).map((_, i) => (
               <ArticleCardSkeleton key={i} />
             ))}
@@ -41,9 +41,9 @@ export default function Loading() {
         </section>
 
         {/* SPECIAL REPORTS SKELETON */}
-        <section className="bbc-special-2">
+        <section className="tgn-special-2">
           <h2 className="section-title">Special Reports</h2>
-          <div className="bbc-special-grid">
+          <div className="tgn-special-grid">
             {Array.from({ length: 3 }).map((_, i) => (
               <article key={i} className="special-card-2 animate-pulse">
                 <div className="w-full h-48 bg-gray-200 dark:bg-gray-700"></div>
@@ -59,7 +59,7 @@ export default function Loading() {
         {/* OPINION SKELETON */}
         <section>
           <h2 className="section-title">Opinion</h2>
-          <div className="bbc-opinion-grid">
+          <div className="tgn-opinion-grid">
             {Array.from({ length: 4 }).map((_, i) => (
               <article key={i} className="op-item-row animate-pulse">
                 <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>

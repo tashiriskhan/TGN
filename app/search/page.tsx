@@ -8,6 +8,8 @@ import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
 import Pagination from "@/app/components/Pagination"
+import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
+import { getTrending } from "@/sanity/lib/getTrending"
 
 const PAGE_SIZE = 12
 
@@ -17,6 +19,12 @@ export default async function SearchPage({ searchParams }: any) {
   const query = s.q || ""
   const page = Number(s.page) || 1
 
+  // Fetch data for sidebar (used in both branches)
+  const [breaking, trending] = await Promise.all([
+    getBreakingNews(),
+    getTrending()
+  ])
+
   if (!query || query.trim().length < 1) {
     return (
       <main className="main-content-with-sidebar">
@@ -25,7 +33,7 @@ export default async function SearchPage({ searchParams }: any) {
             <h1 className="search-title">Search Articles</h1>
             <p className="search-instruction">Type something in the search box.</p>
           </div>
-          <RightSidebar />
+          <RightSidebar breaking={breaking} trending={trending} />
         </div>
       </main>
     )
@@ -106,7 +114,7 @@ export default async function SearchPage({ searchParams }: any) {
             />
           )}
         </div>
-        <RightSidebar />
+        <RightSidebar breaking={breaking} trending={trending} />
       </div>
     </main>
   )

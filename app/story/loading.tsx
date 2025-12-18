@@ -22,12 +22,12 @@ export default function Loading() {
           <ArticleMetaSkeleton />
 
           {/* HERO IMAGE SKELETON */}
-          <div className="bbc-hero-wrapper animate-pulse">
+          <div className="tgn-hero-wrapper animate-pulse">
             <div className="w-full h-64 md:h-96 bg-gray-200 dark:bg-gray-700 rounded"></div>
           </div>
 
           {/* ARTICLE CONTENT SKELETON */}
-          <article className="bbc-article-body">
+          <article className="tgn-article-body">
             <div className="space-y-4 animate-pulse">
               {skeletonWidths.map((width, i) => (
                 <div
@@ -40,7 +40,7 @@ export default function Loading() {
           </article>
 
           {/* TAGS SKELETON */}
-          <div className="bbc-tags mt-6 animate-pulse">
+          <div className="tgn-tags mt-6 animate-pulse">
             <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-24 inline-block mr-2"></div>
             <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-20 inline-block mr-2"></div>
             <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16 inline-block"></div>
