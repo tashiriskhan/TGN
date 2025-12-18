@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate": "tsx scripts/migrate-to-cloudinary.ts",
     "sanity": "sanity dev",
     "sanity:deploy": "sanity deploy"
   },
@@ -19,10 +18,8 @@
     "@sanity/client": "^7.13.1",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.19.0",
-    "cloudinary": "^2.8.0",
     "moment-hijri": "^3.0.0",
     "next": "16.0.7",
-    "next-cloudinary": "^6.17.5",
     "next-sanity": "^11.6.10",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -38,7 +35,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "tailwindcss": "^4",
-    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
