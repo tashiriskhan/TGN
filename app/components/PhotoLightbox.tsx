@@ -11,11 +11,12 @@ interface PhotoLightboxProps {
 export default function PhotoLightbox({ images, title }: PhotoLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
     setIsOpen(true);
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
   };
 
   const closeLightbox = () => {
@@ -37,26 +38,104 @@ export default function PhotoLightbox({ images, title }: PhotoLightboxProps) {
     if (e.key === 'ArrowRight') goToNext();
   };
 
+  const goToCarouselSlide = (index: number) => {
+    setCarouselIndex(index);
+  };
+
+  const nextCarouselSlide = () => {
+    setCarouselIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  };
+
+  const prevCarouselSlide = () => {
+    setCarouselIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  };
+
   return (
     <>
-      {/* Gallery Grid */}
-      <div className="photo-gallery-masonry">
-        {images.map((image: any, index: number) => (
-          <div
-            key={index}
-            className="photo-item"
-            onClick={() => openLightbox(index)}
-            style={{ cursor: 'pointer' }}
-          >
-            <Image
-              src={image.url || image}
-              alt={`${title} - Photo ${index + 1}`}
-              width={800}
-              height={600}
-              style={{ width: "100%", height: "auto" }}
-            />
+      {/* Carousel Gallery */}
+      <div className="photo-gallery-carousel">
+        {/* Main Carousel */}
+        <div className="carousel-container">
+          <div className="carousel-wrapper">
+            <div
+              className="carousel-slide-container"
+              style={{ transform: `translateX(-${carouselIndex * 100}%)` }}
+            >
+              {images.map((image: any, index: number) => (
+                <div
+                  key={index}
+                  className="carousel-slide"
+                  onClick={() => openLightbox(index)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Image
+                    src={image.url || image}
+                    alt={`${title} - Photo ${index + 1}`}
+                    width={1200}
+                    height={700}
+                    style={{ width: "100%", height: "auto", objectFit: "contain" }}
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+
+          {/* Carousel Navigation */}
+          {images.length > 1 && (
+            <>
+              <button
+                className="carousel-nav carousel-prev"
+                onClick={prevCarouselSlide}
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+              <button
+                className="carousel-nav carousel-next"
+                onClick={nextCarouselSlide}
+                aria-label="Next image"
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          {/* Carousel Dots Indicator */}
+          {images.length > 1 && (
+            <div className="carousel-dots">
+              {images.map((_: any, index: number) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${carouselIndex === index ? 'active' : ''}`}
+                  onClick={() => goToCarouselSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Thumbnail Strip */}
+        {images.length > 1 && (
+          <div className="carousel-thumbnails">
+            {images.map((image: any, index: number) => (
+              <div
+                key={index}
+                className={`carousel-thumbnail ${carouselIndex === index ? 'active' : ''}`}
+                onClick={() => goToCarouselSlide(index)}
+              >
+                <Image
+                  src={image.url || image}
+                  alt={`${title} - Thumbnail ${index + 1}`}
+                  width={120}
+                  height={80}
+                  style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Lightbox Modal */}
