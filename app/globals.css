@@ -4496,6 +4496,57 @@ a:hover {
     line-height: 1.6;
     display: inline;
     max-width: none;
+    transition: all 0.3s ease;
+  }
+
+  /* Active story highlighting */
+  .top-grid-3col .global-right-sidebar .breaking-list-compact li.breaking-active .breaking-link {
+    font-weight: 700 !important;
+    opacity: 1 !important;
+  }
+
+  .top-grid-3col .global-right-sidebar .breaking-list-compact li:not(.breaking-active) .breaking-link {
+    opacity: 0.6 !important;
+    font-weight: 500 !important;
+  }
+
+  /* MOBILE SWIPE: Show only active story, hide others */
+  .top-grid-3col .global-right-sidebar .breaking-ticker-track {
+    animation: none !important;
+  }
+
+  .top-grid-3col .global-right-sidebar .breaking-list-compact li {
+    display: none !important;
+  }
+
+  .top-grid-3col .global-right-sidebar .breaking-list-compact li.breaking-active {
+    display: inline-flex !important;
+  }
+
+  .top-grid-3col .global-right-sidebar .breaking-list-compact li.breaking-active .breaking-link {
+    white-space: normal !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+  }
+
+  /* Dot indicators for mobile */
+  .breaking-dots {
+    display: flex !important;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .breaking-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .breaking-dot.active {
+    background: white;
   }
 
   .top-grid-3col .global-right-sidebar .breaking-list-compact .time {
@@ -5445,6 +5496,18 @@ a:hover {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   margin-bottom: var(--space-md);
+}
+
+/* Enable swipe on breaking news - prevents passive event listeners */
+.breaking-ticker-wrapper {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Hide dot indicators on desktop */
+.breaking-dots {
+  display: none;
 }
 
 .trending-item-compact {
