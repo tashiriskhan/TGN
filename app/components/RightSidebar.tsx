@@ -17,13 +17,13 @@ export default function RightSidebar({ hideMostRead = false, breaking = [], tren
   const touchEndRef = useRef<number | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Auto-rotate every 2 seconds
+  // Auto-rotate every 4 seconds
   useEffect(() => {
     if (breaking.length <= 1) return;
 
     const interval = setInterval(() => {
       setCurrentBreakingIndex((prev) => (prev + 1) % breaking.length);
-    }, 2000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [breaking.length]);
