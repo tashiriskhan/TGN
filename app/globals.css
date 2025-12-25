@@ -404,7 +404,8 @@ a:hover {
     grid-template-columns: auto auto 1fr auto;
     align-items: center;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--container-padding);
+    padding: var(--space-md) var(--container-padding);
+    padding-top: var(--space-lg);
   }
 
   /* Mobile logo styling */
@@ -625,6 +626,18 @@ a:hover {
   padding: var(--space-md);
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .tgn-nav-list li {
@@ -4522,7 +4535,20 @@ a:hover {
     font-weight: 500 !important;
   }
 
-  /* MOBILE SWIPE: Show only active story, hide others */
+  /* MOBILE: Hide label, use swipe/rotation style */
+  .top-grid-3col .global-right-sidebar .breaking-label {
+    display: none !important;
+  }
+
+  .top-grid-3col .global-right-sidebar .breaking-ticker-wrapper {
+    padding-left: 0;
+  }
+
+  .top-grid-3col .global-right-sidebar .breaking-ticker-content {
+    width: 100%;
+  }
+
+  /* Show only active story, hide others */
   .top-grid-3col .global-right-sidebar .breaking-ticker-track {
     animation: none !important;
   }
@@ -4541,7 +4567,7 @@ a:hover {
     opacity: 1 !important;
   }
 
-  /* Dot indicators for mobile */
+  /* Dot indicators */
   .breaking-dots {
     display: flex !important;
     justify-content: center;
@@ -4589,13 +4615,16 @@ a:hover {
   .top-feature-image {
     position: relative;
     width: 100%;
-    height: 160px;
+    padding-top: 56.25%;
     overflow: hidden;
   }
 
   .top-feature-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 160px;
+    height: 100%;
     object-fit: cover;
   }
 
@@ -5034,7 +5063,8 @@ a:hover {
     margin-bottom: 10px;
   }
 
-  .media-cards-compact {
+  /* Watch & Listen - 3 columns on mobile */
+  .media-strip-compact .media-cards-compact {
     display: flex;
     flex-wrap: nowrap;
     gap: 8px;
@@ -5042,7 +5072,7 @@ a:hover {
     padding-bottom: 4px;
   }
 
-  .media-card-compact {
+  .media-strip-compact .media-card-compact {
     flex: 0 0 calc(33.333% - 5px);
     display: flex;
     flex-direction: column;
@@ -5091,6 +5121,25 @@ a:hover {
     gap: 12px;
   }
 
+  /* First 3 widgets (photos, videos, podcasts) in 3 columns side by side */
+  .main-content-with-sidebar .global-right-sidebar .global-sidebar-widget:nth-child(-n+3) {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .main-content-with-sidebar .global-right-sidebar .global-sidebar-widget:nth-child(-n+3) h3 {
+    display: none;
+  }
+
+  .main-content-with-sidebar .global-right-sidebar .global-sidebar-widget:nth-child(-n+3) .tgn-3col-grid {
+    display: contents !important;
+  }
+
   .main-content-with-sidebar .global-sidebar-widget {
     background: white;
     border-radius: var(--mobile-radius);
@@ -5105,8 +5154,8 @@ a:hover {
   /* ===== BBC GRID (photos, videos) ===== */
   .tgn-3col-grid {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
   }
 
   .tgn-card {
@@ -5115,7 +5164,7 @@ a:hover {
   }
 
   .tgn-card-img {
-    height: 80px !important;
+    height: 70px !important;
     object-fit: cover;
   }
 
@@ -6150,13 +6199,6 @@ a:hover {
     grid-template-columns: 1fr;
   }
 
-  .media-cards-compact {
-    flex-direction: column;
-  }
-
-  .media-card-compact {
-    width: 100%;
-  }
 }
 
 /* ============================================
