@@ -391,6 +391,13 @@ a:hover {
     display: none;
   }
 
+  /* Left side controls container - hamburger and theme toggle side by side */
+  .nav-left-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
   /* Mobile navigation layout: hamburger | theme toggle | logo | date */
   .tgn-nav-inner {
     display: grid;
@@ -2862,6 +2869,13 @@ a:hover {
   /* Hide the top tgn-header (Date | Logo | Social) on tablet */
   .tgn-header {
     display: none;
+  }
+
+  /* Left side controls container - hamburger and theme toggle side by side */
+  .nav-left-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
   }
 
   /* Show inline theme toggle on tablet too */
