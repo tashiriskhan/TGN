@@ -378,7 +378,12 @@ export default async function StoryPage({ params }: any) {
         </article>
 
         {/* RIGHT SIDEBAR */}
-        <RightSidebar breaking={breaking} trending={trending} />
+        <RightSidebar
+          breaking={breaking}
+          trending={trending}
+          relatedPosts={relatedPosts}
+          category={post.categories?.title}
+        />
       </div>
     </main>
 

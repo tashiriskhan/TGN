@@ -46,9 +46,12 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  // Get category title
+  // Get category title with description
   const category = await client.fetch(
-    `*[_type == "category" && slug.current == $slug][0]{ title }`,
+    `*[_type == "category" && slug.current == $slug][0]{
+      title,
+      description
+    }`,
     { slug }
   )
 

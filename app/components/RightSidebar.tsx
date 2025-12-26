@@ -4,14 +4,23 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { truncateText } from "./utils";
 import NewsletterForm from "./NewsletterForm";
+import { urlFor } from "@/sanity/lib/image";
 
 interface RightSidebarProps {
   hideMostRead?: boolean;
   breaking?: any[];
   trending?: any[];
+  relatedPosts?: any[];
+  category?: string;
 }
 
-export default function RightSidebar({ hideMostRead = false, breaking = [], trending = [] }: RightSidebarProps) {
+export default function RightSidebar({
+  hideMostRead = false,
+  breaking = [],
+  trending = [],
+  relatedPosts = [],
+  category = ''
+}: RightSidebarProps) {
   const [currentBreakingIndex, setCurrentBreakingIndex] = useState(0);
   const touchStartRef = useRef<number | null>(null);
   const touchEndRef = useRef<number | null>(null);
@@ -73,48 +82,85 @@ export default function RightSidebar({ hideMostRead = false, breaking = [], tren
     };
   }, [handleSwipe]);
 
+  // Show "More in [Category]" section when category and relatedPosts are provided
+  const showCategorySection = category && relatedPosts && relatedPosts.length > 0;
+
   return (
     <aside className="global-right-sidebar">
-      <div className="global-sidebar-widget">
-        <div
-          ref={wrapperRef}
-          className="breaking-ticker-wrapper"
-        >
-          <span className="breaking-label">BREAKING NEWS</span>
-          <div className="breaking-ticker-content">
-            <div className="breaking-ticker-track">
-              <ul className="breaking-list-compact">
-                {breaking?.map((post: any, index: number) => (
-                  <li
-                    key={post.slug}
-                    className={index === currentBreakingIndex ? 'breaking-active' : ''}
-                  >
-                    <Link href={`/story/${post.slug}`}>
-                      <span className="breaking-link">
-                        {post.title}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Dot indicators - mobile only */}
-            {breaking.length > 0 && (
-              <div className="breaking-dots">
-                {breaking.map((_: any, index: number) => (
-                  <div
-                    key={index}
-                    className={`breaking-dot ${index === currentBreakingIndex ? 'active' : ''}`}
-                  />
-                ))}
-              </div>
-            )}
+      {/* Category-related posts section - replaces breaking news on article pages */}
+      {showCategorySection ? (
+        <div className="global-sidebar-widget">
+          <h3>More in {category}</h3>
+          <div className="sidebar-related-posts">
+            {relatedPosts.slice(0, 5).map((post: any) => (
+              <Link
+                key={post.slug}
+                href={`/story/${post.slug}`}
+                className="sidebar-related-item"
+              >
+                {post.mainImage && (
+                  <div className="sidebar-related-image">
+                    <img
+                      src={urlFor(post.mainImage).width(80).height(60).url()}
+                      alt={post.title}
+                    />
+                  </div>
+                )}
+                <div className="sidebar-related-content">
+                  <span className="sidebar-related-title">
+                    {truncateText(post.title, 60)}
+                  </span>
+                  <span className="sidebar-related-meta">
+                    {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ''}
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
-      </div>
+      ) : (
+        /* Default: Breaking News ticker */
+        <div className="global-sidebar-widget">
+          <div
+            ref={wrapperRef}
+            className="breaking-ticker-wrapper"
+          >
+            <span className="breaking-label">BREAKING NEWS</span>
+            <div className="breaking-ticker-content">
+              <div className="breaking-ticker-track">
+                <ul className="breaking-list-compact">
+                  {breaking?.map((post: any, index: number) => (
+                    <li
+                      key={post.slug}
+                      className={index === currentBreakingIndex ? 'breaking-active' : ''}
+                    >
+                      <Link href={`/story/${post.slug}`}>
+                        <span className="breaking-link">
+                          {post.title}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Dot indicators - mobile only */}
+              {breaking.length > 0 && (
+                <div className="breaking-dots">
+                  {breaking.map((_: any, index: number) => (
+                    <div
+                      key={index}
+                      className={`breaking-dot ${index === currentBreakingIndex ? 'active' : ''}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Only show Most Read when not hidden */}
-      {!hideMostRead && (
+      {/* Only show Most Read when not hidden and not on article page with category */}
+      {!hideMostRead && !showCategorySection && (
         <div className="global-sidebar-widget">
           <h3>Most Read</h3>
           <div className="most-read-list-compact">
