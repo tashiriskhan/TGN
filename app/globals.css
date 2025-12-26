@@ -1400,11 +1400,9 @@ a:hover {
   margin-bottom: 1.5em;
 }
 
-/* Lead paragraph - first paragraph with larger, lighter text */
+/* First paragraph - same styling as other paragraphs */
 .article-content > p:first-of-type {
-  font-size: 1.15em;
-  line-height: 1.85;
-  color: var(--color-text-muted);
+  line-height: 1.75;
   font-weight: 400;
 }
 
