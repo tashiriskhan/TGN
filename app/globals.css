@@ -319,6 +319,11 @@ a:hover {
 
 /* Mobile responsiveness */
 @media (max-width: 640px) {
+  /* Add space at top of header on mobile */
+  .tgn-header {
+    padding-top: var(--space-md);
+  }
+
   .header-date {
     font-size: 10px;
   }

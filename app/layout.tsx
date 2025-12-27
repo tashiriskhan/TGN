@@ -22,28 +22,6 @@ export const metadata = {
     template: "%s | The Ground Narrative",
   },
   description: "Independent news reporting with depth and context. Stories That See Beyond Headlines.",
-  openGraph: {
-    title: "The Ground Narrative",
-    description: "Stories That See Beyond Headlines",
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    siteName: 'The Ground Narrative',
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'The Ground Narrative',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'The Ground Narrative',
-    description: 'Stories That See Beyond Headlines',
-    images: ['/og-image.jpg'],
-  },
 };
 
 export default function RootLayout({

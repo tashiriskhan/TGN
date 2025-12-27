@@ -1,5 +1,4 @@
 import { createClient } from '@sanity/client'
-import { getFooterCategories } from "@/sanity/lib/getFooterCategories"
 
 
 export const client = createClient({

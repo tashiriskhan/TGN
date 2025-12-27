@@ -156,7 +156,7 @@ export default async function PhotosPage({ searchParams }: any) {
 
           <div className="row">
             <div className="col-md-12 text-center">
-              <p className="photos-copyright">Copyright &copy; 2025 The Ground Narrative</p>
+              <p className="photos-copyright">Copyright &copy; {new Date().getFullYear()} The Ground Narrative</p>
             </div>
           </div>
         </div>

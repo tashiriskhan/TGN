@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { truncateText } from "./utils";
 import NewsletterForm from "./NewsletterForm";
 import { urlFor } from "@/sanity/lib/image";
@@ -100,9 +101,11 @@ export default function RightSidebar({
               >
                 {post.mainImage && (
                   <div className="sidebar-related-image">
-                    <img
+                    <Image
                       src={urlFor(post.mainImage).width(80).height(60).url()}
                       alt={post.title}
+                      width={80}
+                      height={60}
                     />
                   </div>
                 )}
