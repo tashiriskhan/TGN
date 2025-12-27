@@ -144,7 +144,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
                 News <span className="dropdown-arrow">{newsDropdownOpen ? '▲' : '▼'}</span>
               </button>
               <ul className={`nav-dropdown-menu ${newsDropdownOpen ? 'open' : ''}`}>
-                <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li>
+               <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li> 
                 <li><Link href="/india" onClick={closeMenu}>India</Link></li>
                 <li><Link href="/world" onClick={closeMenu}>World</Link></li>
               </ul>

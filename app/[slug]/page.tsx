@@ -11,7 +11,7 @@ import Breadcrumb from "@/app/components/Breadcrumb"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getTrending } from "@/sanity/lib/getTrending"
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 9
 
 // Reserved route names that should not be treated as categories
 const RESERVED_ROUTES = [
