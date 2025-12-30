@@ -1,5 +1,7 @@
 import Link from "next/link"
 import { getFooterCategories } from "@/sanity/lib/getFooterCategories"
+import { siteConfig, navRoutes, contactConfig, externalConfig, themeColors } from "@/config/site"
+import { footerLabels } from "@/config/site"
 
 export default async function Footer() {
   const categories = await getFooterCategories()
@@ -10,39 +12,37 @@ export default async function Footer() {
 
         {/* COLUMN 1 — ABOUT US */}
         <div className="footer-col">
-          <h4>About Us</h4>
+          <h4>{footerLabels.aboutUs}</h4>
           <p>
-            The Ground Narrative is an independent digital platform covering 
-            stories, news, and social issues with accuracy, depth, 
+            {siteConfig.name} is an independent digital platform covering
+            stories, news, and social issues with accuracy, depth,
             and a human perspective.
           </p>
-
-          <h4 style={{ marginTop: "20px" }}>Contact</h4>
-          <p>Email: groundnarrative@gmail.com</p>
-          <p>Instagram: @thegroundnarrative</p>
-          <p>Facebook: The Ground Narrative</p>
+          <p>Email: {contactConfig.support}</p>
+          <p>Instagram: {contactConfig.instagramHandle}</p>
+          <p>Facebook: {siteConfig.name}</p>
         </div>
 
         {/* COLUMN 2 — QUICK LINKS */}
         <div className="footer-col">
-          <h4>Quick Links</h4>
-          <Link href="/about" className="footer-link">About</Link>
-          <Link href="/contact" className="footer-link">Contact</Link>
-          <Link href="/privacy" className="footer-link">Privacy Policy</Link>
-          <Link href="/terms" className="footer-link">Terms & Conditions</Link>
+          <h4>{footerLabels.quickLinks}</h4>
+          <Link href={navRoutes.about} className="footer-link">About</Link>
+          <Link href={navRoutes.contact} className="footer-link">Contact</Link>
+          <Link href={navRoutes.privacy} className="footer-link">Privacy Policy</Link>
+          <Link href={navRoutes.terms} className="footer-link">Terms & Conditions</Link>
         </div>
 
         {/* COLUMN 3 — MEDIA */}
         <div className="footer-col">
-          <h4>Media</h4>
-          <Link href="/photos" className="footer-link">Photos</Link>
-          <Link href="/videos" className="footer-link">Videos</Link>
-          <Link href="/podcasts" className="footer-link">Podcasts</Link>
+          <h4>{footerLabels.media}</h4>
+          <Link href={navRoutes.media.photos} className="footer-link">Photos</Link>
+          <Link href={navRoutes.media.videos} className="footer-link">Videos</Link>
+          <Link href={navRoutes.media.podcasts} className="footer-link">Podcasts</Link>
         </div>
 
         {/* COLUMN 4 — CATEGORIES (Dynamic from Sanity) */}
         <div className="footer-col">
-          <h4>Categories</h4>
+          <h4>{footerLabels.categories}</h4>
           {categories.map((cat: any) => (
             <Link
               key={cat.slug}
@@ -58,7 +58,7 @@ export default async function Footer() {
 
       {/* Copyright */}
       <div className="footer-bottom">
-        © {new Date().getFullYear()} The Ground Narrative — All Rights Reserved.
+        © {new Date().getFullYear()} {siteConfig.name} — All Rights Reserved | This Website is made with <span style={{ color: themeColors.status.error }}>♥</span> by <a href={externalConfig.developer} className="footer-credit-link" target="_blank" rel="noopener noreferrer">COSMIC STACK</a>
       </div>
     </footer>
   )

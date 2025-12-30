@@ -17,13 +17,7 @@ import TableOfContents from "@/app/components/TableOfContents"
 import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
 import { getTrending } from "@/sanity/lib/getTrending"
-
-// Helper function to truncate text
-function truncateText(text: string, maxLength: number): string {
-  if (!text) return "";
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-}
+import { truncateText } from "@/app/components/utils"
 
 export async function generateMetadata({ params }: any) {
   const { slug } = await params

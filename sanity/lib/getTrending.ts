@@ -1,17 +1,6 @@
 import { client } from "./sanity"
+import { TRENDING_QUERY } from "./queries"
 
 export async function getTrending() {
-  return client.fetch(`
-    *[_type == "post" && isTrending == true]
-      | order(publishedAt desc)
-      [0...10] {
-        title,
-        "slug": slug.current,
-        mainImage,
-        publishedAt,
-
-        author->{ name, "slug": slug.current },
-        categories[]->{ title, "slug": slug.current }
-      }
-  `)
+  return client.fetch(TRENDING_QUERY)
 }

@@ -6,14 +6,24 @@ import ThemeToggle from "./ThemeToggle"
 import SocialIcons from "./SocialIcons"
 import { useTheme } from "./ThemeProvider"
 import { getFormattedTodayDate, getFormattedHijriDate } from "@/app/lib/dateHelper"
+import { usePathname } from "next/navigation"
+import { navRoutes, imageConfig, siteConfig } from "@/config/site"
 
 export default function HeaderClient({ categories }: { categories: Array<{title: string, slug: string}> }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [newsDropdownOpen, setNewsDropdownOpen] = useState(false)
   const [mediaDropdownOpen, setMediaDropdownOpen] = useState(false)
   const { theme } = useTheme()
+  const pathname = usePathname()
   const newsDropdownRef = useRef<HTMLLIElement>(null)
   const mediaDropdownRef = useRef<HTMLLIElement>(null)
+
+  // Check if we're on a video or photos page - force white logo and dark theme
+  const isVideoPage = pathname?.startsWith('/videos') || pathname?.startsWith('/video-stories')
+  const isPhotosPage = pathname?.startsWith('/photos')
+
+  // Force dark logo on video and photos pages
+  const logoSrc = (isVideoPage || isPhotosPage) ? "/logo-w.svg" : (theme === "dark" ? "/logo-w.svg" : "/logo.svg")
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
@@ -21,6 +31,8 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
 
   const closeMenu = () => {
     setMenuOpen(false)
+    setNewsDropdownOpen(false)
+    setMediaDropdownOpen(false)
   }
 
   // Close dropdown when clicking outside
@@ -63,11 +75,11 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           {/* Center: Logo */}
           <Link href="/" className="tgn-logo-link">
             <Image
-              src={theme === "dark" ? "/logo-w.svg" : "/logo.svg"}
+              src={logoSrc}
               className="tgn-logo"
-              alt="The Ground Narrative"
-              width={200}
-              height={52}
+              alt={siteConfig.name}
+              width={imageConfig.logo.width}
+              height={imageConfig.logo.height}
               priority
             />
           </Link>
@@ -109,7 +121,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           {/* CENTER - Logo (Mobile Only) */}
           <Link href="/" className="tgn-logo-link mobile-nav-logo mobile-only">
             <Image
-              src={theme === "dark" ? "/logo-w.svg" : "/logo.svg"}
+              src={logoSrc}
               className="tgn-logo"
               alt="The Ground Narrative"
               width={150}
@@ -131,7 +143,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           <ul id="tgn-nav-list" className={`tgn-nav-list ${menuOpen ? 'mobile-open' : ''}`}>
 
             {/* HOME */}
-            <li><Link href="/" onClick={closeMenu}>Home</Link></li>
+            <li><Link href={navRoutes.home} onClick={closeMenu}>Home</Link></li>
 
             {/* News Dropdown - Kashmir, India, World ONLY */}
             <li className="nav-dropdown" ref={newsDropdownRef}>
@@ -144,9 +156,9 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
                 News <span className="dropdown-arrow">{newsDropdownOpen ? '▲' : '▼'}</span>
               </button>
               <ul className={`nav-dropdown-menu ${newsDropdownOpen ? 'open' : ''}`}>
-               <li><Link href="/kashmir" onClick={closeMenu}>Kashmir</Link></li> 
-                <li><Link href="/india" onClick={closeMenu}>India</Link></li>
-                <li><Link href="/world" onClick={closeMenu}>World</Link></li>
+               <li><Link href={navRoutes.categories.kashmir} onClick={closeMenu}>Kashmir</Link></li>
+                <li><Link href={navRoutes.categories.india} onClick={closeMenu}>India</Link></li>
+                <li><Link href={navRoutes.categories.world} onClick={closeMenu}>World</Link></li>
               </ul>
             </li>
 
@@ -161,9 +173,9 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
                 Media <span className="dropdown-arrow">{mediaDropdownOpen ? '▲' : '▼'}</span>
               </button>
               <ul className={`nav-dropdown-menu ${mediaDropdownOpen ? 'open' : ''}`}>
-                <li><Link href="/photos" onClick={closeMenu}>Photos</Link></li>
-                <li><Link href="/videos" onClick={closeMenu}>Videos</Link></li>
-                <li><Link href="/podcasts" onClick={closeMenu}>Podcasts</Link></li>
+                <li><Link href={navRoutes.media.photos} onClick={closeMenu}>Photos</Link></li>
+                <li><Link href={navRoutes.media.videos} onClick={closeMenu}>Videos</Link></li>
+                <li><Link href={navRoutes.media.podcasts} onClick={closeMenu}>Podcasts</Link></li>
               </ul>
             </li>
 
@@ -197,7 +209,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
 
           {/* SEARCH */}
           <div className="tgn-nav-tools">
-            <form action="/search" method="GET">
+            <form action={navRoutes.search} method="GET">
               <input type="search" name="q" placeholder="Search…" />
             </form>
           </div>

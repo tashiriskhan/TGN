@@ -1,14 +1,6 @@
 import { client } from "./sanity"
+import { FEATURED_POST_QUERY } from "./queries"
 
 export async function getAllFeatured() {
-  return client.fetch(`
-    *[_type == "post" && isFeatured == true] | order(publishedAt desc){
-      title,
-      "slug": slug.current,
-      mainImage,
-      author->{ name, "slug": slug.current, image },
-      categories[]->{ title, "slug": slug.current },
-      tags[]->{ title, "slug": slug.current }
-    }
-  `)
+  return client.fetch(FEATURED_POST_QUERY)
 }

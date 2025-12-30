@@ -1,18 +1,6 @@
 import { client } from "./sanity"
+import { OPINION_QUERY } from "./queries"
 
 export async function getOpinion() {
-  return client.fetch(`
-    *[_type == "post" && isOpinion == true]
-      | order(publishedAt desc)
-      [0...5] {
-        title,
-        subtitle,
-        "slug": slug.current,
-        mainImage,
-        publishedAt,
-
-        author->{ name, "slug": slug.current },
-        categories[]->{ title, "slug": slug.current }
-      }
-  `)
+  return client.fetch(OPINION_QUERY)
 }

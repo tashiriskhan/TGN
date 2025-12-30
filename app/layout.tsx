@@ -5,6 +5,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import BodyAttribute from "./components/BodyAttribute";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { siteConfig } from "@/config/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,12 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: {
-    default: "The Ground Narrative - Stories That See Beyond Headlines",
-    template: "%s | The Ground Narrative",
+    default: siteConfig.name,
+    template: siteConfig.titleTemplate,
   },
-  description: "Independent news reporting with depth and context. Stories That See Beyond Headlines.",
+  description: siteConfig.description,
 };
 
 export default function RootLayout({

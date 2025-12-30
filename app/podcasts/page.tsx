@@ -67,17 +67,7 @@ export default async function PodcastsPage({ searchParams }: any) {
                         height={120}
                       />
                     ) : (
-                      <div
-                        style={{
-                          width: "120px",
-                          height: "120px",
-                          background: "#f0f0f0",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "48px",
-                        }}
-                      >
+                      <div className="podcast-placeholder">
                         🎧
                       </div>
                     )}

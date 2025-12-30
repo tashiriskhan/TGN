@@ -1,18 +1,6 @@
 import { client } from "./sanity"
+import { ALL_VIDEO_STORIES_QUERY } from "./queries"
 
 export async function getAllVideoStories() {
-  return client.fetch(`
-    *[_type == "videoStory"] | order(publishedAt desc) {
-      title,
-      "slug": slug.current,
-      description,
-      videoUrl,
-      thumbnail,
-      publishedAt,
-
-      author->{ name, "slug": slug.current },
-      categories[]->{ title, "slug": slug.current },
-      tags[]->{ title, "slug": slug.current }
-    }
-  `)
+  return client.fetch(ALL_VIDEO_STORIES_QUERY)
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { apiRoutes } from '@/config/site'
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('')
@@ -13,7 +14,7 @@ export default function NewsletterForm() {
     setMessage('')
 
     try {
-      const response = await fetch('/api/newsletter', {
+      const response = await fetch(apiRoutes.newsletter, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +32,7 @@ export default function NewsletterForm() {
         setStatus('error')
         setMessage(data.error || 'Something went wrong')
       }
-    } catch (error) {
+    } catch {
       setStatus('error')
       setMessage('Network error. Please try again.')
     }

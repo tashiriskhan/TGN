@@ -1,19 +1,6 @@
 import { client } from "./sanity"
+import { ALL_PODCASTS_QUERY } from "./queries"
 
 export async function getAllPodcasts() {
-  return client.fetch(`
-    *[_type == "podcast"] | order(publishedAt desc) {
-      title,
-      "slug": slug.current,
-      description,
-      audioUrl,
-      duration,
-      thumbnail,
-      publishedAt,
-
-      author->{ name, "slug": slug.current },
-      categories[]->{ title, "slug": slug.current },
-      tags[]->{ title, "slug": slug.current }
-    }
-  `)
+  return client.fetch(ALL_PODCASTS_QUERY)
 }

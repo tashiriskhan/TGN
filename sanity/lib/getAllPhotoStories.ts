@@ -1,17 +1,6 @@
 import { client } from "./sanity"
+import { ALL_PHOTO_STORIES_QUERY } from "./queries"
 
 export async function getAllPhotoStories() {
-  return client.fetch(`
-    *[_type == "photoStory"] | order(publishedAt desc) {
-      title,
-      "slug": slug.current,
-      description,
-      images,
-      publishedAt,
-
-      author->{ name, "slug": slug.current },
-      categories[]->{ title, "slug": slug.current },
-      tags[]->{ title, "slug": slug.current }
-    }
-  `)
+  return client.fetch(ALL_PHOTO_STORIES_QUERY)
 }

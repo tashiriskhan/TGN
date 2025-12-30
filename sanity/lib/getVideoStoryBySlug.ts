@@ -7,6 +7,8 @@ export async function getVideoStoryBySlug(slug: string) {
       "slug": slug.current,
       description,
       videoUrl,
+      videoType,
+      isShort,
       thumbnail,
       publishedAt,
 

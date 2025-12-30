@@ -20,6 +20,12 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'isShort',
+      title: 'Short',
+      type: 'boolean',
+      initialValue: false,
+    },
+    {
       name: 'author',
       title: 'Author',
       type: 'reference',
@@ -54,19 +60,7 @@ export default {
         ],
       },
       initialValue: 'mp4',
-    },
-    {
-      name: 'duration',
-      title: 'Duration',
-      type: 'string',
-      description: 'Video duration (e.g., 5:30)',
-    },
-    {
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{ type: 'reference', to: { type: 'category' } }],
-    },
+    },    
     {
       name: 'tags',
       title: 'Tags',

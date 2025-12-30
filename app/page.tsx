@@ -15,20 +15,8 @@ import { getAllPhotoStories } from "@/sanity/lib/getAllPhotoStories";
 
 import { urlFor } from "@/sanity/lib/image";
 import { timeAgo } from "@/sanity/lib/timeAgo";
+import { truncateText } from "@/app/components/utils";
 import RightSidebar from "./components/RightSidebar";
-
-// Helper function to truncate text by word boundary
-function truncateText(text: string, maxLength: number): string {
-  if (!text) return "";
-  if (text.length <= maxLength) return text;
-
-  const truncated = text.slice(0, maxLength);
-  const lastSpaceIndex = truncated.lastIndexOf(' ');
-
-  return lastSpaceIndex > 0
-    ? truncated.slice(0, lastSpaceIndex) + '...'
-    : truncated + '...';
-}
 
 type RelatedPost = {
   title: string;

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { timeouts } from "@/config/site"
 
 type SocialShareProps = {
   title: string
@@ -47,7 +48,7 @@ export default function SocialShare({ title }: SocialShareProps) {
       toastTimeoutRef.current = setTimeout(() => {
         setShowToast(false)
         setCopied(false)
-      }, 2500)
+      }, timeouts.toastDuration)
     } catch (err) {
       console.error("Failed to copy: ", err)
     }

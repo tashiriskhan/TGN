@@ -1,3 +1,22 @@
+/**
+ * ============================================
+ * DARK PHOTO STORIES PAGE
+ * ============================================
+ *
+ * Layout Structure:
+ * 1. HERO SECTION - Full-width with dark gradient overlay
+ * 2. FILTER SECTION - Category chips + photo count
+ * 3. MASONRY GRID - 4 columns desktop, 2 tablet, 1 mobile
+ * 4. NEWSLETTER CARD - Email signup
+ *
+ * Design Features:
+ * - Dark navy theme matching video pages
+ * - Orange accent color for emphasis
+ * - Premium photojournalism showcase
+ *
+ * ============================================
+ */
+
 // Always fetch fresh data from Sanity
 export const dynamic = "force-dynamic";
 
@@ -5,162 +24,263 @@ import Link from "next/link"
 import Image from "next/image"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
-import SocialIcons from "@/app/components/SocialIcons"
-import "@/app/styles/photos.css"
+import { timeAgo } from "@/sanity/lib/timeAgo"
+import "@/app/styles/dark-photos.css"
+import PhotoHeroCTA from "./PhotoHeroCTA"
 
 const PAGE_SIZE = 12
 
 export default async function PhotosPage({ searchParams }: any) {
   const s = await searchParams
   const page = Number(s.page) || 1
+  const category = s.category || 'all'
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
+  // Fetch all photo categories from Sanity for dynamic filters
+  const allCategories = await client.fetch(`
+    *[_type == "photoCategory"] | order(title asc) {
+      title,
+      "slug": slug.current
+    }
+  `)
+
+  // Build filter list: All + categories from Sanity
+  const filters = [
+    { id: 'all', label: 'All' },
+    ...allCategories.map((cat: any) => ({
+      id: cat.slug,
+      label: cat.title
+    }))
+  ]
+
+  // Build query based on category filter
+  let query = `*[_type == "photoStory"]`
+  if (category !== 'all') {
+    query = `*[_type == "photoStory" && "${category}" in categories[]->slug.current]`
+  }
+
   const photoStories = await client.fetch(
-    `*[_type == "photoStory"]
-      | order(publishedAt desc)[$start...$end] {
-        title,
-        description,
-        mainImage,
-        gallery,
-        publishedAt,
-        "slug": slug.current,
-        author->{ name }
-      }`,
-    { start, end }
+    `${query} | order(publishedAt desc)[${start}...${end}] {
+      title,
+      description,
+      mainImage,
+      gallery,
+      publishedAt,
+      "slug": slug.current,
+      "categories": categories[]->{ title, "slug": slug.current },
+      author->{ name }
+    }`
   )
 
+  // Fetch the latest photo story for hero background
+  const latestStory = await client.fetch(`
+    *[_type == "photoStory"] | order(publishedAt desc)[0] {
+      mainImage,
+      title,
+      publishedAt
+    }
+  `)
+
   const totalStories = await client.fetch(
-    `count(*[_type == "photoStory"])`
+    category !== 'all'
+      ? `count(*[_type == "photoStory" && "${category}" in categories[]->slug.current])`
+      : `count(*[_type == "photoStory"])`
   )
 
   const totalPages = Math.ceil(totalStories / PAGE_SIZE)
 
   return (
-    <>
-      {/* Site Top - Header and Banner */}
-      <div className="site-top">
-        {/* Site Header */}
-        <div className="site-header">
-          <div className="container">
-            <Link href="/" className="site-brand">
-              <strong>The Ground Narrative</strong>
-            </Link>
-            <div className="social-icons pull-right">
-              <SocialIcons showToggle={true} />
+    <main className="photo-stories-page">
+      <div className="photo-stories-container">
+        {/* ============================================
+            HERO SECTION
+            ============================================ */}
+        <section className="photo-hero">
+          <div className="photo-hero-bg">
+            {latestStory?.mainImage ? (
+              <Image
+                src={urlFor(latestStory.mainImage).width(1920).height(1080).url()}
+                alt={latestStory.title}
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
+              />
+            ) : (
+              <div style={{
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(135deg, #1e293b 0%, #0f141a 100%)'
+              }} />
+            )}
+          </div>
+          <div className="photo-hero-overlay" />
+          <div className="photo-hero-content">
+            <span className="photo-hero-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              Visual Journalism
+            </span>
+            <h1 className="photo-hero-title">Photo Stories</h1>
+            <p className="photo-hero-subtitle">
+              Visual narratives from journalists around the world
+            </p>
+            <PhotoHeroCTA />
+          </div>
+        </section>
+
+        {/* ============================================
+            FILTER SECTION
+            ============================================ */}
+        <section className="photo-filters-section">
+          <div className="photo-filters-header">
+            <h2 className="photo-filters-title">Latest Photography</h2>
+            <div className="photo-meta-info">
+              <span className="photo-count">{totalStories} photos</span>
+              <span>Updated {timeAgo(new Date().toISOString())}</span>
             </div>
           </div>
-        </div>
-
-        {/* Site Banner */}
-        <div className="site-banner">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-offset-2 col-md-8 text-center">
-                <h2>Photo <span className="blue">Stories</span></h2>
-                <p>Visual narratives and photography from our journalists around the world.</p>
-              </div>
-            </div>
+          <div className="photo-filter-chips">
+            {filters.map((filter: any) => (
+              <Link
+                key={filter.id}
+                href={filter.id === 'all' ? '/photos' : `/photos?category=${filter.id}`}
+                className={`photo-filter-chip ${category === filter.id ? 'active' : ''}`}
+              >
+                {filter.label}
+              </Link>
+            ))}
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Main Gallery - exactly like template */}
-      <div className="main-posts">
-        <div className="container">
-          <div className="row">
-            <div className="blog-masonry masonry-true">
-              {photoStories?.length > 0 ? (
-                photoStories.map((story: any) => (
-                  <div key={story.slug} className="post-masonry col-md-3 col-sm-6">
-                    <div className="post-thumb">
-                      <Link href={`/photos/${story.slug}`}>
-                        {story.mainImage && (
-                          <Image
-                            src={urlFor(story.mainImage).width(280).height(210).url()}
-                            alt={story.title}
-                            width={280}
-                            height={210}
-                          />
-                        )}
-                      </Link>
+        {/* ============================================
+            MASONRY GRID
+            ============================================ */}
+        {photoStories.length > 0 ? (
+          <div className="photo-masonry-grid" id="photo-gallery">
+            {photoStories.map((story: any, index: number) => {
+              // Create varied grid spans for masonry effect
+              const isTall = index % 5 === 0 || index % 7 === 0
+              const isWide = index % 3 === 0
+              const cardClass = isTall ? 'photo-card photo-card-tall' : (isWide ? 'photo-card photo-card-wide' : 'photo-card')
 
-                      {/* Always visible title */}
-                      <div className="title-over">
-                        <h4><Link href={`/photos/${story.slug}`}>{story.title}</Link></h4>
-                      </div>
+              // Calculate image dimensions for URL
+              const imgWidth = isTall ? 400 : (isWide ? 800 : 400)
+              const imgHeight = isTall ? 500 : 300
 
-                      {/* Hover overlay */}
-                      <div className="post-hover text-center">
-                        <div className="inside">
-                          <span>{new Date(story.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                          <h4><Link href={`/photos/${story.slug}`}>{story.title}</Link></h4>
-                          {story.description && (
-                            <p>{story.description.slice(0, 100)}</p>
-                          )}
-                        </div>
-                      </div>
+              return (
+                <Link
+                  key={story.slug}
+                  href={`/photos/${story.slug}`}
+                  className={cardClass}
+                >
+                  <div className="photo-card-thumb">
+                    {story.mainImage ? (
+                      <Image
+                        src={urlFor(story.mainImage).width(imgWidth).height(imgHeight).url()}
+                        alt={story.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', background: 'var(--bg-tertiary)' }} />
+                    )}
+                    <div className="photo-card-overlay" />
+
+                    {/* Quick View Overlay */}
+                    <div className="photo-quick-view">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                      </svg>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="photo-card-badges">
+                      {index < 3 && <span className="photo-card-badge new">New</span>}
+                      <span className="photo-card-badge date">
+                        {new Date(story.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </span>
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="col-md-12">
-                  <div className="photos-empty">
-                    No photo stories available yet.
+
+                  {/* Content Overlay */}
+                  <div className="photo-card-content">
+                    <h3 className="photo-card-title">{story.title}</h3>
+                    <div className="photo-card-meta">
+                      <span>{story.author?.name}</span>
+                      <span>•</span>
+                      <span>{timeAgo(story.publishedAt)}</span>
+                    </div>
+                    {story.categories && story.categories.length > 0 && (
+                      <div className="photo-card-location">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                          <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        {story.categories[0].title}
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-            </div>
+                </Link>
+              )
+            })}
           </div>
+        ) : (
+          <div className="photo-empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            <h3>No photo stories yet</h3>
+            <p>Check back soon for new visual narratives</p>
+          </div>
+        )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="photos-pagination">
-              <div className="pagination-controls">
-                {page > 1 && (
-                  <Link href={`/photos?page=${page - 1}`} className="pagination-btn pagination-prev">
-                    ← Previous
-                  </Link>
-                )}
-                <span className="pagination-info">
-                  Page {page} of {totalPages}
-                </span>
-                {page < totalPages && (
-                  <Link href={`/photos?page=${page + 1}`} className="pagination-btn pagination-next">
-                    Next →
-                  </Link>
-                )}
-              </div>
+        {/* ============================================
+            LOAD MORE / PAGINATION
+            ============================================ */}
+        {totalPages > 1 && (
+          <div className="photo-load-more">
+            <Link href={`/photos?page=${page + 1}`} className="photo-load-more-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="7 13 12 18 17 13" />
+                <polyline points="7 6 12 11 17 6" />
+              </svg>
+              Load More Stories
+            </Link>
+          </div>
+        )}
+
+        {/* ============================================
+            NEWSLETTER SECTION
+            ============================================ */}
+        <section className="photo-newsletter">
+          <div className="photo-newsletter-card">
+            <div className="photo-newsletter-content">
+              <h3 className="photo-newsletter-title">Stay with our photo stories</h3>
+              <p className="photo-newsletter-desc">
+                Subscribe to receive photo stories and newsletters from journalists around the world.
+              </p>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Footer - Template style with unique class name */}
-      <footer className="photos-page-footer">
-        <div className="container">
-          {/* Newsletter Section */}
-          <div className="photos-newsletter">
-            <h3>Subscribe to Our Newsletter</h3>
-            <p>Stay updated with our latest photo stories and visual narratives from around the world.</p>
-            <form className="photos-newsletter-form" action="/api/newsletter" method="POST">
+            <form className="photo-newsletter-form" action="/api/newsletter" method="POST">
               <input
                 type="email"
                 name="email"
                 placeholder="Enter your email address"
+                className="photo-newsletter-input"
                 required
               />
-              <button type="submit">Subscribe</button>
+              <button type="submit" className="photo-newsletter-btn">
+                Subscribe
+              </button>
             </form>
           </div>
-
-          <div className="row">
-            <div className="col-md-12 text-center">
-              <p className="photos-copyright">Copyright &copy; {new Date().getFullYear()} The Ground Narrative</p>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </>
+        </section>
+      </div>
+    </main>
   )
 }
