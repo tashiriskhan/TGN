@@ -18,7 +18,6 @@
  */
 
 import { notFound } from "next/navigation"
-import Image from "next/image"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import HeroPhoto from "./HeroPhoto"
@@ -86,10 +85,6 @@ export default async function PhotoStoryPage({ params }: { params: Promise<{ slu
     })
   }
 
-  // Get location from author or categories
-  const location = photoStory.author?.location ||
-    (photoStory.categories?.[0]?.title ? `${photoStory.categories[0].title}` : "")
-
   return (
     <div className="photo-story-page">
       {/* Hero Section */}
@@ -97,55 +92,54 @@ export default async function PhotoStoryPage({ params }: { params: Promise<{ slu
         title={photoStory.title}
         mainImage={photoStory.mainImage}
         photographer={photoStory.author?.name}
-        location={location}
         publishedAt={formatDate(photoStory.publishedAt)}
+        categories={photoStory.categories}
+        slug={photoStory.slug}
       />
 
-      {/* Main Content Grid */}
+      {/* Main Content Grid - Generous spacing */}
       <div className="photo-story-container">
-        <div className="photo-story-grid">
-          {/* Left Column - Main Content */}
-          <main className="photo-story-main">
-            {/* Photo Gallery */}
-            {photoStory.gallery && photoStory.gallery.length > 0 && (
-              <PhotoGallery
-                images={photoStory.gallery}
-                title="Gallery"
-              />
-            )}
-
-            {/* Article Body */}
-            {photoStory.description && (
-              <article className="photo-story-article">
-                <div className="photo-story-description">
-                  <p>{photoStory.description}</p>
-                </div>
-
-                {/* Rich text body would go here if available */}
-                {photoStory.body && (
-                  <div className="photo-story-body">
-                    {/* Portable Text would be rendered here */}
-                  </div>
-                )}
-              </article>
-            )}
-          </main>
-
-          {/* Right Column - Sidebar */}
-          <aside className="photo-story-sidebar">
-            {/* Photographer Bio */}
-            <PhotographerBio
-              name={photoStory.author?.name || "Unknown Photographer"}
-              avatar={photoStory.author?.avatar}
-              bio={photoStory.author?.bio}
-              location={photoStory.author?.location}
-              socialLinks={photoStory.author?.socialLinks}
+        {/* Main content area with proper spacing */}
+        <div className="photo-story-main-content">
+          {/* Photo Gallery */}
+          {photoStory.gallery && photoStory.gallery.length > 0 && (
+            <PhotoGallery
+              images={photoStory.gallery}
+              title="Gallery"
             />
+          )}
 
-            {/* Recommended Photos */}
-            <RecommendedPhotos photos={recommendedPhotos} />
-          </aside>
+          {/* Article Body */}
+          {photoStory.description && (
+            <article className="photo-story-article">
+              <div className="photo-story-description">
+                <p>{photoStory.description}</p>
+              </div>
+
+              {/* Rich text body would go here if available */}
+              {photoStory.body && (
+                <div className="photo-story-body">
+                  {/* Portable Text would be rendered here */}
+                </div>
+              )}
+            </article>
+          )}
         </div>
+
+        {/* Sidebar - Sticky with generous spacing */}
+        <aside className="photo-story-sidebar">
+          {/* Photographer Bio */}
+          <PhotographerBio
+            name={photoStory.author?.name || "Unknown Photographer"}
+            avatar={photoStory.author?.avatar}
+            bio={photoStory.author?.bio}
+            location={photoStory.author?.location}
+            socialLinks={photoStory.author?.socialLinks}
+          />
+
+          {/* Recommended Photos */}
+          <RecommendedPhotos photos={recommendedPhotos} />
+        </aside>
       </div>
 
       {/* Newsletter Section */}

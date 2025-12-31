@@ -190,13 +190,6 @@ export default async function PhotosPage({ searchParams }: any) {
                     )}
                     <div className="photo-card-overlay" />
 
-                    {/* Quick View Overlay */}
-                    <div className="photo-quick-view">
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                      </svg>
-                    </div>
-
                     {/* Badges */}
                     <div className="photo-card-badges">
                       {index < 3 && <span className="photo-card-badge new">New</span>}
