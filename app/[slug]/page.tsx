@@ -6,10 +6,7 @@ import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
-import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
-import { getTrending } from "@/sanity/lib/getTrending"
 
 const PAGE_SIZE = 9
 
@@ -80,16 +77,9 @@ export default async function CategoryPage({ params, searchParams }: any) {
 
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
-  // Fetch data for sidebar
-  const [breaking, trending] = await Promise.all([
-    getBreakingNews(),
-    getTrending()
-  ])
-
   return (
-    <main className="main-content-with-sidebar">
+    <main className="main-content-full">
       <div className="container">
-        {/* LEFT: MAIN CONTENT */}
         <div className="main-content">
           {/* BREADCRUMB */}
           <Breadcrumb
@@ -189,9 +179,6 @@ export default async function CategoryPage({ params, searchParams }: any) {
             )}
           </div>
         </div>
-
-        {/* RIGHT: UNIFIED SIDEBAR */}
-        <RightSidebar breaking={breaking} trending={trending} />
       </div>
     </main>
   )
