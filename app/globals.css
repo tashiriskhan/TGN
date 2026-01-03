@@ -25,8 +25,9 @@
   --space-2xl: 3rem;
   --space-3xl: 4rem;
 
-  /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Typography - News Website Style with Merriweather */
+  --font-serif: var(--font-merriweather), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-merriweather-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -311,6 +312,42 @@ body[data-page="photos"] .footer-link:hover {
 body[data-page="video"] .footer-link:hover::before,
 body[data-page="photos"] .footer-link:hover::before {
   color: var(--video-accent) !important;
+}
+
+/* Footer social icons for video/photo pages */
+body[data-page="video"] .footer-social .social-icon-circle,
+body[data-page="photos"] .footer-social .social-icon-circle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--video-text-secondary);
+}
+
+body[data-page="video"] .footer-social .social-icon-circle:hover,
+body[data-page="photos"] .footer-social .social-icon-circle:hover {
+  background: var(--video-accent);
+  border-color: var(--video-accent);
+  color: #ffffff;
+}
+
+body[data-page="video"] .footer-social .social-toggle-circle,
+body[data-page="photos"] .footer-social .social-toggle-circle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--video-text-secondary);
+  transition: all 0.2s ease;
+}
+
+body[data-page="video"] .footer-social .social-toggle-circle:hover,
+body[data-page="photos"] .footer-social .social-toggle-circle:hover {
+  background: var(--video-accent);
+  border-color: var(--video-accent);
+  color: #ffffff;
 }
 
 body[data-page="video"] .footer-bottom,
@@ -3256,6 +3293,66 @@ html[data-theme="photos-dark"] body .footer-link:hover {
   color: #b0b0b0;
   font-size: var(--font-size-sm);
   line-height: 1.6;
+}
+
+.footer-social {
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.footer-social .social-icons-container {
+  position: relative;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.footer-social .social-icon-circle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #b0b0b0;
+  transition: all 0.2s ease;
+}
+
+.footer-social .social-icon-circle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.footer-social .social-icon-circle:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.footer-social .social-toggle-circle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #b0b0b0;
+  transition: all 0.2s ease;
+}
+
+.footer-social .social-toggle-circle:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.footer-social .toggle-icon {
+  font-size: 16px;
 }
 
 .footer-link {

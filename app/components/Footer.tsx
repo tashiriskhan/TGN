@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { getFooterCategories } from "@/sanity/lib/getFooterCategories"
-import { siteConfig, navRoutes, contactConfig, externalConfig, themeColors } from "@/config/site"
+import { siteConfig, navRoutes, externalConfig, themeColors } from "@/config/site"
 import { footerLabels } from "@/config/site"
+import SocialIcons from "./SocialIcons"
 
 export default async function Footer() {
   const categories = await getFooterCategories()
@@ -18,9 +19,9 @@ export default async function Footer() {
             stories, news, and social issues with accuracy, depth,
             and a human perspective.
           </p>
-          <p>Email: {contactConfig.support}</p>
-          <p>Instagram: {contactConfig.instagramHandle}</p>
-          <p>Facebook: {siteConfig.name}</p>
+          <div className="footer-social">
+            <SocialIcons />
+          </div>
         </div>
 
         {/* COLUMN 2 — QUICK LINKS */}

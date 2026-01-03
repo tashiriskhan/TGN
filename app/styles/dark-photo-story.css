@@ -1843,6 +1843,42 @@ html[data-theme="photos-dark"] body .footer {
     padding: 1.5rem 1rem !important;
     margin: 0 !important;
   }
+
+  /* Footer social icons for photos-dark theme */
+  html[data-theme="photos-dark"] body .footer-social .social-icon-circle,
+  body[data-page="photos"] .footer-social .social-icon-circle {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+  }
+
+  html[data-theme="photos-dark"] body .footer-social .social-icon-circle:hover,
+  body[data-page="photos"] .footer-social .social-icon-circle:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #ffffff;
+  }
+
+  html[data-theme="photos-dark"] body .footer-social .social-toggle-circle,
+  body[data-page="photos"] .footer-social .social-toggle-circle {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+  }
+
+  html[data-theme="photos-dark"] body .footer-social .social-toggle-circle:hover,
+  body[data-page="photos"] .footer-social .social-toggle-circle:hover {
+    background: #f97316;
+    border-color: #f97316;
+    color: #ffffff;
+  }
 }
 
 /* ===== AGGRESSIVE MOBILE FIXES ===== */
