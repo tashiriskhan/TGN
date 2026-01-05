@@ -17,13 +17,13 @@ export default function ContactPage() {
         <div style={{ color: 'var(--color-text)', lineHeight: 1.8, fontSize: 'var(--font-size-lg)' }}>
           <p style={{ marginBottom: 'var(--space-2xl)' }}>
             We value your feedback, questions, and story tips. The Ground Narrative team is here to help.
-            Reach out to us through any of the following channels:
+            Reach out to us through any of the following channels: We value your feedback, questions, and story tips.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-xl)', marginBottom: 'var(--space-2xl)' }}>
             <div style={{ background: 'var(--color-surface)', padding: 'var(--space-lg)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
               <h3 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600, marginBottom: 'var(--space-sm)', color: 'var(--color-text)' }}>
-                📧 General Inquiries
+                General Inquiries
               </h3>
               <p style={{ marginBottom: 'var(--space-sm)' }}>
                 For general questions, feedback, or suggestions:
@@ -35,7 +35,7 @@ export default function ContactPage() {
 
             <div style={{ background: 'var(--color-surface)', padding: 'var(--space-lg)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
               <h3 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600, marginBottom: 'var(--space-sm)', color: 'var(--color-text)' }}>
-                ✍️ Editorial Team
+                Editorial Team
               </h3>
               <p style={{ marginBottom: 'var(--space-sm)' }}>
                 For story tips, press releases, or editorial matters:
@@ -47,7 +47,7 @@ export default function ContactPage() {
 
             <div style={{ background: 'var(--color-surface)', padding: 'var(--space-lg)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
               <h3 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600, marginBottom: 'var(--space-sm)', color: 'var(--color-text)' }}>
-                📰 Media & Press
+                Media &amp; Press
               </h3>
               <p style={{ marginBottom: 'var(--space-sm)' }}>
                 For media inquiries and press related questions:
@@ -59,7 +59,7 @@ export default function ContactPage() {
 
             <div style={{ background: 'var(--color-surface)', padding: 'var(--space-lg)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
               <h3 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600, marginBottom: 'var(--space-sm)', color: 'var(--color-text)' }}>
-                💼 Business & Partnerships
+                Business &amp; Partnerships
               </h3>
               <p style={{ marginBottom: 'var(--space-sm)' }}>
                 For advertising, partnerships, and business opportunities:

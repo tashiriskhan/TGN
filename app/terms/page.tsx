@@ -20,7 +20,7 @@ export default function TermsPage() {
 
         <div style={{ color: 'var(--color-text)', lineHeight: 1.8, fontSize: 'var(--font-size-base)' }}>
           <p style={{ marginBottom: 'var(--space-md)' }}>
-            Welcome to The Ground Narrative. These Terms and Conditions ("Terms") govern your use of our website located at groundnarrative.com (the "Service") operated by The Ground Narrative ("us", "we", or "our").
+            Welcome to The Ground Narrative. These Terms and Conditions (&quot;Terms&quot;) govern your use of our website located at groundnarrative.com (the &quot;Service&quot;) operated by The Ground Narrative (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;).
           </p>
 
           <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 600, marginTop: 'var(--space-2xl)', marginBottom: 'var(--space-md)' }}>
@@ -115,7 +115,7 @@ export default function TermsPage() {
             10. Indemnification
           </h2>
           <p style={{ marginBottom: 'var(--space-md)' }}>
-            You agree to defend, indemnify, and hold harmless The Ground Narrative and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees).
+            You agree to defend, indemnify, and hold harmless The Ground Narrative and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney&apos;s fees).
           </p>
 
           <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 600, marginTop: 'var(--space-2xl)', marginBottom: 'var(--space-md)' }}>
@@ -129,7 +129,7 @@ export default function TermsPage() {
             12. Changes to Terms
           </h2>
           <p style={{ marginBottom: 'var(--space-md)' }}>
-            We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect.
+            We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days&apos; notice prior to any new terms taking effect.
           </p>
 
           <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 600, marginTop: 'var(--space-2xl)', marginBottom: 'var(--space-md)' }}>

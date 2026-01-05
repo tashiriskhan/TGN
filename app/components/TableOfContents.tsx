@@ -8,8 +8,14 @@ interface TOCItem {
   level: number;
 }
 
+interface PortableTextBlock {
+  _type: string;
+  style?: string;
+  children?: Array<{ text: string }>;
+}
+
 interface TableOfContentsProps {
-  body: any[];
+  body: PortableTextBlock[];
 }
 
 export default function TableOfContents({ body }: TableOfContentsProps) {
@@ -31,7 +37,7 @@ export default function TableOfContents({ body }: TableOfContentsProps) {
 
         if (level > 0 && block.children) {
           const text = block.children
-            .map((child: any) => child.text)
+            .map((child) => child.text)
             .join(' ')
             .trim();
 
@@ -55,6 +61,7 @@ export default function TableOfContents({ body }: TableOfContentsProps) {
       }
     });
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setTOCItems(headings);
   }, [body]);
 

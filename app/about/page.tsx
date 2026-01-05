@@ -24,7 +24,7 @@ export default function AboutPage() {
           </h2>
           <p style={{ marginBottom: 'var(--space-md)' }}>
             In an era of information overload, The Ground Narrative stands as a beacon of thoughtful journalism.
-            We're not just another news outlet – we're a platform dedicated to uncovering the stories that shape our world,
+            We&apos;re not just another news outlet – we&apos;re a platform dedicated to uncovering the stories that shape our world,
             providing you with the context and insight you need to understand complex issues.
           </p>
 
@@ -52,14 +52,14 @@ export default function AboutPage() {
           <p style={{ marginBottom: 'var(--space-md)' }}>
             From breaking news to in-depth features, from politics to technology, from local stories to global events –
             our team of experienced journalists and writers brings you coverage across a wide range of topics.
-            We focus on stories that have real impact on people's lives.
+            We focus on stories that have real impact on people&apos;s lives.
           </p>
 
           <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 600, marginTop: 'var(--space-2xl)', marginBottom: 'var(--space-md)' }}>
             Join Our Community
           </h2>
           <p style={{ marginBottom: 'var(--space-md)' }}>
-            The Ground Narrative is more than a news website – it's a community of curious minds who value quality journalism.
+            The Ground Narrative is more than a news website – it&apos;s a community of curious minds who value quality journalism.
             We encourage you to engage with our content, share your thoughts, and be part of the conversation.
           </p>
 

@@ -10,13 +10,12 @@ type SocialShareProps = {
 export default function SocialShare({ title }: SocialShareProps) {
   const [copied, setCopied] = useState(false)
   const [showToast, setShowToast] = useState(false)
-  const [currentUrl, setCurrentUrl] = useState('')
+  const [currentUrl] = useState(() =>
+    typeof window !== 'undefined' ? window.location.href : ''
+  )
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentUrl(window.location.href)
-    }
     return () => {
       if (toastTimeoutRef.current) {
         clearTimeout(toastTimeoutRef.current)

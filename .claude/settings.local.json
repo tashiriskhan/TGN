@@ -45,7 +45,8 @@
       "Bash(npx:*)",
       "Bash(timeout 15 npx sanity dev)",
       "Bash(tree:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(npm run lint)"
     ],
     "deny": [],
     "ask": []
