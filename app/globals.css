@@ -789,7 +789,8 @@ html[data-theme="photos-dark"] body .tgn-header * {
 .breaking-ticker-simple {
   display: flex;
   align-items: center;
-  animation: ticker-simple 25s linear infinite;
+  width: max-content;
+  animation: ticker-simple 90s linear infinite;
   gap: 0;
   padding: 0 var(--container-padding);
 }
@@ -800,7 +801,7 @@ html[data-theme="photos-dark"] body .tgn-header * {
 
 @keyframes ticker-simple {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }
 }
 
 .breaking-item-simple {
@@ -823,6 +824,13 @@ html[data-theme="photos-dark"] body .tgn-header * {
   color: rgba(255, 255, 255, 0.6);
   margin: 0 var(--space-md);
   font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+
+/* Add space at end for seamless loop */
+.breaking-ticker-simple::after {
+  content: '';
+  flex-shrink: 0;
 }
 
 /* Top Grid Section - Modern Spacious Layout */
@@ -1233,7 +1241,7 @@ html[data-theme="photos-dark"] body .tgn-header * {
   }
 
   .breaking-ticker-simple {
-    animation-duration: 15s;
+    animation-duration: 90s;
     gap: 0;
     padding: 0 var(--space-md);
   }

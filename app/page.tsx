@@ -50,8 +50,21 @@ export default async function HomePage() {
       {breaking && breaking.length > 0 && (
         <section className="breaking-banner-simple">
           <div className="breaking-ticker-simple">
+            {/* First set */}
             {breaking.map((news: any, index: number) => (
-              <React.Fragment key={news.slug || index}>
+              <React.Fragment key={`first-${news.slug || index}`}>
+                {index > 0 && <span className="breaking-separator">|</span>}
+                <Link
+                  href={`/story/${news.slug}`}
+                  className="breaking-item-simple"
+                >
+                  {news.title}
+                </Link>
+              </React.Fragment>
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {breaking.map((news: any, index: number) => (
+              <React.Fragment key={`dup-${news.slug || index}`}>
                 {index > 0 && <span className="breaking-separator">|</span>}
                 <Link
                   href={`/story/${news.slug}`}
