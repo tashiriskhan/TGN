@@ -109,9 +109,15 @@ export default async function StoryPage({ params }: any) {
   )
 
   // Fetch data for sidebar
-  const [breaking, trending] = await Promise.all([
+  const [breaking, trending, recentStories] = await Promise.all([
     getBreakingNews(),
-    getTrending()
+    getTrending(),
+    client.fetch(`*[_type == "post" && slug.current != $slug] | order(publishedAt desc)[0...5]{
+      title,
+      mainImage,
+      publishedAt,
+      "slug": slug.current
+    }`, { slug })
   ])
 
   // Calculate reading time from Portable Text
@@ -377,6 +383,7 @@ export default async function StoryPage({ params }: any) {
           trending={trending}
           relatedPosts={relatedPosts}
           category={post.categories?.title}
+          recentStories={recentStories}
         />
       </div>
     </main>

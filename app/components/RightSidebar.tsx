@@ -13,6 +13,7 @@ interface RightSidebarProps {
   trending?: any[];
   relatedPosts?: any[];
   category?: string;
+  recentStories?: any[];
 }
 
 export default function RightSidebar({
@@ -20,150 +21,51 @@ export default function RightSidebar({
   breaking = [],
   trending = [],
   relatedPosts = [],
-  category = ''
+  category = '',
+  recentStories = []
 }: RightSidebarProps) {
-  const [currentBreakingIndex, setCurrentBreakingIndex] = useState(0);
-  const touchStartRef = useRef<number | null>(null);
-  const touchEndRef = useRef<number | null>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // Auto-rotate every 4 seconds
-  useEffect(() => {
-    if (breaking.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setCurrentBreakingIndex((prev) => (prev + 1) % breaking.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [breaking.length]);
-
-  const handleSwipe = useCallback(() => {
-    if (touchStartRef.current === null || touchEndRef.current === null) return;
-
-    const distance = touchStartRef.current - touchEndRef.current;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && breaking.length > 0) {
-      setCurrentBreakingIndex((prev) => (prev + 1) % breaking.length);
-    } else if (isRightSwipe && breaking.length > 0) {
-      setCurrentBreakingIndex((prev) => (prev - 1 + breaking.length) % breaking.length);
-    }
-
-    touchStartRef.current = null;
-    touchEndRef.current = null;
-  }, [breaking.length]);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchEndRef.current = null;
-      touchStartRef.current = e.touches[0].clientX;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      touchEndRef.current = e.touches[0].clientX;
-    };
-
-    const onTouchEnd = () => {
-      handleSwipe();
-    };
-
-    wrapper.addEventListener('touchstart', onTouchStart, { passive: true });
-    wrapper.addEventListener('touchmove', onTouchMove, { passive: true });
-    wrapper.addEventListener('touchend', onTouchEnd, { passive: true });
-
-    return () => {
-      wrapper.removeEventListener('touchstart', onTouchStart);
-      wrapper.removeEventListener('touchmove', onTouchMove);
-      wrapper.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [handleSwipe]);
-
-  // Show "More in [Category]" section when category and relatedPosts are provided
-  const showCategorySection = category && relatedPosts && relatedPosts.length > 0;
+  // Determine if we're on a story page (has category)
+  const isStoryPage = !!category;
 
   return (
     <aside className="global-right-sidebar">
-      {/* Category-related posts section - replaces breaking news on article pages */}
-      {showCategorySection ? (
+      {/* Recent Stories with Images - always show on story pages */}
+      {recentStories.length > 0 && (
         <div className="global-sidebar-widget">
-          <h3>More in {category}</h3>
-          <div className="sidebar-related-posts">
-            {relatedPosts.slice(0, 5).map((post: any) => (
+          <h3>Recent Stories</h3>
+          <div className="recent-stories-sidebar">
+            {recentStories.map((story: any) => (
               <Link
-                key={post.slug}
-                href={`/story/${post.slug}`}
-                className="sidebar-related-item"
+                key={story.slug}
+                href={`/story/${story.slug}`}
+                className="recent-story-sidebar-item"
               >
-                {post.mainImage && (
-                  <div className="sidebar-related-image">
+                {story.mainImage && (
+                  <div className="recent-story-sidebar-thumb">
                     <Image
-                      src={urlFor(post.mainImage).width(80).height(60).url()}
-                      alt={post.title}
-                      width={80}
-                      height={60}
+                      src={urlFor(story.mainImage).width(70).height(55).url()}
+                      alt={story.title}
+                      width={70}
+                      height={55}
                     />
                   </div>
                 )}
-                <div className="sidebar-related-content">
-                  <span className="sidebar-related-title">
-                    {truncateText(post.title, 60)}
+                <div className="recent-story-sidebar-content">
+                  <span className="recent-story-sidebar-title">
+                    {truncateText(story.title, 55)}
                   </span>
-                  <span className="sidebar-related-meta">
-                    {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ''}
+                  <span className="recent-story-sidebar-meta">
+                    {story.publishedAt ? new Date(story.publishedAt).toLocaleDateString() : ''}
                   </span>
                 </div>
               </Link>
             ))}
           </div>
         </div>
-      ) : (
-        /* Default: Breaking News ticker */
-        <div className="global-sidebar-widget">
-          <div
-            ref={wrapperRef}
-            className="breaking-ticker-wrapper"
-          >
-            <span className="breaking-label">BREAKING NEWS</span>
-            <div className="breaking-ticker-content">
-              <div className="breaking-ticker-track">
-                <ul className="breaking-list-compact">
-                  {breaking?.map((post: any, index: number) => (
-                    <li
-                      key={post.slug}
-                      className={index === currentBreakingIndex ? 'breaking-active' : ''}
-                    >
-                      <Link href={`/story/${post.slug}`}>
-                        <span className="breaking-link">
-                          {post.title}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {/* Dot indicators - mobile only */}
-              {breaking.length > 0 && (
-                <div className="breaking-dots">
-                  {breaking.map((_: any, index: number) => (
-                    <div
-                      key={index}
-                      className={`breaking-dot ${index === currentBreakingIndex ? 'active' : ''}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       )}
 
-      {/* Only show Most Read when not hidden and not on article page with category */}
-      {!hideMostRead && !showCategorySection && (
+      {/* Most Read / Trending */}
+      {!hideMostRead && (
         <div className="global-sidebar-widget">
           <h3>Most Read</h3>
           <div className="most-read-list-compact">

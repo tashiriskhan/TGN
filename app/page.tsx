@@ -1,11 +1,11 @@
-// 🔥 Always fetch fresh data (fixes the Vercel redeploy issue)
+// Always fetch fresh data from Sanity
 export const dynamic = "force-dynamic";
 
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import "./globals.css";
 
-import { getFeaturedPost } from "@/sanity/lib/getFeaturedPost";
+import { getFeaturedStories } from "@/sanity/lib/getFeaturedStories";
 import { getTrending } from "@/sanity/lib/getTrending";
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews";
 import { getOpinion } from "@/sanity/lib/getOpinion";
@@ -16,29 +16,11 @@ import { getAllPhotoStories } from "@/sanity/lib/getAllPhotoStories";
 import { urlFor } from "@/sanity/lib/image";
 import { timeAgo } from "@/sanity/lib/timeAgo";
 import { truncateText } from "@/app/components/utils";
-import RightSidebar from "./components/RightSidebar";
-
-type RelatedPost = {
-  title: string;
-  slug: string;
-  mainImage?: any;
-  publishedAt: string;
-  author?: {
-    name: string;
-  };
-};
-
-async function getRelatedPosts(category: string): Promise<RelatedPost[]> {
-  // In a real app, you'd query Sanity by category
-  // For now, return trending posts as related
-  const trending = await getTrending();
-  return trending?.slice(0, 3) || [];
-}
 
 export default async function HomePage() {
-  // Fetch all data in parallel → faster
+  // Fetch all data in parallel
   const [
-    hero,
+    featuredStories,
     trending,
     breaking,
     opinion,
@@ -46,7 +28,7 @@ export default async function HomePage() {
     specialList,
     photoStories
   ] = await Promise.all([
-    getFeaturedPost(),
+    getFeaturedStories(),
     getTrending(),
     getBreakingNews(),
     getOpinion(),
@@ -55,22 +37,40 @@ export default async function HomePage() {
     getAllPhotoStories()
   ]);
 
-  if (!hero) {
-    return <div>No featured post found</div>;
+  if (!featuredStories || featuredStories.length === 0) {
+    return <div>No featured stories found</div>;
   }
 
-  // Extract category from categories array
-  const categoryName = hero.categories?.[0]?.title || 'News';
-  const relatedPosts = await getRelatedPosts(categoryName);
+  const mainStory = featuredStories[0];
+  const recentStories = featuredStories.slice(1, 5);
 
   return (
     <>
-      {/* TOP GRID - TRENDING | FEATURE | SIDEBAR */}
+      {/* BREAKING NEWS BANNER - Simple ticker */}
+      {breaking && breaking.length > 0 && (
+        <section className="breaking-banner-simple">
+          <div className="breaking-ticker-simple">
+            {breaking.map((news: any, index: number) => (
+              <React.Fragment key={news.slug || index}>
+                {index > 0 && <span className="breaking-separator">|</span>}
+                <Link
+                  href={`/story/${news.slug}`}
+                  className="breaking-item-simple"
+                >
+                  {news.title}
+                </Link>
+              </React.Fragment>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* TOP SECTION - TRENDING | FEATURE | RECENT SIDEBAR */}
       <section className="top-grid-section">
         <div className="container">
           <div className="top-grid-3col">
-            {/* LEFT: TRENDING */}
-            <div className="top-grid-left">
+            {/* LEFT: TRENDING - hidden on mobile, visible desktop */}
+            <div className="top-grid-left desktop-only">
               <h2 className="top-grid-title">Trending</h2>
               <div className="top-trending-list">
                 {trending?.slice(0, 5).map((post: any, index: number) => (
@@ -87,48 +87,118 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* CENTER: FEATURE */}
+            {/* CENTER: MAIN FEATURE - visible on both */}
             <div className="top-grid-center">
               <article className="top-feature-card">
-                <Link href={`/story/${hero.slug}`}>
-                  {hero.mainImage && (
+                <Link href={`/story/${mainStory.slug}`}>
+                  {mainStory.mainImage && (
                     <div className="top-feature-image">
                       <Image
-                        src={urlFor(hero.mainImage).width(800).height(500).url()}
-                        alt={hero.title}
+                        src={urlFor(mainStory.mainImage).width(800).height(500).url()}
+                        alt={mainStory.title}
                         width={800}
                         height={500}
                         priority
                       />
-                      <div className="top-feature-category">{categoryName}</div>
+                      <div className="top-feature-category">
+                        {mainStory.categories?.[0]?.title || 'News'}
+                      </div>
                     </div>
                   )}
                   <div className="top-feature-content">
-                    <h1 className="top-feature-title">{hero.title}</h1>
-                    {hero.excerpt && (
+                    <h1 className="top-feature-title">{mainStory.title}</h1>
+                    {mainStory.excerpt && (
                       <p className="top-feature-excerpt">
-                        {truncateText(hero.excerpt, 120)}
+                        {truncateText(mainStory.excerpt, 150)}
                       </p>
                     )}
                     <p className="top-feature-meta">
-                      <span className="top-feature-author">{hero.author?.name}</span> • {timeAgo(hero.publishedAt)}
+                      <span className="top-feature-author">{mainStory.author?.name}</span>
+                      {' • '}
+                      {timeAgo(mainStory.publishedAt)}
                     </p>
                   </div>
                 </Link>
               </article>
             </div>
 
-            {/* RIGHT: SIDEBAR */}
-            <RightSidebar hideMostRead={true} breaking={breaking} trending={trending} />
+            {/* RIGHT: RECENT STORIES - visible on desktop, hidden on mobile */}
+            <aside className="top-grid-right desktop-only">
+              <h2 className="top-grid-title">Recent Stories</h2>
+              <div className="top-recent-list">
+                {recentStories.map((story: any) => (
+                  <article key={story.slug} className="top-recent-item">
+                    <Link href={`/story/${story.slug}`} className="top-recent-link">
+                      {story.mainImage && (
+                        <div className="top-recent-thumb">
+                          <Image
+                            src={urlFor(story.mainImage).width(100).height(75).url()}
+                            alt={story.title}
+                            width={100}
+                            height={75}
+                          />
+                        </div>
+                      )}
+                      <div className="top-recent-content">
+                        <h3 className="top-recent-title">{truncateText(story.title, 60)}</h3>
+                        <span className="top-recent-meta">{timeAgo(story.publishedAt)}</span>
+                      </div>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </aside>
           </div>
         </div>
       </section>
 
-      {/* MAIN CONTENT - NO SIDEBAR */}
+      {/* MOBILE ONLY SECTIONS - Recent then Trending */}
+      <div className="mobile-only-section">
+        {/* Mobile Recent Stories - after feature */}
+        <section className="mobile-recent-section">
+          <div className="container">
+            <h2 className="mobile-section-title">Recent Stories</h2>
+            <div className="mobile-recent-grid">
+              {recentStories.map((story: any) => (
+                <Link key={story.slug} href={`/story/${story.slug}`} className="mobile-recent-card">
+                  {story.mainImage && (
+                    <div className="mobile-recent-thumb">
+                      <Image
+                        src={urlFor(story.mainImage).width(150).height(100).url()}
+                        alt={story.title}
+                        width={150}
+                        height={100}
+                      />
+                    </div>
+                  )}
+                  <h3 className="mobile-recent-title">{truncateText(story.title, 50)}</h3>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Mobile Trending - after Recent */}
+        <section className="mobile-trending-section">
+          <div className="container">
+            <h2 className="mobile-section-title">Trending</h2>
+            <div className="mobile-trending-list">
+              {trending?.slice(0, 5).map((post: any, index: number) => (
+                <Link key={post.slug} href={`/story/${post.slug}`} className="mobile-trending-item">
+                  <span className="mobile-trending-rank">{index + 1}</span>
+                  <span className="mobile-trending-title">{truncateText(post.title, 70)}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* MAIN CONTENT SECTIONS */}
       <section className="main-content-full">
         <div className="container">
           <div className="main-content">
-            {/* IN DEPTH - SMALLER */}
+            {/* IN DEPTH */}
             <section className="content-section-compact">
               <h2 className="section-title-compact">In Depth</h2>
               <div className="stories-grid-smaller">
@@ -155,7 +225,7 @@ export default async function HomePage() {
               </div>
             </section>
 
-            {/* SPECIAL REPORTS - SMALLER */}
+            {/* SPECIAL REPORTS */}
             <section className="content-section-compact">
               <h2 className="section-title-compact">Special Reports</h2>
               <div className="special-grid-smaller">
@@ -211,7 +281,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* WATCH & LISTEN - MOVED TO BOTTOM, COMPACT */}
+      {/* WATCH & LISTEN */}
       <section className="media-strip-compact">
         <div className="container">
           <h2 className="section-title-compact">Watch & Listen</h2>

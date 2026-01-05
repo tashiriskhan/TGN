@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Merriweather, Merriweather_Sans } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
 import BodyAttribute from "./components/BodyAttribute";
@@ -7,15 +7,16 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { siteConfig } from "@/config/site";
 
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const merriweatherSans = Merriweather_Sans({
-  variable: "--font-merriweather-sans",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -96,7 +97,7 @@ export default function RootLayout({
   return (
     <ThemeProvider>
       <html lang="en">
-        <body className={`${merriweather.variable} ${merriweatherSans.variable} antialiased`}>
+        <body className={`${inter.variable} ${playfair.variable} antialiased`}>
           <BodyAttribute />
           <Header />
           {children}
