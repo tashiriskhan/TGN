@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="50" y="50" width="1100" height="530" rx="20" fill="none" stroke="#bb1919" stroke-width="4"/>
+  <text x="600" y="260" font-family="Georgia, serif" font-size="80" font-weight="bold" fill="#ffffff" text-anchor="middle">The Ground</text>
+  <text x="600" y="340" font-family="Georgia, serif" font-size="80" font-weight="bold" fill="#ffffff" text-anchor="middle">Narrative</text>
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="28" fill="#bb1919" text-anchor="middle">Independent Journalism with Depth &amp; Perspective</text>
+  <circle cx="600" y="500" r="8" fill="#bb1919"/>
+</svg>

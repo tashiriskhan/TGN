@@ -89,7 +89,7 @@ export const FEATURED_POST_QUERY = `
 export const IN_DEPTH_QUERY = `
   *[_type == "post" && isInDepth == true]
     | order(publishedAt desc)
-    [0...10] {
+    [0...4] {
       ${POST_FIELDS},
       subtitle
     }
@@ -100,7 +100,7 @@ export const IN_DEPTH_QUERY = `
 export const SPECIAL_REPORTS_QUERY = `
   *[_type == "post" && isSpecial == true]
     | order(publishedAt desc)
-    [0...10] {
+    [0...4] {
       ${POST_FIELDS},
       subtitle,
       specialTag
