@@ -32,7 +32,7 @@ export default function RightSidebar({
       {/* Recent Stories with Images - always show on story pages */}
       {recentStories.length > 0 && (
         <div className="global-sidebar-widget">
-          <h3>Recent Stories</h3>
+          <h3>Most Read</h3>
           <div className="recent-stories-sidebar">
             {recentStories.map((story: any) => (
               <Link
@@ -43,10 +43,10 @@ export default function RightSidebar({
                 {story.mainImage && (
                   <div className="recent-story-sidebar-thumb">
                     <Image
-                      src={urlFor(story.mainImage).width(70).height(55).url()}
+                      src={urlFor(story.mainImage).width(180).height(140).url()}
                       alt={story.title}
-                      width={70}
-                      height={55}
+                      width={90}
+                      height={70}
                     />
                   </div>
                 )}
@@ -67,7 +67,7 @@ export default function RightSidebar({
       {/* Most Read / Trending */}
       {!hideMostRead && (
         <div className="global-sidebar-widget">
-          <h3>Most Read</h3>
+          <h3>Trending</h3>
           <div className="most-read-list-compact">
             {trending?.slice(0, 5).map((post: any, index: number) => (
               <div key={post.slug} className="most-read-item-compact">

@@ -20,9 +20,15 @@ export default async function SearchPage({ searchParams }: any) {
   const page = Number(s.page) || 1
 
   // Fetch data for sidebar (used in both branches)
-  const [breaking, trending] = await Promise.all([
+  const [breaking, trending, recentStories] = await Promise.all([
     getBreakingNews(),
-    getTrending()
+    getTrending(),
+    client.fetch(`*[_type == "post"] | order(publishedAt desc)[0...5]{
+      title,
+      mainImage,
+      publishedAt,
+      "slug": slug.current
+    }`)
   ])
 
   if (!query || query.trim().length < 1) {
@@ -33,7 +39,7 @@ export default async function SearchPage({ searchParams }: any) {
             <h1 className="search-title">Search Articles</h1>
             <p className="search-instruction">Type something in the search box.</p>
           </div>
-          <RightSidebar breaking={breaking} trending={trending} />
+          <RightSidebar breaking={breaking} trending={trending} recentStories={recentStories} />
         </div>
       </main>
     )
@@ -114,7 +120,7 @@ export default async function SearchPage({ searchParams }: any) {
             />
           )}
         </div>
-        <RightSidebar breaking={breaking} trending={trending} />
+        <RightSidebar breaking={breaking} trending={trending} recentStories={recentStories} />
       </div>
     </main>
   )
