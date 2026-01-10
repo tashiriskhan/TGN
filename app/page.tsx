@@ -171,19 +171,22 @@ export default async function HomePage() {
           <div className="container">
             <h2 className="mobile-section-title">Recent Stories</h2>
             <div className="mobile-recent-grid">
-              {recentStories.map((story: any) => (
+              {recentStories.slice(0, 3).map((story: any) => (
                 <Link key={story.slug} href={`/story/${story.slug}`} className="mobile-recent-card">
                   {story.mainImage && (
                     <div className="mobile-recent-thumb">
                       <Image
-                        src={urlFor(story.mainImage).width(150).height(100).url()}
+                        src={urlFor(story.mainImage).width(400).height(250).url()}
                         alt={story.title}
-                        width={150}
-                        height={100}
+                        width={400}
+                        height={250}
                       />
                     </div>
                   )}
-                  <h3 className="mobile-recent-title">{truncateText(story.title, 50)}</h3>
+                  <div className="mobile-recent-content">
+                    <h3 className="mobile-recent-title">{truncateText(story.title, 45)}</h3>
+                    <span className="mobile-recent-meta">{timeAgo(story.publishedAt)}</span>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -193,12 +196,13 @@ export default async function HomePage() {
         {/* Mobile Trending - after Recent */}
         <section className="mobile-trending-section">
           <div className="container">
-            <h2 className="mobile-section-title">Trending</h2>
             <div className="mobile-trending-list">
-              {trending?.slice(0, 5).map((post: any, index: number) => (
+              {trending?.slice(0, 4).map((post: any) => (
                 <Link key={post.slug} href={`/story/${post.slug}`} className="mobile-trending-item">
-                  <span className="mobile-trending-rank">{index + 1}</span>
-                  <span className="mobile-trending-title">{truncateText(post.title, 70)}</span>
+                  <span className="mobile-trending-title">{truncateText(post.title, 80)}</span>
+                  {post.excerpt && (
+                    <span className="mobile-trending-excerpt">{truncateText(post.excerpt, 100)}</span>
+                  )}
                 </Link>
               ))}
             </div>
