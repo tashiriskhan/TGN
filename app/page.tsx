@@ -84,15 +84,22 @@ export default async function HomePage() {
           <div className="top-grid-3col">
             {/* LEFT: TRENDING - hidden on mobile, visible desktop */}
             <div className="top-grid-left desktop-only">
-              <h2 className="top-grid-title">Trending</h2>
               <div className="top-trending-list">
-                {trending?.slice(0, 5).map((post: any, index: number) => (
+                {trending?.slice(0, 3).map((post: any) => (
                   <article key={post.slug} className="top-trending-item">
-                    <Link href={`/story/${post.slug}`}>
-                      <span className="top-trending-rank">{index + 1}</span>
+                    <Link href={`/story/${post.slug}`} className="top-trending-link">
+                      {post.mainImage && (
+                        <div className="top-trending-thumb">
+                          <Image
+                            src={urlFor(post.mainImage).width(320).height(180).url()}
+                            alt={post.title}
+                            width={320}
+                            height={180}
+                          />
+                        </div>
+                      )}
                       <div className="top-trending-content">
-                        <h3 className="top-trending-title">{truncateText(post.title, 80)}</h3>
-                        <p className="top-trending-meta">{timeAgo(post.publishedAt)}</p>
+                        <h3 className="top-trending-title">{truncateText(post.title, 70)}</h3>
                       </div>
                     </Link>
                   </article>
@@ -113,9 +120,6 @@ export default async function HomePage() {
                         height={500}
                         priority
                       />
-                      <div className="top-feature-category">
-                        {mainStory.categories?.[0]?.title || 'News'}
-                      </div>
                     </div>
                   )}
                   <div className="top-feature-content">
@@ -125,11 +129,6 @@ export default async function HomePage() {
                         {truncateText(mainStory.excerpt, 150)}
                       </p>
                     )}
-                    <p className="top-feature-meta">
-                      <span className="top-feature-author">{mainStory.author?.name}</span>
-                      {' • '}
-                      {timeAgo(mainStory.publishedAt)}
-                    </p>
                   </div>
                 </Link>
               </article>
@@ -139,22 +138,22 @@ export default async function HomePage() {
             <aside className="top-grid-right desktop-only">
               <h2 className="top-grid-title">Recent Stories</h2>
               <div className="top-recent-list">
-                {recentStories.map((story: any) => (
+                {recentStories.slice(0, 2).map((story: any) => (
                   <article key={story.slug} className="top-recent-item">
                     <Link href={`/story/${story.slug}`} className="top-recent-link">
                       {story.mainImage && (
                         <div className="top-recent-thumb">
                           <Image
-                            src={urlFor(story.mainImage).width(100).height(75).url()}
+                            src={urlFor(story.mainImage).width(320).height(180).url()}
                             alt={story.title}
-                            width={100}
-                            height={75}
+                            width={320}
+                            height={180}
                           />
                         </div>
                       )}
                       <div className="top-recent-content">
-                        <h3 className="top-recent-title">{truncateText(story.title, 60)}</h3>
-                        <span className="top-recent-meta">{timeAgo(story.publishedAt)}</span>
+                        <h3 className="top-recent-title">{truncateText(story.title, 70)}</h3>
+                        <p className="top-recent-subtitle">{story.excerpt ? truncateText(story.excerpt, 80) : story.author?.name}</p>
                       </div>
                     </Link>
                   </article>
@@ -242,7 +241,7 @@ export default async function HomePage() {
             <section className="content-section-compact">
               <h2 className="section-title-compact">Special Reports</h2>
               <div className="special-grid-smaller">
-                {specialList?.filter((post: any) => post.mainImage).map((post: any) => (
+                {specialList?.filter((post: any) => post.mainImage).slice(0, 4).map((post: any) => (
                   <article key={post.slug} className="special-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       <div className="special-image-smaller">
