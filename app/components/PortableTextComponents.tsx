@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { PortableText as PortableTextReact } from "@portabletext/react";
+import { PortableText, PortableTextComponents } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
 
 // Helper function to generate slug from heading text
@@ -13,7 +13,7 @@ function generateSlug(text: string): string {
 }
 
 // PortableText types configuration
-export const portableTextTypes = {
+const portableTextTypes: PortableTextComponents["types"] = {
   image: ({ value }: { value: any }) => {
     const { asset, alt, caption } = value;
     return (
@@ -31,7 +31,7 @@ export const portableTextTypes = {
 };
 
 // PortableText marks configuration
-export const portableTextMarks = {
+const portableTextMarks: PortableTextComponents["marks"] = {
   link: ({ value, children }: { value: any; children: React.ReactNode }) => {
     const href = value?.href || "";
     const isExternal = href.startsWith("http") || href.startsWith("https");
@@ -49,7 +49,7 @@ export const portableTextMarks = {
 };
 
 // PortableText blocks configuration
-export const portableTextBlocks = {
+const portableTextBlocks: PortableTextComponents["block"] = {
   h1: ({ value }: { value: any }) => {
     const text = value.children.map((child: any) => child.text).join(" ");
     const id = generateSlug(text);
@@ -97,7 +97,7 @@ export const portableTextBlocks = {
 };
 
 // Combined PortableText components object
-export const portableTextComponents = {
+const portableTextComponents: PortableTextComponents = {
   types: portableTextTypes,
   marks: portableTextMarks,
   block: portableTextBlocks,
@@ -109,5 +109,5 @@ interface ArticlePortableTextProps {
 }
 
 export default function ArticlePortableText({ value }: ArticlePortableTextProps) {
-  return <PortableTextReact value={value} components={portableTextComponents} />;
+  return <PortableText value={value} components={portableTextComponents} />;
 }
