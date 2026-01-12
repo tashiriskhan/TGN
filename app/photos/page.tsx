@@ -17,8 +17,8 @@
  * ============================================
  */
 
-// Always fetch fresh data from Sanity
-export const dynamic = "force-dynamic";
+// Revalidate every 60 seconds for fresh content with caching
+export const revalidate = 60;
 
 import Link from "next/link"
 import Image from "next/image"

@@ -9,7 +9,16 @@ import { queryLimits } from '@/config/site'
 export const POST_FIELDS = `
   title,
   "slug": slug.current,
-  mainImage,
+  mainImage{
+    ...,
+    asset->{
+      _id,
+      metadata{
+        lqip,
+        dimensions
+      }
+    }
+  },
   publishedAt,
   excerpt,
   subtitle,
@@ -67,7 +76,7 @@ export const TRENDING_QUERY = `
 // ============ BREAKING NEWS QUERIES ============
 
 export const BREAKING_NEWS_QUERY = `
-  *[_type == "post" && isBreaking == true]
+  *[_type == "post" && isBreaking == true && publishedAt >= now() - 30*60*60]
     | order(publishedAt desc)
     [0...${queryLimits.breaking}] {
       ${POST_FIELDS}

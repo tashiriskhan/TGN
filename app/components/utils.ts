@@ -1,5 +1,7 @@
+import type { SanityImage } from '@/app/types';
+
 export function truncateText(text: string, maxLength: number): string {
-  if (!text) return "";
+  if (!text || typeof text !== 'string') return '';
   if (text.length <= maxLength) return text;
 
   const truncated = text.slice(0, maxLength);
@@ -12,25 +14,17 @@ export function truncateText(text: string, maxLength: number): string {
 
 // Optimized image URL with quality and format settings
 export function getOptimizedImageUrl(
-  image: any,
+  image: SanityImage | null | undefined,
   width: number,
   height?: number,
   quality: number = 90
 ): string {
-  if (!image) return "";
-
-  // If using Sanity's urlFor, apply optimization
-  if (typeof image === 'object' && image.asset) {
-    const builder = (image as any).width(width);
-    if (height) builder.height(height);
-
-    return builder
-      .quality(quality)
-      .format('webp')
-      .fit('max')
-      .url();
-  }
+  if (!image) return '';
 
   // Fallback for direct URLs
-  return image.url || image;
+  if ('url' in image) {
+    return (image as { url?: string }).url || '';
+  }
+
+  return '';
 }

@@ -1,8 +1,9 @@
-// Always fetch fresh data from Sanity
-export const dynamic = "force-dynamic";
+// Revalidate every 60 seconds for fresh content with caching
+export const revalidate = 60;
 
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
+import SmartImage from "@/app/components/SmartImage"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getRelatedPosts } from "@/sanity/lib/getRelatedPosts"
 import Link from "next/link"
@@ -12,34 +13,47 @@ import { calculateReadingTime } from "@/sanity/lib/readingTime"
 import SocialShare from "@/app/components/SocialShare"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
-import { PortableText } from "@portabletext/react"
+import ArticlePortableText from "@/app/components/PortableTextComponents"
 import TableOfContents from "@/app/components/TableOfContents"
 import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
 import { getTrending } from "@/sanity/lib/getTrending"
 import { truncateText } from "@/app/components/utils"
 
+// Shared query for post data (reduces duplication)
+const POST_FULL_QUERY = `*[_type == "post" && slug.current == $slug][0]{
+  title,
+  subtitle,
+  excerpt,
+  body,
+  publishedAt,
+  mainImage{
+    ...,
+    asset->{
+      _id,
+      metadata{
+        lqip,
+        dimensions
+      }
+    }
+  },
+  author->{
+    name,
+    bio,
+    "slug": slug.current,
+    image
+  },
+  categories[]->{ title, "slug": slug.current }[0],
+  tags[]->{ title, "slug": slug.current }
+}`
+
+async function getPost(slug: string) {
+  return client.fetch(POST_FULL_QUERY, { slug })
+}
+
 export async function generateMetadata({ params }: any) {
   const { slug } = await params
-
-  const post = await client.fetch(
-    `*[_type == "post" && slug.current == $slug][0]{
-       title,
-       subtitle,
-       body,
-       mainImage,
-       publishedAt,
-       author->{
-         name,
-         image
-       },
-       categories[]->{
-         title,
-         "slug": slug.current
-       }[0]
-     }`,
-    { slug }
-  )
+  const post = await getPost(slug)
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   const url = `${siteUrl}/story/${slug}`
@@ -79,25 +93,7 @@ export async function generateMetadata({ params }: any) {
 
 export default async function StoryPage({ params }: any) {
   const { slug } = await params
-
-  const post = await client.fetch(
-    `*[_type == "post" && slug.current == $slug][0]{
-      title,
-      excerpt,
-      body,
-      publishedAt,
-      author->{
-      name,
-      bio,
-      "slug": slug.current,
-      image
-    },
-      mainImage,
-      categories[]->{ title, "slug": slug.current }[0],
-      tags[]->{ title, "slug": slug.current }
-    }`,
-    { slug }
-  )
+  const post = await getPost(slug)
 
   if (!post) return <div>Story not found</div>
 
@@ -229,13 +225,13 @@ export default async function StoryPage({ params }: any) {
           {/* HERO IMAGE */}
           {post.mainImage && (
             <div className="article-hero-image">
-              <Image
-                src={urlFor(post.mainImage).width(1200).height(675).url()}
+              <SmartImage
+                image={post.mainImage}
                 alt={post.title}
-                className="article-image"
                 width={1200}
                 height={675}
                 priority
+                className="article-image"
               />
             </div>
           )}
@@ -246,83 +242,7 @@ export default async function StoryPage({ params }: any) {
           {/* ARTICLE CONTENT */}
           <div className="tgn-article-body">
             <div className="article-content">
-              <PortableText
-                value={post.body}
-                components={{
-                  types: {
-                    image: ({ value }) => {
-                      const { asset, alt, caption } = value;
-                      return (
-                        <figure className="article-image">
-                          <Image
-                            src={urlFor(asset).width(800).height(450).url()}
-                            alt={alt || ''}
-                            width={800}
-                            height={450}
-                          />
-                          {caption && <figcaption>{caption}</figcaption>}
-                        </figure>
-                      );
-                    },
-                  },
-                  marks: {
-                    link: ({ value, children }) => {
-                      const target = (value?.href || '').startsWith('http') ? '_blank' : undefined;
-                      return (
-                        <a href={value?.href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
-                          {children}
-                        </a>
-                      );
-                    },
-                  },
-                  block: {
-                    h1: ({ value }) => {
-                      const text = value.children.map((child: any) => child.text).join(' ');
-                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return (
-                        <h1 id={id}>
-                          {value.children.map((child: any, index: number) => (
-                            <span key={index}>{child.text}</span>
-                          ))}
-                        </h1>
-                      );
-                    },
-                    h2: ({ value }) => {
-                      const text = value.children.map((child: any) => child.text).join(' ');
-                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return (
-                        <h2 id={id}>
-                          {value.children.map((child: any, index: number) => (
-                            <span key={index}>{child.text}</span>
-                          ))}
-                        </h2>
-                      );
-                    },
-                    h3: ({ value }) => {
-                      const text = value.children.map((child: any) => child.text).join(' ');
-                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return (
-                        <h3 id={id}>
-                          {value.children.map((child: any, index: number) => (
-                            <span key={index}>{child.text}</span>
-                          ))}
-                        </h3>
-                      );
-                    },
-                    h4: ({ value }) => {
-                      const text = value.children.map((child: any) => child.text).join(' ');
-                      const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                      return (
-                        <h4 id={id}>
-                          {value.children.map((child: any, index: number) => (
-                            <span key={index}>{child.text}</span>
-                          ))}
-                        </h4>
-                      );
-                    },
-                  },
-                }}
-              />
+              <ArticlePortableText value={post.body} />
             </div>
           </div>
 

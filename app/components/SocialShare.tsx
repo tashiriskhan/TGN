@@ -5,15 +5,19 @@ import { timeouts } from "@/config/site"
 
 type SocialShareProps = {
   title: string
+  url?: string // Allow passing URL as prop for SSR
 }
 
-export default function SocialShare({ title }: SocialShareProps) {
+export default function SocialShare({ title, url: propUrl }: SocialShareProps) {
   const [copied, setCopied] = useState(false)
   const [showToast, setShowToast] = useState(false)
-  const [currentUrl] = useState(() =>
-    typeof window !== 'undefined' ? window.location.href : ''
-  )
+  const [currentUrl, setCurrentUrl] = useState(propUrl || '')
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Get URL on client side only
+  useEffect(() => {
+    setCurrentUrl(propUrl || window.location.href)
+  }, [propUrl])
 
   useEffect(() => {
     return () => {
@@ -23,7 +27,7 @@ export default function SocialShare({ title }: SocialShareProps) {
     }
   }, [])
 
-  const encodedUrl = encodeURIComponent(currentUrl)
+  const encodedUrl = encodeURIComponent(currentUrl || window.location.href)
   const encodedTitle = encodeURIComponent(title)
 
   const shareLinks = {
@@ -34,7 +38,7 @@ export default function SocialShare({ title }: SocialShareProps) {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(currentUrl)
+      await navigator.clipboard.writeText(currentUrl || window.location.href)
       setCopied(true)
       setShowToast(true)
 
@@ -51,6 +55,18 @@ export default function SocialShare({ title }: SocialShareProps) {
     } catch (err) {
       console.error("Failed to copy: ", err)
     }
+  }
+
+  // Show loading state during SSR/initial client render
+  if (!currentUrl) {
+    return (
+      <div className="social-share">
+        <h3 className="share-title">Share this article</h3>
+        <div className="share-buttons">
+          <span className="share-loading">Loading share links...</span>
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -1,5 +1,5 @@
-// Always fetch fresh data from Sanity
-export const dynamic = "force-dynamic";
+// Revalidate every 60 seconds for fresh content with caching
+export const revalidate = 60;
 
 import React from "react";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import { getAllSpecial } from "@/sanity/lib/getAllSpecial";
 import { getAllPhotoStories } from "@/sanity/lib/getAllPhotoStories";
 
 import { urlFor } from "@/sanity/lib/image";
+import SmartImage from "@/app/components/SmartImage";
 import { timeAgo } from "@/sanity/lib/timeAgo";
 import { truncateText } from "@/app/components/utils";
 
@@ -113,12 +114,13 @@ export default async function HomePage() {
                 <Link href={`/story/${mainStory.slug}`}>
                   {mainStory.mainImage && (
                     <div className="top-feature-image">
-                      <Image
-                        src={urlFor(mainStory.mainImage).width(800).height(500).url()}
+                      <SmartImage
+                        image={mainStory.mainImage}
                         alt={mainStory.title}
                         width={800}
                         height={500}
                         priority
+                        className="top-feature-img"
                       />
                     </div>
                   )}

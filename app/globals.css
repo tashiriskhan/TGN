@@ -3,6 +3,34 @@
    Mobile-First Approach
    ============================================ */
 
+/* ========== ACCESSIBILITY ========== */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  text-decoration: none;
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 /* ========== CSS VARIABLES ========== */
 :root {
   /* Colors - Modern Clean */
@@ -9001,4 +9029,158 @@ html[data-theme="photos-dark"] body .footer-link:hover {
   .toc-link {
     font-size: 0.85rem;
   }
+}
+
+/* ========== 404 PAGE ========== */
+.not-found-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--container-padding);
+}
+
+.not-found-container {
+  text-align: center;
+  max-width: 500px;
+}
+
+.not-found-code {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: var(--space-md);
+}
+
+.not-found-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+}
+
+.not-found-message {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+  font-size: var(--font-size-lg);
+}
+
+.not-found-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.not-found-home-btn,
+.not-found-search-btn {
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.not-found-home-btn {
+  background: var(--color-primary);
+  color: white;
+}
+
+.not-found-home-btn:hover {
+  background: var(--color-primary-dark);
+}
+
+.not-found-search-btn {
+  background: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+}
+
+.not-found-search-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ========== ERROR PAGE ========== */
+.error-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--container-padding);
+}
+
+.error-container {
+  text-align: center;
+  max-width: 500px;
+}
+
+.error-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+}
+
+.error-message {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.error-digest {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-family: monospace;
+  margin-bottom: var(--space-xl);
+}
+
+.error-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-retry-btn,
+.error-home-btn {
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.error-retry-btn {
+  background: var(--color-primary);
+  color: white;
+}
+
+.error-retry-btn:hover {
+  background: var(--color-primary-dark);
+}
+
+.error-home-btn {
+  background: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+}
+
+.error-home-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Dark mode for error pages */
+[data-theme="dark"] .not-found-title,
+[data-theme="dark"] .error-title {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .not-found-search-btn,
+[data-theme="dark"] .error-home-btn {
+  border-color: var(--color-border);
+  color: var(--color-text);
 }

@@ -99,8 +99,12 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${inter.variable} ${playfair.variable} antialiased`}>
           <BodyAttribute />
+          {/* Skip to main content link for accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
           <Header />
-          {children}
+          <main id="main-content">{children}</main>
           <Footer />
         </body>
       </html>
