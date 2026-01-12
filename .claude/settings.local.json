@@ -47,7 +47,8 @@
       "Bash(tree:*)",
       "Bash(npm uninstall:*)",
       "Bash(npm run lint)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(ren:*)"
     ],
     "deny": [],
     "ask": []

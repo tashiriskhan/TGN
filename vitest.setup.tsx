@@ -16,25 +16,26 @@ vi.mock('next/image', () => ({
     blurDataURL,
     onLoad,
   }: any) => {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className={className}
-        loading={priority ? 'eager' : 'lazy'}
-        {...(fill && { style: { objectFit: 'cover' } })}
-        {...(blurDataURL && { style: { background: `url(${blurDataURL})`, backgroundSize: 'cover' } })}
-      />
-    );
+    return {
+      type: 'img',
+      props: {
+        src,
+        alt,
+        width,
+        height,
+        className,
+        loading: priority ? 'eager' : 'lazy',
+        style: fill ? { objectFit: 'cover' } : {},
+      },
+    };
   },
 }));
 
 // Mock next/link
-vi.mock('next/link', ({ children, href, className, ...props }: any) => (
-  <a href={href} className={className} {...props}>{children}</a>
-));
+vi.mock('next/link', ({ children, href, className, ...props }: any) => ({
+  type: 'a',
+  props: { href, className, ...props, children },
+}));
 
 // Mock Sanity client
 vi.mock('@/sanity/lib/sanity', () => ({
