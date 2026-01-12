@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { PortableText, PortableTextComponents, PortableTextMarkComponentProps } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
 
 // Helper function to generate slug from heading text
@@ -32,7 +32,7 @@ const portableTextTypes: PortableTextComponents["types"] = {
 
 // PortableText marks configuration
 const portableTextMarks: PortableTextComponents["marks"] = {
-  link: ({ value, children }: { value: any; children: React.ReactNode }) => {
+  link: ({ value, children }: PortableTextMarkComponentProps) => {
     const href = value?.href || "";
     const isExternal = href.startsWith("http") || href.startsWith("https");
     return (
