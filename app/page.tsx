@@ -138,7 +138,6 @@ export default async function HomePage() {
 
             {/* RIGHT: RECENT STORIES - visible on desktop, hidden on mobile */}
             <aside className="top-grid-right desktop-only">
-              <h2 className="top-grid-title">Recent Stories</h2>
               <div className="top-recent-list">
                 {recentStories.slice(0, 2).map((story: any) => (
                   <article key={story.slug} className="top-recent-item">

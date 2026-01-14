@@ -145,10 +145,13 @@ export default function TermsPage() {
           <p style={{ marginBottom: 'var(--space-md)' }}>
             If you have any questions about these Terms and Conditions, please contact us at:
           </p>
+       {/*
           <div style={{ background: 'var(--color-surface)', padding: 'var(--space-lg)', borderRadius: '8px', marginBottom: 'var(--space-md)' }}>
             <p><strong>Email:</strong> legal@groundnarrative.com</p>
             <p><strong>Address:</strong> The Ground Narrative, Legal Department</p>
           </div>
+
+          EMAIL/CONTACT */}
         </div>
       </article>
     </main>

@@ -147,10 +147,13 @@ export default function PrivacyPage() {
           <p style={{ marginBottom: 'var(--space-md)' }}>
             If you have any questions about this Privacy Policy or our privacy practices, please contact us at:
           </p>
+         {/* 
           <div style={{ background: 'var(--color-surface)', padding: 'var(--space-lg)', borderRadius: '8px', marginBottom: 'var(--space-md)' }}>
             <p><strong>Email:</strong> privacy@groundnarrative.com</p>
             <p><strong>Address:</strong> The Ground Narrative, Privacy Department</p>
-          </div>
+          </div>   
+          
+          EMAIL/CONTAC */}
         </div>
       </article>
     </main>

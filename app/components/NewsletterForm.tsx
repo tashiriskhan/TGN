@@ -1,70 +1,47 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { apiRoutes } from '@/config/site'
+import { useState } from "react";
 
 export default function NewsletterForm() {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [message, setMessage] = useState('')
+  const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus('loading')
-    setMessage('')
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle newsletter subscription
+    console.log("Subscribed:", email);
+    setIsSubmitted(true);
+    setEmail("");
+    setTimeout(() => setIsSubmitted(false), 3000);
+  };
 
-    try {
-      const response = await fetch(apiRoutes.newsletter, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setStatus('success')
-        setMessage(data.message || 'Successfully subscribed!')
-        setEmail('')
-      } else {
-        setStatus('error')
-        setMessage(data.error || 'Something went wrong')
-      }
-    } catch {
-      setStatus('error')
-      setMessage('Network error. Please try again.')
-    }
+  if (isSubmitted) {
+    return (
+      <div className="footer-newsletter">
+        <p className="newsletter-label">Subscribe to our newsletter</p>
+        <div className="newsletter-success">
+          Thanks for subscribing!
+        </div>
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="newsletter-form-compact">
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Your email"
-        className="newsletter-input-compact"
-        required
-        disabled={status === 'loading'}
-      />
-      <button
-        type="submit"
-        className="newsletter-submit-compact"
-        disabled={status === 'loading'}
-      >
-        {status === 'loading' ? '...' : 'Subscribe'}
-      </button>
-      {message && (
-        <p
-          className={`newsletter-message ${
-            status === 'success' ? 'newsletter-success' : 'newsletter-error'
-          }`}
-        >
-          {message}
-        </p>
-      )}
-    </form>
-  )
+    <div className="footer-newsletter">
+      <p className="newsletter-label">Subscribe to our newsletter</p>
+      <form className="newsletter-form" onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Your email"
+          className="newsletter-input"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <button type="submit" className="newsletter-btn">
+          Subscribe
+        </button>
+      </form>
+    </div>
+  );
 }

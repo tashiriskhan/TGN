@@ -3,6 +3,7 @@ import { getFooterCategories } from "@/sanity/lib/getFooterCategories"
 import { siteConfig, navRoutes, externalConfig, themeColors } from "@/config/site"
 import { footerLabels } from "@/config/site"
 import SocialIcons from "./SocialIcons"
+import NewsletterForm from "./NewsletterForm"
 
 export default async function Footer() {
   const categories = await getFooterCategories()
@@ -22,6 +23,9 @@ export default async function Footer() {
           <div className="footer-social">
             <SocialIcons />
           </div>
+
+          {/* Compact Newsletter */}
+          <NewsletterForm />
         </div>
 
         {/* COLUMN 2 — QUICK LINKS */}
