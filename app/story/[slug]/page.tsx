@@ -58,14 +58,15 @@ export async function generateMetadata({ params }: any) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   const url = `${siteUrl}/story/${slug}`
 
+  // Use excerpt as fallback, not body (body is Portable Text array)
+  const description = post?.excerpt || post?.subtitle || "Latest news from The Ground Narrative"
+
   return {
     title: post?.title || "The Ground Narrative",
-    description:
-      post?.subtitle ||
-      (post?.body ? post.body.slice(0, 120) : "Latest news from The Ground Narrative"),
+    description: description,
     openGraph: {
       title: post?.title,
-      description: post?.subtitle || post?.body?.slice(0, 120),
+      description: description,
       url,
       siteName: 'The Ground Narrative',
       images: post?.mainImage ? [
@@ -85,7 +86,7 @@ export async function generateMetadata({ params }: any) {
     twitter: {
       card: 'summary_large_image',
       title: post?.title,
-      description: post?.subtitle || post?.body?.slice(0, 120),
+      description: description,
       images: post?.mainImage ? [urlFor(post.mainImage).width(1200).height(630).url()] : [],
     },
   }
