@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { truncateText } from "./utils";
-import NewsletterForm from "./NewsletterForm";
 import { urlFor } from "@/sanity/lib/image";
 
 interface RightSidebarProps {
@@ -80,12 +79,6 @@ export default function RightSidebar({
           </div>
         </div>
       )}
-
-      <div className="global-sidebar-widget">
-        <h3>Newsletter</h3>
-        <p>Get the latest news in your inbox</p>
-        <NewsletterForm />
-      </div>
 
     </aside>
   );
