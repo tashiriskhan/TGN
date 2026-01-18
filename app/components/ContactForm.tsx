@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
+
+// Replace with your Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgy2fCBjpB-Ty0HjDRDGwL8tbnkS5_m0_BOX9ZRpHh_mRLD9jwXj2zj5HBpUlNInayBw/exec";
 
 interface FormData {
   name: string;
@@ -31,6 +34,21 @@ export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [userIP, setUserIP] = useState("");
+
+  // Get user IP on mount
+  useEffect(() => {
+    const getIP = async () => {
+      try {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setUserIP(data.ip);
+      } catch {
+        setUserIP("Unknown");
+      }
+    };
+    getIP();
+  }, []);
 
   const categories = [
     { value: "general", label: "General Inquiry" },
@@ -75,11 +93,34 @@ export default function ContactForm() {
 
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      // Send as form-encoded data (what Google Apps Script expects)
+      const formBody = new URLSearchParams({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        category: formData.category,
+        message: formData.message,
+        timestamp: new Date().toISOString(),
+        ip: userIP,
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setErrors({ message: "Failed to send message. Please try again." });
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
