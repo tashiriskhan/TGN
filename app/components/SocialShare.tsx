@@ -16,7 +16,7 @@ export default function SocialShare({ title, url: propUrl }: SocialShareProps) {
 
   // Get URL on client side only
   useEffect(() => {
-    setCurrentUrl(propUrl || window.location.href)
+    setCurrentUrl(propUrl || (typeof window !== 'undefined' ? window.location.href : ''))
   }, [propUrl])
 
   useEffect(() => {
@@ -27,7 +27,19 @@ export default function SocialShare({ title, url: propUrl }: SocialShareProps) {
     }
   }, [])
 
-  const encodedUrl = encodeURIComponent(currentUrl || window.location.href)
+  // Guard against SSR - don't render share links until we have a URL
+  if (!currentUrl || typeof window === 'undefined') {
+    return (
+      <div className="social-share">
+        <h3 className="share-title">Share this article</h3>
+        <div className="share-buttons">
+          <span className="share-loading">Loading share links...</span>
+        </div>
+      </div>
+    )
+  }
+
+  const encodedUrl = encodeURIComponent(currentUrl)
   const encodedTitle = encodeURIComponent(title)
 
   const shareLinks = {
@@ -55,18 +67,6 @@ export default function SocialShare({ title, url: propUrl }: SocialShareProps) {
     } catch (err) {
       console.error("Failed to copy: ", err)
     }
-  }
-
-  // Show loading state during SSR/initial client render
-  if (!currentUrl) {
-    return (
-      <div className="social-share">
-        <h3 className="share-title">Share this article</h3>
-        <div className="share-buttons">
-          <span className="share-loading">Loading share links...</span>
-        </div>
-      </div>
-    )
   }
 
   return (
