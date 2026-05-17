@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next'
 import { client } from '@/sanity/lib/sanity'
+import { siteConfig } from '@/config/site'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
 
   // Fetch all posts from Sanity
   const posts = await client.fetch(`

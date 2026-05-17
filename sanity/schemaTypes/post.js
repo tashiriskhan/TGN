@@ -100,6 +100,41 @@ export default {
       type: 'boolean',
       initialValue: false,
     },
+
+    // AI-generated scoring fields
+    {
+      name: 'importanceScore',
+      title: 'Importance Score (1-10)',
+      type: 'number',
+      description: 'AI-generated score indicating global significance.',
+      initialValue: 0,
+    },
+    {
+      name: 'geopoliticalImpact',
+      title: 'Geopolitical Impact (1-10)',
+      type: 'number',
+      description: 'AI-generated score for impact on global policy/relations.',
+      initialValue: 0,
+    },
+    {
+      name: 'narrativeConflictScore',
+      title: 'Narrative Conflict Score (1-10)',
+      type: 'number',
+      description: 'Measures the difference in framing between multiple sources.',
+      initialValue: 0,
+    },
+    {
+      name: 'controversyLevel',
+      title: 'Controversy Level (1-10)',
+      type: 'number',
+      initialValue: 0,
+    },
+    {
+      name: 'urgencyScore',
+      title: 'Urgency Score (1-10)',
+      type: 'number',
+      initialValue: 0,
+    },
   ],
   preview: {
     select: {

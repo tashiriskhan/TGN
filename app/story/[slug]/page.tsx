@@ -19,6 +19,7 @@ import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
 import { getTrending } from "@/sanity/lib/getTrending"
 import { truncateText } from "@/app/components/utils"
+import { siteConfig } from "@/config/site"
 
 // Shared query for post data (reduces duplication)
 const POST_FULL_QUERY = `*[_type == "post" && slug.current == $slug][0]{
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: any) {
   const { slug } = await params
   const post = await getPost(slug)
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
   const url = `${siteUrl}/story/${slug}`
 
   // Use excerpt as fallback, not body (body is Portable Text array)
@@ -129,7 +130,7 @@ export default async function StoryPage({ params }: any) {
   const readingTime = calculateReadingTime(bodyText);
 
   // Create JSON-LD structured data
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
   const url = `${siteUrl}/story/${slug}`
 
   const jsonLd = {
@@ -245,7 +246,7 @@ export default async function StoryPage({ params }: any) {
             <div className="article-content">
               <ArticlePortableText value={post.body} />
             </div>
-          </div>
+          </div>     
 
           {/* TAGS */}
           {post.tags && post.tags.length > 0 && (
