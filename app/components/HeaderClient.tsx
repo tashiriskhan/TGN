@@ -11,12 +11,24 @@ import { navRoutes, imageConfig, siteConfig } from "@/config/site"
 
 export default function HeaderClient({ categories }: { categories: Array<{title: string, slug: string}> }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [newsDropdownOpen, setNewsDropdownOpen] = useState(false)
-  const [mediaDropdownOpen, setMediaDropdownOpen] = useState(false)
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false)
   const { theme } = useTheme()
   const pathname = usePathname()
-  const newsDropdownRef = useRef<HTMLLIElement>(null)
-  const mediaDropdownRef = useRef<HTMLLIElement>(null)
+  const moreDropdownRef = useRef<HTMLLIElement>(null)
+
+  // Preferred order for categories
+  const preferredOrder = ['world', 'politics', 'science', 'tech', 'technology', 'culture', 'business']
+  
+  const sortedCategories = [...categories].sort((a, b) => {
+    const indexA = preferredOrder.indexOf(a.slug || '')
+    const indexB = preferredOrder.indexOf(b.slug || '')
+    
+    if (indexA === -1 && indexB === -1) return 0
+    if (indexA === -1) return 1
+    if (indexB === -1) return -1
+    
+    return indexA - indexB
+  })
 
   // Check if we're on a video or photos page - force white logo and dark theme
   const isVideoPage = pathname?.startsWith('/videos') || pathname?.startsWith('/video-stories')
@@ -31,8 +43,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
 
   const closeMenu = () => {
     setMenuOpen(false)
-    setNewsDropdownOpen(false)
-    setMediaDropdownOpen(false)
+    setMoreDropdownOpen(false)
   }
 
   // Close dropdown when clicking outside
@@ -48,11 +59,8 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
       }
 
       // Close dropdowns when clicking outside
-      if (newsDropdownRef.current && !newsDropdownRef.current.contains(target)) {
-        setNewsDropdownOpen(false)
-      }
-      if (mediaDropdownRef.current && !mediaDropdownRef.current.contains(target)) {
-        setMediaDropdownOpen(false)
+      if (moreDropdownRef.current && !moreDropdownRef.current.contains(target)) {
+        setMoreDropdownOpen(false)
       }
     }
 
@@ -145,48 +153,37 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
             {/* HOME */}
             <li><Link href={navRoutes.home} onClick={closeMenu}>Home</Link></li>
 
-            {/* News Dropdown - Kashmir, India, World ONLY */}
-            <li className="nav-dropdown" ref={newsDropdownRef}>
-              <button
-                className="nav-dropdown-toggle"
-                onClick={() => setNewsDropdownOpen(!newsDropdownOpen)}
-                aria-expanded={newsDropdownOpen}
-                aria-haspopup="true"
-              >
-                News <span className="dropdown-arrow">{newsDropdownOpen ? '▲' : '▼'}</span>
-              </button>
-              <ul className={`nav-dropdown-menu ${newsDropdownOpen ? 'open' : ''}`}>
-               <li><Link href={navRoutes.categories.kashmir} onClick={closeMenu}>Kashmir</Link></li>
-                <li><Link href={navRoutes.categories.india} onClick={closeMenu}>India</Link></li>
-                <li><Link href={navRoutes.categories.world} onClick={closeMenu}>World</Link></li>
-              </ul>
-            </li>
-
-            {/* Media Dropdown */}
-            <li className="nav-dropdown" ref={mediaDropdownRef}>
-              <button
-                className="nav-dropdown-toggle"
-                onClick={() => setMediaDropdownOpen(!mediaDropdownOpen)}
-                aria-expanded={mediaDropdownOpen}
-                aria-haspopup="true"
-              >
-                Media <span className="dropdown-arrow">{mediaDropdownOpen ? '▲' : '▼'}</span>
-              </button>
-              <ul className={`nav-dropdown-menu ${mediaDropdownOpen ? 'open' : ''}`}>
-                <li><Link href={navRoutes.media.photos} onClick={closeMenu}>Photos</Link></li>
-                <li><Link href={navRoutes.media.videos} onClick={closeMenu}>Videos</Link></li>
-                <li><Link href={navRoutes.media.podcasts} onClick={closeMenu}>Podcasts</Link></li>
-              </ul>
-            </li>
-
-            {/* Other Categories - Show all categories EXCEPT Kashmir, India, World */}
-            {categories.filter(cat => !['kashmir', 'india', 'world'].includes(cat.slug)).map((category) => (
+            {/* Dynamic Categories - Show first 6 categories */}
+            {sortedCategories.filter(cat => cat.slug).slice(0, 6).map((category) => (
               <li key={category.slug}>
                 <Link href={`/${category.slug}`} onClick={closeMenu}>
                   {category.title}
                 </Link>
               </li>
             ))}
+
+            {/* More Dropdown for remaining categories */}
+            {sortedCategories.filter(cat => cat.slug).length > 6 && (
+              <li className="nav-dropdown" ref={moreDropdownRef}>
+                <button
+                  className="nav-dropdown-toggle"
+                  onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                  aria-expanded={moreDropdownOpen}
+                  aria-haspopup="true"
+                >
+                  More <span className="dropdown-arrow">{moreDropdownOpen ? '▲' : '▼'}</span>
+                </button>
+                <ul className={`nav-dropdown-menu ${moreDropdownOpen ? 'open' : ''}`}>
+                  {sortedCategories.filter(cat => cat.slug).slice(6).map((category) => (
+                    <li key={category.slug}>
+                      <Link href={`/${category.slug}`} onClick={closeMenu}>
+                        {category.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            )}
 
             {/* SOCIAL ICONS - Mobile (inside hamburger menu) */}
             <li className="mobile-social-icons">

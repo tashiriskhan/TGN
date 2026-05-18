@@ -48,7 +48,7 @@ export default async function Footer() {
         {/* COLUMN 4 — CATEGORIES (Dynamic from Sanity) */}
         <div className="footer-col">
           <h4>{footerLabels.categories}</h4>
-          {categories.map((cat: any) => (
+          {categories.filter((cat: any) => cat.slug).slice(0, 10).map((cat: any) => (
             <Link
               key={cat.slug}
               href={`/${cat.slug}`}
