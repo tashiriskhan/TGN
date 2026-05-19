@@ -80,7 +80,6 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
-  manifest: '/site.webmanifest',
   viewport: {
     width: 'device-width',
     initialScale: 1,
