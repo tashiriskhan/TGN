@@ -121,7 +121,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const postEntries = posts.map((post: any) => ({
     url: `${baseUrl}/story/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
+    lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
@@ -149,21 +149,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const photoEntries = photoStories.map((story: any) => ({
     url: `${baseUrl}/photos/${story.slug}`,
-    lastModified: new Date(story.publishedAt),
+    lastModified: story.publishedAt ? new Date(story.publishedAt) : new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }))
 
   const videoEntries = videoStories.map((story: any) => ({
     url: `${baseUrl}/videos/${story.slug}`,
-    lastModified: new Date(story.publishedAt),
+    lastModified: story.publishedAt ? new Date(story.publishedAt) : new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }))
 
   const podcastEntries = podcasts.map((podcast: any) => ({
     url: `${baseUrl}/podcasts/${podcast.slug}`,
-    lastModified: new Date(podcast.publishedAt),
+    lastModified: podcast.publishedAt ? new Date(podcast.publishedAt) : new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }))
