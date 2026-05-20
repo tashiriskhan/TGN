@@ -20,6 +20,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: 'https://www.groundnarrative.com',
+  },
   title: {
     default: siteConfig.name,
     template: siteConfig.titleTemplate,
