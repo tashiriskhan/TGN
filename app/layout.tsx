@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     template: siteConfig.titleTemplate,
   },
   description: siteConfig.description,
-  keywords: ['news', 'Kashmir', 'India', 'world', 'journalism', 'stories', 'politics', 'current affairs'],
+  keywords: ['independent journalism', 'global politics', 'geopolitics', 'international affairs', 'conflict reporting', 'documentaries', 'human stories', 'culture', 'visual storytelling', 'in-depth analysis'],
   authors: [{ name: 'The Ground Narrative' }],
   creator: 'The Ground Narrative',
   publisher: 'The Ground Narrative',
@@ -79,7 +80,11 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
@@ -101,6 +106,33 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${inter.variable} ${playfair.variable} antialiased`}>
           <BodyAttribute />
+          {process.env.NEXT_PUBLIC_GA_ID && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                strategy="afterInteractive"
+              />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+                `}
+              </Script>
+            </>
+          )}
+          {process.env.NEXT_PUBLIC_CLARITY_ID && (
+            <Script id="microsoft-clarity" strategy="afterInteractive">
+              {`
+                (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_ID}");
+              `}
+            </Script>
+          )}
           {/* Skip to main content link for accessibility */}
           <a href="#main-content" className="skip-link">
             Skip to main content

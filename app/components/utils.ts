@@ -4,6 +4,10 @@ export function truncateText(text: string, maxLength: number): string {
   if (!text || typeof text !== 'string') return '';
   if (text.length <= maxLength) return text;
 
+  if (text[maxLength] === ' ') {
+    return text.slice(0, maxLength) + '...';
+  }
+
   const truncated = text.slice(0, maxLength);
   const lastSpaceIndex = truncated.lastIndexOf(' ');
 

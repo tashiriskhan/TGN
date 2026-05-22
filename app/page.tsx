@@ -4,6 +4,7 @@ export const revalidate = 60;
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 
 import { getFeaturedStories } from "@/sanity/lib/getFeaturedStories";
 import { getTrending } from "@/sanity/lib/getTrending";
@@ -17,6 +18,14 @@ import { urlFor } from "@/sanity/lib/image";
 import SmartImage from "@/app/components/SmartImage";
 import { timeAgo } from "@/sanity/lib/timeAgo";
 import { truncateText } from "@/app/components/utils";
+
+export const metadata: Metadata = {
+  title: "The Ground Narrative | Independent Global Journalism & Analysis",
+  description: "Independent journalism covering global politics, culture, conflict, human stories, geopolitics, and international affairs through in-depth reporting and analysis.",
+  alternates: {
+    canonical: "https://www.groundnarrative.com",
+  },
+};
 
 export default async function HomePage() {
   // Fetch all data in parallel
@@ -298,6 +307,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+
       {/* WATCH & LISTEN */}
       <section className="media-strip-compact">
         <div className="container">
@@ -318,6 +328,62 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                "@id": "https://www.groundnarrative.com/#website",
+                "url": "https://www.groundnarrative.com",
+                "name": "The Ground Narrative",
+                "description": "Independent journalism covering global politics, culture, conflict, human stories, geopolitics, and international affairs.",
+                "publisher": {
+                  "@id": "https://www.groundnarrative.com/#organization"
+                },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://www.groundnarrative.com/search?q={search_term_string}"
+                  },
+                  "query-input": "required name=search_term_string"
+                },
+                "inLanguage": "en-US"
+              },
+              {
+                "@type": "NewsMediaOrganization",
+                "@id": "https://www.groundnarrative.com/#organization",
+                "name": "The Ground Narrative",
+                "url": "https://www.groundnarrative.com",
+                "logo": {
+                  "@type": "ImageObject",
+                  "@id": "https://www.groundnarrative.com/#logo",
+                  "url": "https://www.groundnarrative.com/logo.svg",
+                  "caption": "The Ground Narrative Logo"
+                },
+                "sameAs": [
+                  "https://www.facebook.com/GroundNarrative",
+                  "https://instagram.com/groundnarrative",
+                  "https://www.youtube.com/@TheGroundNarrative",
+                  "https://x.com/GroundNarrative",
+                  "https://linkedin.com/company/the-ground-narrative"
+                ],
+                "publishingPrinciples": "https://www.groundnarrative.com/editorial-policy",
+                "correctionsPolicy": "https://www.groundnarrative.com/corrections-policy",
+                "ethicsPolicy": "https://www.groundnarrative.com/ethics-statement",
+                "masthead": "https://www.groundnarrative.com/about",
+                "diversityPolicy": "https://www.groundnarrative.com/editorial-policy",
+                "actionableFeedbackPolicy": "https://www.groundnarrative.com/corrections-policy"
+              }
+            ]
+          })
+        }}
+      />
     </>
   );
 }

@@ -40,6 +40,27 @@ export default {
         },
       ],
     },
+    {
+      name: 'expertise',
+      title: 'Expertise / Beat',
+      type: 'string',
+      description: 'Areas of expertise or coverage beat (e.g., Geopolitics, Visual Journalism, Conflict Reporting)',
+    },
+    {
+      name: 'twitter',
+      title: 'Twitter / X Profile URL',
+      type: 'url',
+    },
+    {
+      name: 'instagram',
+      title: 'Instagram Profile URL',
+      type: 'url',
+    },
+    {
+      name: 'linkedin',
+      title: 'LinkedIn Profile URL',
+      type: 'url',
+    },
   ],
   preview: {
     select: {

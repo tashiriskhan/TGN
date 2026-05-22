@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/author/:slug",
+        destination: "/authors/:slug",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [
           {

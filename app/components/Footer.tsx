@@ -16,9 +16,9 @@ export default async function Footer() {
         <div className="footer-col">
           <h4>{footerLabels.aboutUs}</h4>
           <p>
-            {siteConfig.name} is an independent digital platform covering
-            stories, news, and social issues with accuracy, depth,
-            and a human perspective.
+            {siteConfig.name} is an independent digital media platform covering
+            global politics, culture, conflict, human stories, geopolitics, and international affairs
+            with accuracy, depth, and a human perspective.
           </p>
           <div className="footer-social">
             <SocialIcons />
@@ -33,6 +33,9 @@ export default async function Footer() {
           <h4>{footerLabels.quickLinks}</h4>
           <Link href={navRoutes.about} className="footer-link">About</Link>
           <Link href={navRoutes.contact} className="footer-link">Contact</Link>
+          <Link href="/editorial-policy" className="footer-link">Editorial Policy</Link>
+          <Link href="/corrections-policy" className="footer-link">Corrections Policy</Link>
+          <Link href="/ethics-statement" className="footer-link">Ethics Statement</Link>
           <Link href={navRoutes.privacy} className="footer-link">Privacy Policy</Link>
           <Link href={navRoutes.terms} className="footer-link">Terms & Conditions</Link>
         </div>

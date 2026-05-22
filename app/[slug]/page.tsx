@@ -6,6 +6,7 @@ import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import type { Metadata } from "next"
 import Breadcrumb from "@/app/components/Breadcrumb"
 
 const PAGE_SIZE = 9
@@ -15,6 +16,7 @@ const RESERVED_ROUTES = [
   'story',
   'tag',
   'author',
+  'authors',
   'search',
   'about',
   'contact',
@@ -23,8 +25,42 @@ const RESERVED_ROUTES = [
   'sanity',
   'photos',
   'videos',
-  'podcasts'
+  'podcasts',
+  'editorial-policy',
+  'corrections-policy',
+  'ethics-statement'
 ]
+
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const p = await params
+  const slug = p.slug
+
+  if (RESERVED_ROUTES.includes(slug)) {
+    return {}
+  }
+
+  const category = await client.fetch(
+    `*[_type == "category" && slug.current == $slug][0]{
+      title,
+      description
+    }`,
+    { slug }
+  )
+
+  if (!category) {
+    return {
+      title: "Category Not Found",
+    }
+  }
+
+  return {
+    title: `${category.title} | The Ground Narrative`,
+    description: category.description || `Read in-depth reporting and stories on ${category.title} from The Ground Narrative.`,
+    alternates: {
+      canonical: `https://www.groundnarrative.com/${slug}`,
+    },
+  }
+}
 
 export default async function CategoryPage({ params, searchParams }: any) {
   // FIX: unwrap async params

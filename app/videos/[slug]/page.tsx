@@ -22,7 +22,45 @@ import { getVideoStoryBySlug } from "@/sanity/lib/getVideoStoryBySlug"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import { client } from "@/sanity/lib/sanity"
+import type { Metadata } from "next"
 import "@/app/styles/cinematic-videos.css"
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const videoStory = await getVideoStoryBySlug(slug)
+
+  if (!videoStory) {
+    return {
+      title: "Video Not Found",
+    }
+  }
+
+  const description = videoStory.description
+    ? videoStory.description.slice(0, 155)
+    : `Watch the video report: ${videoStory.title} on The Ground Narrative.`
+
+  return {
+    title: `${videoStory.title} | Video Reporting & Documentaries`,
+    description,
+    alternates: {
+      canonical: `https://www.groundnarrative.com/videos/${slug}`,
+    },
+    openGraph: {
+      title: videoStory.title,
+      description,
+      type: "video.other",
+      url: `https://www.groundnarrative.com/videos/${slug}`,
+      images: videoStory.thumbnail ? [
+        {
+          url: urlFor(videoStory.thumbnail).width(1200).height(630).url(),
+          width: 1200,
+          height: 630,
+          alt: videoStory.title,
+        }
+      ] : [],
+    }
+  }
+}
 
 // Helper function to convert YouTube URLs to embed URLs
 function getEmbedUrl(url: string): string {
@@ -86,8 +124,42 @@ export default async function VideoStoryPage({ params }: any) {
     }
   `, { slug })
 
+  // Construct premium VideoObject JSON-LD Structured Data
+  const siteUrl = "https://www.groundnarrative.com"
+  const thumbnailUrl = videoStory.thumbnail
+    ? urlFor(videoStory.thumbnail).width(1200).height(630).url()
+    : undefined
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": videoStory.title,
+    "description": videoStory.description || `Watch: ${videoStory.title} on The Ground Narrative.`,
+    "thumbnailUrl": thumbnailUrl ? [thumbnailUrl] : [],
+    "uploadDate": videoStory.publishedAt,
+    "contentUrl": videoStory.videoUrl,
+    "embedUrl": embedUrl || videoStory.videoUrl,
+    "publisher": {
+      "@type": "NewsMediaOrganization",
+      "name": "The Ground Narrative",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/logo.svg`,
+      },
+    },
+    "author": {
+      "@type": "Person",
+      "name": videoStory.author?.name || "The Ground Narrative Video Desk",
+    }
+  }
+
   return (
-    <main className="cinematic-videos-page video-theme">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main className="cinematic-videos-page video-theme">
       <div className="cinematic-videos-container">
         {/* ============================================
             BREADCRUMB & ACTIONS
@@ -271,5 +343,6 @@ export default async function VideoStoryPage({ params }: any) {
         </div>
       </div>
     </main>
+    </>
   )
 }

@@ -6,11 +6,36 @@ import Link from "next/link"
 import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getTrending } from "@/sanity/lib/getTrending"
+
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const p = await params
+  const slug = p.slug
+
+  const tag = await client.fetch(
+    `*[_type == "tag" && slug.current == $slug][0]{ title }`,
+    { slug }
+  )
+
+  if (!tag) {
+    return {
+      title: "Tag Not Found",
+    }
+  }
+
+  return {
+    title: `Stories about #${tag.title} | The Ground Narrative`,
+    description: `Browse all stories, reports, and coverage tagged with #${tag.title} on The Ground Narrative.`,
+    alternates: {
+      canonical: `https://www.groundnarrative.com/tag/${slug}`,
+    },
+  }
+}
 
 const PAGE_SIZE = 10
 

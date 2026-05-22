@@ -32,7 +32,16 @@ import Image from "next/image"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import type { Metadata } from "next"
 import "@/app/styles/cinematic-videos.css"
+
+export const metadata: Metadata = {
+  title: "Independent Documentaries & Video Journalism | The Ground Narrative",
+  description: "Watch high-quality independent documentaries, global video reports, and visual stories covering geopolitics, conflict, culture, and human struggles.",
+  alternates: {
+    canonical: "https://www.groundnarrative.com/videos",
+  },
+}
 
 export default async function VideosPage() {
   const videoStories = await client.fetch(`

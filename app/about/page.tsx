@@ -52,7 +52,7 @@ export default function AboutPage() {
             Our Coverage
           </h2>
           <p style={{ marginBottom: 'var(--space-md)' }}>
-            We provide comprehensive coverage focusing on <strong>Kashmir, India, and global events</strong>. 
+            We provide comprehensive coverage focusing on <strong>global events</strong>. 
             From on-the-ground reporting and political analysis to visual journalism and long-form features, 
             our team focuses on stories that have a real impact on people&apos;s lives and challenge established narratives.
           </p>

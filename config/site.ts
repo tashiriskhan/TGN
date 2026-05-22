@@ -8,7 +8,7 @@ export const siteConfig = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || 'The Ground Narrative',
   shortName: process.env.NEXT_PUBLIC_SITE_SHORT_NAME || 'Ground Narrative',
   description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
-    'Independent journalism covering Kashmir, India, and the world with depth and perspective.',
+    'Independent journalism covering global politics, culture, conflict, human stories, geopolitics, and international affairs through in-depth reporting, analysis, and visual storytelling.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://groundnarrative.com',
   locale: 'en-US',
   titleTemplate: '%s | The Ground Narrative',
@@ -138,9 +138,10 @@ export const navRoutes = {
   privacy: '/privacy',
   terms: '/terms',
   categories: {
-    kashmir: '/kashmir',
-    india: '/india',
     world: '/world',
+    politics: '/politics',
+    culture: '/culture',
+    analysis: '/analysis',
   },
   media: {
     photos: '/photos',

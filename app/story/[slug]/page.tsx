@@ -137,7 +137,7 @@ export default async function StoryPage({ params }: any) {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     "headline": post.title,
-    "description": post.subtitle || (post.body ? post.body.slice(0, 120) : undefined),
+    "description": post.excerpt || post.subtitle || (bodyText ? bodyText.slice(0, 150) : undefined),
     "image": post.mainImage ? urlFor(post.mainImage).width(1200).height(630).url() : undefined,
     "datePublished": post.publishedAt,
     "dateModified": post.publishedAt,
@@ -202,7 +202,7 @@ export default async function StoryPage({ params }: any) {
               <div className="meta-author">
                 <span className="meta-label">By </span>
                 {post.author?.slug && post.author?.name ? (
-                  <Link href={`/author/${post.author.slug}`} className="author-link">
+                  <Link href={`/authors/${post.author.slug}`} className="author-link">
                     {post.author.name}
                   </Link>
                 ) : (

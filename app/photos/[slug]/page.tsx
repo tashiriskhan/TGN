@@ -2,24 +2,12 @@
  * ============================================
  * PHOTO STORY SLUG PAGE
  * ============================================
- *
- * Layout Structure:
- * 1. HERO SECTION - Full-width hero image with overlay
- * 2. MAIN CONTENT (Left 70%) - Gallery, article
- * 3. SIDEBAR (Right 30%) - Bio, recommended
- * 4. NEWSLETTER - Compact card at bottom
- *
- * Design Features:
- * - Dark navy theme (#0f141a)
- * - Orange accent (#f97316)
- * - Full dark theme sync for header/footer
- *
- * ============================================
  */
 
 import { notFound } from "next/navigation"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
+import type { Metadata } from "next"
 import HeroPhoto from "./HeroPhoto"
 import PhotoGallery from "./PhotoGallery"
 import RecommendedPhotos from "./RecommendedPhotos"
@@ -66,6 +54,43 @@ async function getRecommendedPhotos(excludeSlug: string) {
   )
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const photoStory = await getPhotoStory(slug)
+
+  if (!photoStory) {
+    return {
+      title: "Photo Story Not Found",
+    }
+  }
+
+  const description = photoStory.description 
+    ? photoStory.description.slice(0, 155)
+    : `View our latest visual journalism and photo essay: ${photoStory.title} on The Ground Narrative.`
+
+  return {
+    title: `${photoStory.title} | Photo Essay & Visual Storytelling`,
+    description,
+    alternates: {
+      canonical: `https://www.groundnarrative.com/photos/${slug}`,
+    },
+    openGraph: {
+      title: photoStory.title,
+      description,
+      type: "article",
+      url: `https://www.groundnarrative.com/photos/${slug}`,
+      images: photoStory.mainImage ? [
+        {
+          url: urlFor(photoStory.mainImage).width(1200).height(630).url(),
+          width: 1200,
+          height: 630,
+          alt: photoStory.title,
+        }
+      ] : [],
+    }
+  }
+}
+
 export default async function PhotoStoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const photoStory = await getPhotoStory(slug)
@@ -85,67 +110,103 @@ export default async function PhotoStoryPage({ params }: { params: Promise<{ slu
     })
   }
 
+  // Create JSON-LD structured data for photojournalism
+  const siteUrl = "https://www.groundnarrative.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": photoStory.title,
+    "description": photoStory.description ? photoStory.description.slice(0, 150) : undefined,
+    "image": photoStory.mainImage ? urlFor(photoStory.mainImage).width(1200).height(630).url() : undefined,
+    "datePublished": photoStory.publishedAt,
+    "dateModified": photoStory.publishedAt,
+    "author": {
+      "@type": "Person",
+      "name": photoStory.author?.name || "The Ground Narrative Photographer",
+    },
+    "publisher": {
+      "@type": "NewsMediaOrganization",
+      "name": "The Ground Narrative",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/logo.svg`,
+      },
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/photos/${slug}`,
+    }
+  };
+
   return (
-    <div className="photo-story-page">
-      {/* Hero Section */}
-      <HeroPhoto
-        title={photoStory.title}
-        mainImage={photoStory.mainImage}
-        photographer={photoStory.author?.name}
-        publishedAt={formatDate(photoStory.publishedAt)}
-        categories={photoStory.categories}
-        slug={photoStory.slug}
+    <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      
+      <div className="photo-story-page">
+        {/* Hero Section */}
+        <HeroPhoto
+          title={photoStory.title}
+          mainImage={photoStory.mainImage}
+          photographer={photoStory.author?.name}
+          publishedAt={formatDate(photoStory.publishedAt)}
+          categories={photoStory.categories}
+          slug={photoStory.slug}
+        />
 
-      {/* Main Content Grid - Generous spacing */}
-      <div className="photo-story-container">
-        {/* Main content area with proper spacing */}
-        <div className="photo-story-main-content">
-          {/* Photo Gallery */}
-          {photoStory.gallery && photoStory.gallery.length > 0 && (
-            <PhotoGallery
-              images={photoStory.gallery}
-              title="Gallery"
-            />
-          )}
+        {/* Main Content Grid - Generous spacing */}
+        <div className="photo-story-container">
+          {/* Main content area with proper spacing */}
+          <div className="photo-story-main-content">
+            {/* Photo Gallery */}
+            {photoStory.gallery && photoStory.gallery.length > 0 && (
+              <PhotoGallery
+                images={photoStory.gallery}
+                title="Gallery"
+              />
+            )}
 
-          {/* Article Body */}
-          {photoStory.description && (
-            <article className="photo-story-article">
-              <div className="photo-story-description">
-                <p>{photoStory.description}</p>
-              </div>
-
-              {/* Rich text body would go here if available */}
-              {photoStory.body && (
-                <div className="photo-story-body">
-                  {/* Portable Text would be rendered here */}
+            {/* Article Body */}
+            {photoStory.description && (
+              <article className="photo-story-article">
+                <div className="photo-story-description">
+                  <p>{photoStory.description}</p>
                 </div>
-              )}
-            </article>
-          )}
+
+                {/* Rich text body would go here if available */}
+                {photoStory.body && (
+                  <div className="photo-story-body">
+                    {/* Portable Text would be rendered here */}
+                  </div>
+                )}
+              </article>
+            )}
+          </div>
+
+          {/* Sidebar - Sticky with generous spacing */}
+          <aside className="photo-story-sidebar">
+            {/* Photographer Bio */}
+            <PhotographerBio
+              name={photoStory.author?.name || "Unknown Photographer"}
+              avatar={photoStory.author?.avatar}
+              bio={photoStory.author?.bio}
+              location={photoStory.author?.location}
+              socialLinks={photoStory.author?.socialLinks}
+            />
+
+            {/* Recommended Photos */}
+            <RecommendedPhotos photos={recommendedPhotos} />
+          </aside>
         </div>
 
-        {/* Sidebar - Sticky with generous spacing */}
-        <aside className="photo-story-sidebar">
-          {/* Photographer Bio */}
-          <PhotographerBio
-            name={photoStory.author?.name || "Unknown Photographer"}
-            avatar={photoStory.author?.avatar}
-            bio={photoStory.author?.bio}
-            location={photoStory.author?.location}
-            socialLinks={photoStory.author?.socialLinks}
-          />
-
-          {/* Recommended Photos */}
-          <RecommendedPhotos photos={recommendedPhotos} />
-        </aside>
+        {/* Newsletter Section */}
+        <NewsletterCard
+          heroImage={photoStory.mainImage ? urlFor(photoStory.mainImage).width(400).height(300).url() : null}
+        />
       </div>
-
-      {/* Newsletter Section */}
-      <NewsletterCard
-        heroImage={photoStory.mainImage ? urlFor(photoStory.mainImage).width(400).height(300).url() : null}
-      />
-    </div>
+    </>
   )
 }

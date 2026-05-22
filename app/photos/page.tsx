@@ -25,8 +25,17 @@ import Image from "next/image"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import type { Metadata } from "next"
 import "@/app/styles/dark-photos.css"
 import PhotoHeroCTA from "./PhotoHeroCTA"
+
+export const metadata: Metadata = {
+  title: "Visual Journalism & Photo Stories | The Ground Narrative",
+  description: "Explore premium independent photojournalism, photo essays, and in-depth visual narratives covering geopolitics, culture, conflict, and human stories from around the globe.",
+  alternates: {
+    canonical: "https://www.groundnarrative.com/photos",
+  },
+};
 
 const PAGE_SIZE = 12
 

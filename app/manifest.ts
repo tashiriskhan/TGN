@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'The Ground Narrative',
     short_name: 'Ground Narrative',
-    description: 'Independent journalism covering Kashmir, India, and the world with depth and perspective.',
+    description: 'Independent journalism covering global politics, culture, conflict, human stories, geopolitics, and international affairs through in-depth reporting, analysis, and visual storytelling.',
     start_url: '/',
     display: 'standalone',
     background_color: '#fafafa',

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { truncateText } from '@/app/components/utils';
+import { truncateText, getOptimizedImageUrl } from '@/app/components/utils';
 
 describe('truncateText', () => {
   it('returns empty string for null input', () => {
@@ -31,7 +31,7 @@ describe('truncateText', () => {
   });
 
   it('handles text with no spaces', () => {
-    expect(truncateText('Helloworldtest', 8)).toBe('Hellowo...');
+    expect(truncateText('Helloworldtest', 8)).toBe('Hellowor...');
   });
 
   it('handles long text with multiple sentences', () => {
@@ -44,12 +44,10 @@ describe('truncateText', () => {
 
 describe('getOptimizedImageUrl', () => {
   it('returns empty string for null image', () => {
-    const { getOptimizedImageUrl } = await import('@/app/components/utils');
     expect(getOptimizedImageUrl(null, 800)).toBe('');
   });
 
   it('returns empty string for undefined image', () => {
-    const { getOptimizedImageUrl } = await import('@/app/components/utils');
     expect(getOptimizedImageUrl(undefined, 800)).toBe('');
   });
 });

@@ -7,6 +7,15 @@ import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import Pagination from "@/app/components/Pagination"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Independent Journalism Podcasts & Audio Stories | The Ground Narrative",
+  description: "Listen to in-depth audio stories, independent journalism, interviews, and deep dives covering global politics, conflict, culture, and international affairs.",
+  alternates: {
+    canonical: "https://www.groundnarrative.com/podcasts",
+  },
+}
 
 const PAGE_SIZE = 12
 
