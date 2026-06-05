@@ -45,7 +45,7 @@ const POST_FULL_QUERY = `*[_type == "post" && slug.current == $slug][0]{
     "slug": slug.current,
     image
   },
-  categories[]->{ title, "slug": slug.current }[0],
+  categories[]->{ title, "slug": slug.current },
   tags[]->{ title, "slug": slug.current }
 }`
 
@@ -103,10 +103,13 @@ export default async function StoryPage({ params }: any) {
 
   if (!post) notFound()
 
+  // `categories` is an array of all categories this post is in. Pick the first for breadcrumbs and meta.
+  const primaryCategory = post?.categories?.[0] || null
+
   // Get related posts based on category and tags
   const relatedPosts = await getRelatedPosts(
     slug,
-    post?.categories?.slug,
+    primaryCategory?.slug,
     post?.tags?.map((tag: any) => tag.slug) || []
   )
 
@@ -161,7 +164,7 @@ export default async function StoryPage({ params }: any) {
       "@type": "WebPage",
       "@id": url,
     },
-    "articleSection": post.categories?.title,
+    "articleSection": post?.categories?.[0]?.title,
     "keywords": post.tags?.map((tag: any) => tag.title).join(", "),
   }
 
@@ -181,11 +184,11 @@ export default async function StoryPage({ params }: any) {
 
         <article className="article-container">
           {/* BREADCRUMB */}
-          {post.categories && (
+          {primaryCategory && (
             <Breadcrumb
               items={[
                 { label: 'Home', href: '/' },
-                { label: post.categories.title, href: `/${post.categories.slug}` },
+                { label: primaryCategory.title, href: `/${primaryCategory.slug}` },
                 { label: post.title }
               ]}
             />
@@ -218,8 +221,8 @@ export default async function StoryPage({ params }: any) {
                 <span className="meta-date">{timeAgo(post.publishedAt)}</span>
                 <span className="meta-separator">•</span>
                 <span className="meta-category">
-                  {post.categories?.title && (
-                    <Link href={`/${post.categories.slug}`}>{post.categories.title}</Link>
+                  {primaryCategory?.title && (
+                    <Link href={`/${primaryCategory.slug}`}>{primaryCategory.title}</Link>
                   )}
                 </span>
               </div>
@@ -275,7 +278,7 @@ export default async function StoryPage({ params }: any) {
           {/* MORE FROM CATEGORY */}
           {relatedPosts && relatedPosts.length > 0 && (
             <section className="more-from-category">
-              <h2 className="section-heading">More from {post.categories?.title}</h2>
+              <h2 className="section-heading">More from {primaryCategory?.title}</h2>
               <div className="more-articles-grid">
                 {relatedPosts.slice(0, 3).map((relatedPost: any) => (
                   <Link
@@ -309,7 +312,7 @@ export default async function StoryPage({ params }: any) {
           breaking={breaking}
           trending={trending}
           relatedPosts={relatedPosts}
-          category={post.categories?.title}
+          category={primaryCategory?.title}
           recentStories={recentStories}
         />
       </div>
