@@ -5,6 +5,9 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'About Us',
   description: `Learn about ${siteConfig.name} - ${siteConfig.description}`,
+  alternates: {
+    canonical: `${siteConfig.url}/about`,
+  },
 }
 
 export default function AboutPage() {

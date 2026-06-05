@@ -5,12 +5,14 @@ import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getTrending } from "@/sanity/lib/getTrending"
+import { siteConfig } from "@/config/site"
 
 const PAGE_SIZE = 10;
 
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     title: `${author.name} | Journalist & Writer`,
     description,
     alternates: {
-      canonical: `https://www.groundnarrative.com/authors/${slug}`,
+      canonical: `${siteConfig.url}/authors/${slug}`,
     },
   }
 }
@@ -105,13 +107,7 @@ export default async function AuthorPage({ params, searchParams }: any) {
   ])
 
   if (!author) {
-    return (
-      <main className="main-content-with-sidebar">
-        <div className="container">
-          <p>Author not found.</p>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const socialLinks = [

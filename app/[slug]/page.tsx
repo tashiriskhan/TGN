@@ -8,6 +8,7 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Breadcrumb from "@/app/components/Breadcrumb"
+import { siteConfig } from "@/config/site"
 
 const PAGE_SIZE = 9
 
@@ -31,9 +32,11 @@ const RESERVED_ROUTES = [
   'ethics-statement'
 ]
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: any): Promise<Metadata> {
   const p = await params
+  const s = await searchParams
   const slug = p.slug
+  const page = Number(s.page) || 1
 
   if (RESERVED_ROUTES.includes(slug)) {
     return {}
@@ -57,8 +60,12 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     title: `${category.title} | The Ground Narrative`,
     description: category.description || `Read in-depth reporting and stories on ${category.title} from The Ground Narrative.`,
     alternates: {
-      canonical: `https://www.groundnarrative.com/${slug}`,
+      canonical: `${siteConfig.url}/${slug}`,
     },
+    // Paginated views compete with the first page; tell Google to ignore them.
+    ...(page > 1 && {
+      robots: { index: false, follow: true },
+    }),
   }
 }
 
@@ -110,6 +117,11 @@ export default async function CategoryPage({ params, searchParams }: any) {
     `count(*[_type == "post" && $slug in categories[]->slug.current])`,
     { slug }
   )
+
+  // Empty category = soft 404. Return a real 404 so Google doesn't index an empty page.
+  if (totalPosts === 0) {
+    notFound()
+  }
 
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 

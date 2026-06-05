@@ -9,7 +9,7 @@ export const siteConfig = {
   shortName: process.env.NEXT_PUBLIC_SITE_SHORT_NAME || 'Ground Narrative',
   description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'Independent journalism covering global politics, culture, conflict, human stories, geopolitics, and international affairs through in-depth reporting, analysis, and visual storytelling.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://groundnarrative.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.groundnarrative.com',
   locale: 'en-US',
   titleTemplate: '%s | The Ground Narrative',
 }

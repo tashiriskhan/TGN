@@ -1,9 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'Terms & Conditions',
   description: 'Terms and Conditions for using The Ground Narrative website',
+  alternates: {
+    canonical: `${siteConfig.url}/terms`,
+  },
 }
 
 export default function TermsPage() {

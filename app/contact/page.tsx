@@ -1,10 +1,14 @@
 import { Metadata } from "next";
 import ContactForm from "@/app/components/ContactForm";
 import SocialIcons from "@/app/components/SocialIcons";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Contact Us",
   description: "Get in touch with The Ground Narrative team",
+  alternates: {
+    canonical: `${siteConfig.url}/contact`,
+  },
 };
 
 export default function ContactPage() {

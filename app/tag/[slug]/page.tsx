@@ -6,12 +6,14 @@ import Link from "next/link"
 import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getTrending } from "@/sanity/lib/getTrending"
+import { siteConfig } from "@/config/site"
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const p = await params
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     title: `Stories about #${tag.title} | The Ground Narrative`,
     description: `Browse all stories, reports, and coverage tagged with #${tag.title} on The Ground Narrative.`,
     alternates: {
-      canonical: `https://www.groundnarrative.com/tag/${slug}`,
+      canonical: `${siteConfig.url}/tag/${slug}`,
     },
   }
 }
@@ -72,6 +74,11 @@ export default async function TagPage({ params, searchParams }: any) {
   )
 
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
+
+  // Missing tag or empty tag = soft 404. Return a real 404.
+  if (!tag || totalPosts === 0) {
+    notFound()
+  }
 
   // Fetch data for sidebar
   const [breaking, trending] = await Promise.all([

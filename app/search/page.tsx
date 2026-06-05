@@ -10,6 +10,20 @@ import RightSidebar from "@/app/components/RightSidebar"
 import Pagination from "@/app/components/Pagination"
 import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getTrending } from "@/sanity/lib/getTrending"
+import type { Metadata } from "next"
+import { siteConfig } from "@/config/site"
+
+export const metadata: Metadata = {
+  title: "Search Articles | The Ground Narrative",
+  description: "Search articles and stories on The Ground Narrative.",
+  alternates: {
+    canonical: `${siteConfig.url}/search`,
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+}
 
 const PAGE_SIZE = 12
 

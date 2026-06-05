@@ -1,8 +1,12 @@
 import { Metadata } from 'next'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Privacy Policy for The Ground Narrative',
+  alternates: {
+    canonical: `${siteConfig.url}/privacy`,
+  },
 }
 
 export default function PrivacyPage() {

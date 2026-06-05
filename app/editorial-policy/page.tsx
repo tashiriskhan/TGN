@@ -4,6 +4,9 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: 'Editorial Policy',
   description: `The editorial standards, journalistic integrity policies, and sourcing guidelines of ${siteConfig.name}.`,
+  alternates: {
+    canonical: `${siteConfig.url}/editorial-policy`,
+  },
 }
 
 export default function EditorialPolicyPage() {

@@ -24,6 +24,17 @@ const nextConfig: NextConfig = {
         has: [
           {
             type: "host",
+            value: "groundnarrative.com",
+          },
+        ],
+        destination: "https://www.groundnarrative.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
             value: "tgn-nine.vercel.app",
           },
         ],

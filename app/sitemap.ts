@@ -6,38 +6,39 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
 
   // Fetch all posts from Sanity
+  // Excludes drafts and posts with empty/short titles or missing bodies (e.g. failed n8n pushes)
   const posts = await client.fetch(`
-    *[_type == "post" && defined(slug.current)] {
+    *[_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 10 && defined(body)] {
       "slug": slug.current,
       publishedAt
     }
     | order(publishedAt desc)
   `)
 
-  // Fetch all authors
+  // Fetch all authors with at least one published post
   const authors = await client.fetch(`
-    *[_type == "author" && defined(slug.current)] {
+    *[_type == "author" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
       "slug": slug.current
     }
   `)
 
-  // Fetch all categories
+  // Fetch all categories with at least one published post
   const categories = await client.fetch(`
-    *[_type == "category" && defined(slug.current)] {
+    *[_type == "category" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
       "slug": slug.current
     }
   `)
 
-  // Fetch all tags
+  // Fetch all tags with at least one published post
   const tags = await client.fetch(`
-    *[_type == "tag" && defined(slug.current)] {
+    *[_type == "tag" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
       "slug": slug.current
     }
   `)
 
   // Fetch all photo stories
   const photoStories = await client.fetch(`
-    *[_type == "photoStory" && defined(slug.current)] {
+    *[_type == "photoStory" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
       "slug": slug.current,
       publishedAt
     }
@@ -46,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch all video stories
   const videoStories = await client.fetch(`
-    *[_type == "videoStory" && defined(slug.current)] {
+    *[_type == "videoStory" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
       "slug": slug.current,
       publishedAt
     }
@@ -55,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch all podcasts
   const podcasts = await client.fetch(`
-    *[_type == "podcast" && defined(slug.current)] {
+    *[_type == "podcast" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
       "slug": slug.current,
       publishedAt
     }

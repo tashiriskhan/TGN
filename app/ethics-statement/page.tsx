@@ -4,6 +4,9 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: 'Ethics Statement',
   description: `The journalistic ethics, conflict reporting guidelines, and publishing standards of ${siteConfig.name}.`,
+  alternates: {
+    canonical: `${siteConfig.url}/ethics-statement`,
+  },
 }
 
 export default function EthicsStatementPage() {

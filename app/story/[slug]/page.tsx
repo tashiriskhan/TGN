@@ -8,6 +8,7 @@ import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getRelatedPosts } from "@/sanity/lib/getRelatedPosts"
 import Link from "next/link"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import { calculateReadingTime } from "@/sanity/lib/readingTime"
 import SocialShare from "@/app/components/SocialShare"
@@ -65,6 +66,9 @@ export async function generateMetadata({ params }: any) {
   return {
     title: post?.title || "The Ground Narrative",
     description: description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: post?.title,
       description: description,
@@ -97,7 +101,7 @@ export default async function StoryPage({ params }: any) {
   const { slug } = await params
   const post = await getPost(slug)
 
-  if (!post) return <div>Story not found</div>
+  if (!post) notFound()
 
   // Get related posts based on category and tags
   const relatedPosts = await getRelatedPosts(
@@ -181,7 +185,8 @@ export default async function StoryPage({ params }: any) {
             <Breadcrumb
               items={[
                 { label: 'Home', href: '/' },
-                { label: post.categories.title, href: `/${post.categories.slug}` }
+                { label: post.categories.title, href: `/${post.categories.slug}` },
+                { label: post.title }
               ]}
             />
           )}

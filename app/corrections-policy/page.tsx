@@ -4,6 +4,9 @@ import { siteConfig, contactConfig } from '@/config/site'
 export const metadata: Metadata = {
   title: 'Corrections Policy',
   description: `The corrections policy and error reporting procedures of ${siteConfig.name}.`,
+  alternates: {
+    canonical: `${siteConfig.url}/corrections-policy`,
+  },
 }
 
 export default function CorrectionsPolicyPage() {
