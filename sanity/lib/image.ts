@@ -6,23 +6,29 @@ const builder = createImageUrlBuilder(client)
 /**
  * Build a Sanity image URL with auto-format negotiation.
  *
- * Wraps the default builder so every call to .url() includes `auto=format`,
- * which tells Sanity's CDN to serve WebP/AVIF to browsers that support it
- * and JPEG/PNG to others. Saves ~30% bandwidth vs always-JPEG with zero
- * code changes at call sites — they still use:
+ * Overrides the builder prototype's .url() method to always append
+ * `auto=format`, which tells Sanity's CDN to serve WebP/AVIF to browsers
+ * that support them and JPEG/PNG to others. Saves ~30% bandwidth vs
+ * always-JPEG with zero code changes at call sites — they still use:
  *   urlFor(image).width(800).height(600).url()
+ *
+ * Why prototype instead of instance: Sanity's builder uses a prototype
+ * method, so instance-level overrides (imageBuilder.url = ...) are
+ * shadowed by the original prototype method. Mutating the prototype once
+ * at module load applies to every builder created afterwards.
  */
+const sampleBuilder = builder.image({ _type: 'image', asset: { _ref: 'placeholder' } })
+const builderProto = Object.getPrototypeOf(sampleBuilder)
+const originalUrlMethod = builderProto.url
+
+builderProto.url = function (this: any) {
+  const url = originalUrlMethod.call(this)
+  const separator = url.includes('?') ? '&' : '?'
+  return `${url}${separator}auto=format`
+}
+
 export function urlFor(source: any) {
-  const imageBuilder = builder.image(source)
-  // Override .url() to always append auto=format
-  const originalUrl = imageBuilder.url.bind(imageBuilder)
-  imageBuilder.url = () => {
-    const url = originalUrl()
-    // Sanity URLs already have query params (e.g. ?w=800&h=600); append safely
-    const separator = url.includes('?') ? '&' : '?'
-    return `${url}${separator}auto=format`
-  }
-  return imageBuilder
+  return builder.image(source)
 }
 
 // Get blur placeholder from Sanity image asset
