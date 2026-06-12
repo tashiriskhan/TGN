@@ -2,6 +2,12 @@ import { MetadataRoute } from 'next'
 import { client } from '@/sanity/lib/sanity'
 import { siteConfig } from '@/config/site'
 
+// Revalidate the sitemap every 1 hour. Google and other crawlers don't need
+// minute-fresh sitemap data, and reducing the regeneration frequency saves
+// significant Vercel function CPU. 1 hour is the standard recommendation
+// for content sites with infrequent publishes.
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
 

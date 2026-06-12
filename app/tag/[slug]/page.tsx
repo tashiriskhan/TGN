@@ -11,8 +11,7 @@ import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
-import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
-import { getTrending } from "@/sanity/lib/getTrending"
+import { getSidebarData } from "@/sanity/lib/getSidebarData"
 import { siteConfig } from "@/config/site"
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
@@ -80,11 +79,9 @@ export default async function TagPage({ params, searchParams }: any) {
     notFound()
   }
 
-  // Fetch data for sidebar
-  const [breaking, trending] = await Promise.all([
-    getBreakingNews(),
-    getTrending()
-  ])
+  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
+  // Replaces 2 separate Sanity queries with a single cached lookup.
+  const { trending } = await getSidebarData()
 
   return (
     <main className="main-content-with-sidebar">
@@ -161,7 +158,7 @@ export default async function TagPage({ params, searchParams }: any) {
         </div>
 
         {/* RIGHT: UNIFIED SIDEBAR */}
-        <RightSidebar breaking={breaking} trending={trending} />
+        <RightSidebar trending={trending} />
       </div>
     </main>
   )

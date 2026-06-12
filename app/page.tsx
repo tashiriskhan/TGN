@@ -12,7 +12,6 @@ import { getBreakingNews } from "@/sanity/lib/getBreakingNews";
 import { getOpinion } from "@/sanity/lib/getOpinion";
 import { getAllInDepth } from "@/sanity/lib/getAllInDepth";
 import { getAllSpecial } from "@/sanity/lib/getAllSpecial";
-import { getAllPhotoStories } from "@/sanity/lib/getAllPhotoStories";
 
 import { urlFor } from "@/sanity/lib/image";
 import SmartImage from "@/app/components/SmartImage";
@@ -29,22 +28,23 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   // Fetch all data in parallel
+  // Note: getAllPhotoStories() was removed — the variable was destructured but
+  // never used in the JSX. The "Watch & Listen" section only links to /photos
+  // and /videos, it doesn't render individual photo/video cards.
   const [
     featuredStories,
     trending,
     breaking,
     opinion,
     inDepthList,
-    specialList,
-    photoStories
+    specialList
   ] = await Promise.all([
     getFeaturedStories(),
     getTrending(),
     getBreakingNews(),
     getOpinion(),
     getAllInDepth(),
-    getAllSpecial(),
-    getAllPhotoStories()
+    getAllSpecial()
   ]);
 
   if (!featuredStories || featuredStories.length === 0) {

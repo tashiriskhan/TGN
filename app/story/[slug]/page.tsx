@@ -4,7 +4,6 @@ export const revalidate = 60;
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import SmartImage from "@/app/components/SmartImage"
-import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
 import { getRelatedPosts } from "@/sanity/lib/getRelatedPosts"
 import Link from "next/link"
 import Image from "next/image"
@@ -18,7 +17,7 @@ import ArticlePortableText from "@/app/components/PortableTextComponents"
 import TableOfContents from "@/app/components/TableOfContents"
 import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
-import { getTrending } from "@/sanity/lib/getTrending"
+import { getStorySidebarData } from "@/sanity/lib/getSidebarData"
 import { truncateText } from "@/app/components/utils"
 import { siteConfig } from "@/config/site"
 
@@ -113,17 +112,11 @@ export default async function StoryPage({ params }: any) {
     post?.tags?.map((tag: any) => tag.slug) || []
   )
 
-  // Fetch data for sidebar
-  const [breaking, trending, recentStories] = await Promise.all([
-    getBreakingNews(),
-    getTrending(),
-    client.fetch(`*[_type == "post" && slug.current != $slug] | order(publishedAt desc)[0...5]{
-      title,
-      mainImage,
-      publishedAt,
-      "slug": slug.current
-    }`, { slug })
-  ])
+  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
+  // This replaces 2 separate queries (getTrending + inline recent stories fetch)
+  // with a single cached lookup. First request fetches; subsequent requests
+  // within 60s use cache.
+  const { trending, recentStories } = await getStorySidebarData(slug)
 
   // Calculate reading time from Portable Text
   const bodyText = post?.body
@@ -309,7 +302,6 @@ export default async function StoryPage({ params }: any) {
 
         {/* RIGHT SIDEBAR */}
         <RightSidebar
-          breaking={breaking}
           trending={trending}
           relatedPosts={relatedPosts}
           category={primaryCategory?.title}

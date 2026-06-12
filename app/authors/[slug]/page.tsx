@@ -10,8 +10,7 @@ import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
-import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
-import { getTrending } from "@/sanity/lib/getTrending"
+import { getSidebarData } from "@/sanity/lib/getSidebarData"
 import { siteConfig } from "@/config/site"
 
 const PAGE_SIZE = 10;
@@ -100,11 +99,9 @@ export default async function AuthorPage({ params, searchParams }: any) {
 
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
-  // Fetch data for sidebar
-  const [breaking, trending] = await Promise.all([
-    getBreakingNews(),
-    getTrending()
-  ])
+  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
+  // Replaces 2 separate Sanity queries with a single cached lookup.
+  const { trending } = await getSidebarData()
 
   if (!author) {
     notFound();
@@ -253,7 +250,7 @@ export default async function AuthorPage({ params, searchParams }: any) {
           </div>
 
           {/* RIGHT: UNIFIED SIDEBAR */}
-          <RightSidebar breaking={breaking} trending={trending} />
+          <RightSidebar trending={trending} />
         </div>
       </main>
     </>

@@ -8,8 +8,7 @@ import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
 import Pagination from "@/app/components/Pagination"
-import { getBreakingNews } from "@/sanity/lib/getBreakingNews"
-import { getTrending } from "@/sanity/lib/getTrending"
+import { getSidebarData } from "@/sanity/lib/getSidebarData"
 import type { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 
@@ -33,17 +32,9 @@ export default async function SearchPage({ searchParams }: any) {
   const query = s.q || ""
   const page = Number(s.page) || 1
 
-  // Fetch data for sidebar (used in both branches)
-  const [breaking, trending, recentStories] = await Promise.all([
-    getBreakingNews(),
-    getTrending(),
-    client.fetch(`*[_type == "post"] | order(publishedAt desc)[0...5]{
-      title,
-      mainImage,
-      publishedAt,
-      "slug": slug.current
-    }`)
-  ])
+  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
+  // Replaces 3 separate Sanity queries with a single cached lookup.
+  const { trending, recentStories } = await getSidebarData()
 
   if (!query || query.trim().length < 1) {
     return (
@@ -53,7 +44,7 @@ export default async function SearchPage({ searchParams }: any) {
             <h1 className="search-title">Search Articles</h1>
             <p className="search-instruction">Type something in the search box.</p>
           </div>
-          <RightSidebar breaking={breaking} trending={trending} recentStories={recentStories} />
+          <RightSidebar trending={trending} recentStories={recentStories} />
         </div>
       </main>
     )
@@ -134,7 +125,7 @@ export default async function SearchPage({ searchParams }: any) {
             />
           )}
         </div>
-        <RightSidebar breaking={breaking} trending={trending} recentStories={recentStories} />
+        <RightSidebar trending={trending} recentStories={recentStories} />
       </div>
     </main>
   )
