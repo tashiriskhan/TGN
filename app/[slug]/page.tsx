@@ -133,7 +133,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
-              { label: category?.title || slug }
+              { label: category?.title || slug, href: `/${slug}` }
             ]}
           />
 

@@ -143,7 +143,7 @@ export default async function AuthorPage({ params, searchParams }: any) {
             <Breadcrumb
               items={[
                 { label: 'Home', href: '/' },
-                { label: author.name }
+                { label: author.name, href: `/authors/${slug}` }
               ]}
             />
 

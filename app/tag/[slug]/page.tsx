@@ -92,7 +92,7 @@ export default async function TagPage({ params, searchParams }: any) {
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
-              { label: `#${tag?.title || slug}` }
+              { label: `#${tag?.title || slug}`, href: `/tag/${slug}` }
             ]}
           />
 

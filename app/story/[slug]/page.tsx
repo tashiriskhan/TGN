@@ -182,7 +182,7 @@ export default async function StoryPage({ params }: any) {
               items={[
                 { label: 'Home', href: '/' },
                 { label: primaryCategory.title, href: `/${primaryCategory.slug}` },
-                { label: post.title }
+                { label: post.title, href: `/story/${slug}` }
               ]}
             />
           )}
