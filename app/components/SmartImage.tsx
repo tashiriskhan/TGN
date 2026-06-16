@@ -24,6 +24,23 @@ export default function SmartImage({
   className,
   sizes,
 }: SmartImageProps) {
+  // Support direct string URLs from Google Sheets to bypass Next.js domain whitelist limitations
+  if (typeof image === "string") {
+    return (
+      <img
+        src={image}
+        alt={alt}
+        className={className}
+        style={{
+          width: fill ? "100%" : width,
+          height: fill ? "100%" : height,
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
+    );
+  }
+
   // Get blur placeholder from image metadata
   const blurDataURL = image?.asset?.metadata?.lqip || null;
 

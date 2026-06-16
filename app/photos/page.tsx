@@ -47,12 +47,17 @@ export default async function PhotosPage({ searchParams }: any) {
   const end = start + PAGE_SIZE
 
   // Fetch all photo categories from Sanity for dynamic filters
-  const allCategories = await client.fetch(`
-    *[_type == "photoCategory"] | order(title asc) {
-      title,
-      "slug": slug.current
-    }
-  `)
+  let allCategories = []
+  try {
+    allCategories = await client.fetch(`
+      *[_type == "photoCategory"] | order(title asc) {
+        title,
+        "slug": slug.current
+      }
+    `)
+  } catch (err) {
+    console.error("Failed to fetch photo categories from Sanity:", err)
+  }
 
   // Build filter list: All + categories from Sanity
   const filters = [
@@ -69,33 +74,48 @@ export default async function PhotosPage({ searchParams }: any) {
     query = `*[_type == "photoStory" && "${category}" in categories[]->slug.current]`
   }
 
-  const photoStories = await client.fetch(
-    `${query} | order(publishedAt desc)[${start}...${end}] {
-      title,
-      description,
-      mainImage,
-      gallery,
-      publishedAt,
-      "slug": slug.current,
-      "categories": categories[]->{ title, "slug": slug.current },
-      author->{ name }
-    }`
-  )
+  let photoStories = []
+  try {
+    photoStories = await client.fetch(
+      `${query} | order(publishedAt desc)[${start}...${end}] {
+        title,
+        description,
+        mainImage,
+        gallery,
+        publishedAt,
+        "slug": slug.current,
+        "categories": categories[]->{ title, "slug": slug.current },
+        author->{ name }
+      }`
+    )
+  } catch (err) {
+    console.error("Failed to fetch photo stories from Sanity:", err)
+  }
 
   // Fetch the latest photo story for hero background
-  const latestStory = await client.fetch(`
-    *[_type == "photoStory"] | order(publishedAt desc)[0] {
-      mainImage,
-      title,
-      publishedAt
-    }
-  `)
+  let latestStory = null
+  try {
+    latestStory = await client.fetch(`
+      *[_type == "photoStory"] | order(publishedAt desc)[0] {
+        mainImage,
+        title,
+        publishedAt
+      }
+    `)
+  } catch (err) {
+    console.error("Failed to fetch latest photo story from Sanity:", err)
+  }
 
-  const totalStories = await client.fetch(
-    category !== 'all'
-      ? `count(*[_type == "photoStory" && "${category}" in categories[]->slug.current])`
-      : `count(*[_type == "photoStory"])`
-  )
+  let totalStories = 0
+  try {
+    totalStories = await client.fetch(
+      category !== 'all'
+        ? `count(*[_type == "photoStory" && "${category}" in categories[]->slug.current])`
+        : `count(*[_type == "photoStory"])`
+    )
+  } catch (err) {
+    console.error("Failed to fetch total photo stories count from Sanity:", err)
+  }
 
   const totalPages = Math.ceil(totalStories / PAGE_SIZE)
 

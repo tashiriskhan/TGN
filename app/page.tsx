@@ -6,12 +6,14 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 
-import { getFeaturedStories } from "@/sanity/lib/getFeaturedStories";
-import { getTrending } from "@/sanity/lib/getTrending";
-import { getBreakingNews } from "@/sanity/lib/getBreakingNews";
-import { getOpinion } from "@/sanity/lib/getOpinion";
-import { getAllInDepth } from "@/sanity/lib/getAllInDepth";
-import { getAllSpecial } from "@/sanity/lib/getAllSpecial";
+import { 
+  getFeaturedStories, 
+  getTrending, 
+  getBreakingNews, 
+  getOpinion, 
+  getAllInDepth, 
+  getAllSpecial 
+} from "@/app/lib/storyBridge";
 
 import { urlFor } from "@/sanity/lib/image";
 import SmartImage from "@/app/components/SmartImage";
@@ -100,8 +102,8 @@ export default async function HomePage() {
                     <Link href={`/story/${post.slug}`} className="top-trending-link">
                       {post.mainImage && (
                         <div className="top-trending-thumb">
-                          <Image
-                            src={urlFor(post.mainImage).width(320).height(180).url()}
+                          <SmartImage
+                            image={post.mainImage}
                             alt={post.title}
                             width={320}
                             height={180}
@@ -153,8 +155,8 @@ export default async function HomePage() {
                     <Link href={`/story/${story.slug}`} className="top-recent-link">
                       {story.mainImage && (
                         <div className="top-recent-thumb">
-                          <Image
-                            src={urlFor(story.mainImage).width(320).height(180).url()}
+                          <SmartImage
+                            image={story.mainImage}
                             alt={story.title}
                             width={320}
                             height={180}
@@ -185,8 +187,8 @@ export default async function HomePage() {
                 <Link key={story.slug} href={`/story/${story.slug}`} className="mobile-recent-card">
                   {story.mainImage && (
                     <div className="mobile-recent-thumb">
-                      <Image
-                        src={urlFor(story.mainImage).width(400).height(250).url()}
+                      <SmartImage
+                        image={story.mainImage}
                         alt={story.title}
                         width={400}
                         height={250}
@@ -233,8 +235,8 @@ export default async function HomePage() {
                     <Link href={`/story/${post.slug}`}>
                       {post.mainImage && (
                         <div className="story-image-smaller">
-                          <Image
-                            src={urlFor(post.mainImage).width(280).height(160).url()}
+                          <SmartImage
+                            image={post.mainImage}
                             alt={post.title}
                             width={280}
                             height={160}
@@ -259,8 +261,8 @@ export default async function HomePage() {
                   <article key={post.slug} className="special-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       <div className="special-image-smaller">
-                        <Image
-                          src={urlFor(post.mainImage).width(280).height(160).url()}
+                        <SmartImage
+                          image={post.mainImage}
                           alt={post.title}
                           width={280}
                           height={160}
@@ -286,8 +288,8 @@ export default async function HomePage() {
                     <Link href={`/story/${post.slug}`}>
                       {post.mainImage && (
                         <div className="opinion-image-compact">
-                          <Image
-                            src={urlFor(post.mainImage).width(60).height(60).url()}
+                          <SmartImage
+                            image={post.mainImage}
                             alt={post.title}
                             width={60}
                             height={60}

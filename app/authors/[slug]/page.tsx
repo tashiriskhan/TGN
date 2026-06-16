@@ -5,12 +5,13 @@ import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import Link from "next/link"
 import Image from "next/image"
+import SmartImage from "@/app/components/SmartImage"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
-import { getSidebarData } from "@/sanity/lib/getSidebarData"
+import { getAuthorStories, getUnifiedSidebarData } from "@/app/lib/storyBridge"
 import { siteConfig } from "@/config/site"
 
 const PAGE_SIZE = 10;
@@ -28,17 +29,27 @@ const formatSocialUrl = (url: string, platform: 'x' | 'instagram' | 'linkedin') 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const p = await params
   const slug = p.slug
-  const author = await client.fetch(
-    `*[_type == "author" && slug.current == $slug][0]{
-      name,
-      bio
-    }`,
-    { slug }
-  )
+  let author = null
+  try {
+    author = await client.fetch(
+      `*[_type == "author" && slug.current == $slug][0]{
+        name,
+        bio
+      }`,
+      { slug }
+    )
+  } catch (err) {
+    console.error("Failed to fetch author metadata from Sanity:", err)
+  }
 
   if (!author) {
+    const derivedName = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ')
     return {
-      title: "Author Not Found",
+      title: `${derivedName} | Journalist & Writer`,
+      description: `Read articles and reports written by ${derivedName} on The Ground Narrative.`,
+      alternates: {
+        canonical: `${siteConfig.url}/authors/${slug}`,
+      },
     }
   }
 
@@ -64,44 +75,48 @@ export default async function AuthorPage({ params, searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  // Fetch author details including new EEAT fields
-  const author = await client.fetch(
-    `*[_type == "author" && slug.current == $slug][0]{
-      name,
-      bio,
-      image,
-      expertise,
-      twitter,
-      instagram,
-      linkedin
-    }`,
-    { slug }
-  )
-
-  // Fetch author's posts with pagination
-  const posts = await client.fetch(
-    `*[_type == "post" && author->slug.current == $slug]
-      | order(publishedAt desc)[$start...$end]{
-        title,
-        subtitle,
-        publishedAt,
-        mainImage,
-        "slug": slug.current
-      }`,
-    { slug, start, end }
-  )
-
-  // Get total count for pagination
-  const totalPosts = await client.fetch(
-    `count(*[_type == "post" && author->slug.current == $slug])`,
-    { slug }
-  )
-
+  // Fetch author's posts with pagination (merged Sanity + Google Sheets)
+  const { stories: allAuthorStories, total: totalPosts } = await getAuthorStories(slug)
+  const posts = allAuthorStories.slice(start, end)
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
-  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
-  // Replaces 2 separate Sanity queries with a single cached lookup.
-  const { trending } = await getSidebarData()
+  // Fetch author details including new EEAT fields
+  let author = null
+  try {
+    author = await client.fetch(
+      `*[_type == "author" && slug.current == $slug][0]{
+        name,
+        bio,
+        image,
+        expertise,
+        twitter,
+        instagram,
+        linkedin
+      }`,
+      { slug }
+    )
+  } catch (err) {
+    console.error("Failed to fetch author from Sanity:", err)
+  }
+
+  if (!author) {
+    if (totalPosts === 0) {
+      notFound()
+    }
+    const matchedAuthor = allAuthorStories[0]?.author
+    author = {
+      name: matchedAuthor?.name || (slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ')),
+      bio: `Journalist and contributor for The Ground Narrative.`,
+      image: null,
+      expertise: null,
+      twitter: null,
+      instagram: null,
+      linkedin: null
+    }
+  }
+
+  // Fetch sidebar data merged from Sanity + Google Sheets
+  const { trending, recentStories } = await getUnifiedSidebarData()
 
   if (!author) {
     notFound();
@@ -208,8 +223,8 @@ export default async function AuthorPage({ params, searchParams }: any) {
 
                       <div className="category-image-wrapper">
                         {post.mainImage && (
-                          <Image
-                            src={urlFor(post.mainImage).width(600).height(400).url()}
+                          <SmartImage
+                            image={post.mainImage}
                             alt={post.title}
                             fill
                             className="cat-img"
@@ -250,7 +265,7 @@ export default async function AuthorPage({ params, searchParams }: any) {
           </div>
 
           {/* RIGHT: UNIFIED SIDEBAR */}
-          <RightSidebar trending={trending} />
+          <RightSidebar trending={trending} recentStories={recentStories} />
         </div>
       </main>
     </>

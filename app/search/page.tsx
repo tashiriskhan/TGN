@@ -3,12 +3,11 @@ export const revalidate = 60;
 
 import { client } from "@/sanity/lib/sanity"
 import Link from "next/link"
-import Image from "next/image"
-import { urlFor } from "@/sanity/lib/image"
+import SmartImage from "@/app/components/SmartImage"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import RightSidebar from "@/app/components/RightSidebar"
 import Pagination from "@/app/components/Pagination"
-import { getSidebarData } from "@/sanity/lib/getSidebarData"
+import { searchStories, getUnifiedSidebarData } from "@/app/lib/storyBridge"
 import type { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 
@@ -32,9 +31,8 @@ export default async function SearchPage({ searchParams }: any) {
   const query = s.q || ""
   const page = Number(s.page) || 1
 
-  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
-  // Replaces 3 separate Sanity queries with a single cached lookup.
-  const { trending, recentStories } = await getSidebarData()
+  // Fetch sidebar data merged from Sanity + Google Sheets
+  const { trending, recentStories } = await getUnifiedSidebarData()
 
   if (!query || query.trim().length < 1) {
     return (
@@ -54,32 +52,9 @@ export default async function SearchPage({ searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  const results = await client.fetch(
-    `*[_type == "post" && (
-        title match $q ||
-        subtitle match $q ||
-        pt::text(body) match $q
-      )]
-      | order(publishedAt desc)[$start...$end] {
-        title,
-        subtitle,
-        mainImage,
-        publishedAt,
-        "slug": slug.current
-      }
-    `,
-    { q: `${query}*`, start, end } // partial match with pagination
-  )
-
-  const totalResults = await client.fetch(
-    `count(*[_type == "post" && (
-        title match $q ||
-        subtitle match $q ||
-        pt::text(body) match $q
-      )])`,
-    { q: `${query}*` }
-  )
-
+  const allSearchResults = await searchStories(query)
+  const totalResults = allSearchResults.length
+  const results = allSearchResults.slice(start, end)
   const totalPages = Math.ceil(totalResults / PAGE_SIZE)
 
   return (
@@ -100,8 +75,8 @@ export default async function SearchPage({ searchParams }: any) {
               <article key={post.slug} className="search-result-card">
                 <Link href={`/story/${post.slug}`} className="search-result-link">
                   {post.mainImage && (
-                    <Image
-                      src={urlFor(post.mainImage).width(500).height(350).url()}
+                    <SmartImage
+                      image={post.mainImage}
                       alt={post.title}
                       className="search-result-image"
                       width={500}

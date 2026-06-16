@@ -3,29 +3,45 @@ export const revalidate = 60;
 
 import { client } from "@/sanity/lib/sanity"
 import Link from "next/link"
-import Image from "next/image"
-import { urlFor } from "@/sanity/lib/image"
+import SmartImage from "@/app/components/SmartImage"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import Pagination from "@/app/components/Pagination"
-import { getSidebarData } from "@/sanity/lib/getSidebarData"
+import { getTagStories, getUnifiedSidebarData } from "@/app/lib/storyBridge"
 import { siteConfig } from "@/config/site"
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const p = await params
   const slug = p.slug
 
-  const tag = await client.fetch(
-    `*[_type == "tag" && slug.current == $slug][0]{ title }`,
-    { slug }
-  )
+  let tag = null
+  try {
+    tag = await client.fetch(
+      `*[_type == "tag" && slug.current == $slug][0]{ title }`,
+      { slug }
+    )
+  } catch (err) {
+    console.error("Failed to fetch tag metadata from Sanity:", err)
+  }
 
   if (!tag) {
+    const allTagStories = await getTagStories(slug)
+    if (allTagStories.length === 0) {
+      return {
+        title: "Tag Not Found",
+      }
+    }
+    const matchedTag = allTagStories[0]?.tags?.find((t: any) => t.slug === slug)
+    const tagTitle = matchedTag?.title || slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ')
     return {
-      title: "Tag Not Found",
+      title: `Stories about #${tagTitle} | The Ground Narrative`,
+      description: `Browse all stories, reports, and coverage tagged with #${tagTitle} on The Ground Narrative.`,
+      alternates: {
+        canonical: `${siteConfig.url}/tag/${slug}`,
+      },
     }
   }
 
@@ -50,38 +66,29 @@ export default async function TagPage({ params, searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  const tag = await client.fetch(
-    `*[_type == "tag" && slug.current == $slug][0]{ title }`,
-    { slug }
-  )
+  let tag = null
+  try {
+    tag = await client.fetch(
+      `*[_type == "tag" && slug.current == $slug][0]{ title }`,
+      { slug }
+    )
+  } catch (err) {
+    console.error("Failed to fetch tag from Sanity:", err)
+  }
 
-  const posts = await client.fetch(
-    `*[_type == "post" && $slug in tags[]->slug.current]
-      | order(publishedAt desc)[$start...$end]{
-        title,
-        subtitle,
-        mainImage,
-        publishedAt,
-        "slug": slug.current
-      }`,
-    { slug, start, end }
-  )
-
-  const totalPosts = await client.fetch(
-    `count(*[_type == "post" && $slug in tags[]->slug.current])`,
-    { slug }
-  )
-
+  const allTagStories = await getTagStories(slug)
+  const totalPosts = allTagStories.length
+  const posts = allTagStories.slice(start, end)
   const totalPages = Math.ceil(totalPosts / PAGE_SIZE)
 
-  // Missing tag or empty tag = soft 404. Return a real 404.
-  if (!tag || totalPosts === 0) {
+  if (totalPosts === 0) {
     notFound()
   }
 
-  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
-  // Replaces 2 separate Sanity queries with a single cached lookup.
-  const { trending } = await getSidebarData()
+  const tagTitle = tag?.title || allTagStories[0]?.tags?.find((t: any) => t.slug === slug)?.title || (slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '))
+
+  // Fetch sidebar data merged from Sanity + Google Sheets
+  const { trending, recentStories } = await getUnifiedSidebarData()
 
   return (
     <main className="main-content-with-sidebar">
@@ -92,12 +99,12 @@ export default async function TagPage({ params, searchParams }: any) {
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
-              { label: `#${tag?.title || slug}`, href: `/tag/${slug}` }
+              { label: `#${tagTitle}`, href: `/tag/${slug}` }
             ]}
           />
 
           <header className="category-header">
-            <h1 className="category-title">#{tag?.title || slug}</h1>
+            <h1 className="category-title">#{tagTitle}</h1>
             <p className="category-count">
               {totalPosts} {totalPosts === 1 ? 'article' : 'articles'}
             </p>
@@ -116,8 +123,8 @@ export default async function TagPage({ params, searchParams }: any) {
 
                     <div className="category-image-wrapper">
                       {post.mainImage && (
-                        <Image
-                          src={urlFor(post.mainImage).width(600).height(400).url()}
+                        <SmartImage
+                          image={post.mainImage}
                           alt={post.title}
                           fill
                           className="cat-img"
@@ -158,7 +165,7 @@ export default async function TagPage({ params, searchParams }: any) {
         </div>
 
         {/* RIGHT: UNIFIED SIDEBAR */}
-        <RightSidebar trending={trending} />
+        <RightSidebar trending={trending} recentStories={recentStories} />
       </div>
     </main>
   )

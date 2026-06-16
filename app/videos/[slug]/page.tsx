@@ -113,16 +113,21 @@ export default async function VideoStoryPage({ params }: any) {
   const embedUrl = isYouTube || isVimeo ? getEmbedUrl(videoStory.videoUrl) : ''
 
   // Get related videos (same tags or same author)
-  const relatedVideos = await client.fetch(`
-    *[_type == "videoStory" && slug.current != $slug] | order(publishedAt desc)[0...6] {
-      title,
-      "slug": slug.current,
-      isShort,
-      thumbnail,
-      publishedAt,
-      author->{ name }
-    }
-  `, { slug })
+  let relatedVideos = []
+  try {
+    relatedVideos = await client.fetch(`
+      *[_type == "videoStory" && slug.current != $slug] | order(publishedAt desc)[0...6] {
+        title,
+        "slug": slug.current,
+        isShort,
+        thumbnail,
+        publishedAt,
+        author->{ name }
+      }
+    `, { slug })
+  } catch (err) {
+    console.error("Failed to fetch related videos from Sanity:", err)
+  }
 
   // Construct premium VideoObject JSON-LD Structured Data
   const siteUrl = "https://www.groundnarrative.com"

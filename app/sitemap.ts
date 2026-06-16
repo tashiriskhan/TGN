@@ -1,129 +1,158 @@
 import { MetadataRoute } from 'next'
 import { client } from '@/sanity/lib/sanity'
 import { siteConfig } from '@/config/site'
+import { fetchSheetStories } from '@/app/lib/storyBridge'
 
-// Revalidate the sitemap every 1 hour. Google and other crawlers don't need
-// minute-fresh sitemap data, and reducing the regeneration frequency saves
-// significant Vercel function CPU. 1 hour is the standard recommendation
-// for content sites with infrequent publishes.
 export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
 
-  // Fetch all posts from Sanity
-  // Excludes drafts and posts with empty/short titles or missing bodies (e.g. failed n8n pushes)
-  const posts = await client.fetch(`
-    *[_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 10 && defined(body)] {
-      "slug": slug.current,
-      publishedAt
-    }
-    | order(publishedAt desc)
-  `)
+  // 1. Fetch from Sanity with try-catch
+  let posts: any[] = []
+  try {
+    posts = await client.fetch(`
+      *[_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 10 && defined(body)] {
+        "slug": slug.current,
+        publishedAt
+      }
+      | order(publishedAt desc)
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch posts from Sanity:", err)
+  }
 
-  // Fetch all authors with at least one published post
-  const authors = await client.fetch(`
-    *[_type == "author" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
-      "slug": slug.current
-    }
-  `)
+  let authors: any[] = []
+  try {
+    authors = await client.fetch(`
+      *[_type == "author" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
+        "slug": slug.current
+      }
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch authors from Sanity:", err)
+  }
 
-  // Fetch all categories with at least one published post
-  const categories = await client.fetch(`
-    *[_type == "category" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
-      "slug": slug.current
-    }
-  `)
+  let categories: any[] = []
+  try {
+    categories = await client.fetch(`
+      *[_type == "category" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
+        "slug": slug.current
+      }
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch categories from Sanity:", err)
+  }
 
-  // Fetch all tags with at least one published post
-  const tags = await client.fetch(`
-    *[_type == "tag" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
-      "slug": slug.current
-    }
-  `)
+  let tags: any[] = []
+  try {
+    tags = await client.fetch(`
+      *[_type == "tag" && defined(slug.current) && count(*[_type == "post" && references(^._id)]) > 0] {
+        "slug": slug.current
+      }
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch tags from Sanity:", err)
+  }
 
-  // Fetch all photo stories
-  const photoStories = await client.fetch(`
-    *[_type == "photoStory" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
-      "slug": slug.current,
-      publishedAt
-    }
-    | order(publishedAt desc)
-  `)
+  let photoStories: any[] = []
+  try {
+    photoStories = await client.fetch(`
+      *[_type == "photoStory" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
+        "slug": slug.current,
+        publishedAt
+      }
+      | order(publishedAt desc)
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch photo stories from Sanity:", err)
+  }
 
-  // Fetch all video stories
-  const videoStories = await client.fetch(`
-    *[_type == "videoStory" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
-      "slug": slug.current,
-      publishedAt
-    }
-    | order(publishedAt desc)
-  `)
+  let videoStories: any[] = []
+  try {
+    videoStories = await client.fetch(`
+      *[_type == "videoStory" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
+        "slug": slug.current,
+        publishedAt
+      }
+      | order(publishedAt desc)
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch video stories from Sanity:", err)
+  }
 
-  // Fetch all podcasts
-  const podcasts = await client.fetch(`
-    *[_type == "podcast" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
-      "slug": slug.current,
-      publishedAt
-    }
-    | order(publishedAt desc)
-  `)
+  let podcasts: any[] = []
+  try {
+    podcasts = await client.fetch(`
+      *[_type == "podcast" && defined(slug.current) && !(_id in path("drafts.**")) && length(title) > 5] {
+        "slug": slug.current,
+        publishedAt
+      }
+      | order(publishedAt desc)
+    `)
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch podcasts from Sanity:", err)
+  }
 
+  // 2. Fetch from Google Sheets
+  let sheetStories: any[] = []
+  try {
+    sheetStories = await fetchSheetStories()
+  } catch (err) {
+    console.error("Sitemap: Failed to fetch Google Sheet stories:", err)
+  }
+
+  // 3. Create sets to track existing slugs so we don't duplicate
+  const postSlugs = new Set(posts.map(p => p.slug))
+  const authorSlugs = new Set(authors.map(a => a.slug))
+  const categorySlugs = new Set(categories.map(c => c.slug))
+  const tagSlugs = new Set(tags.map(t => t.slug))
+
+  // 4. Merge sheet data
+  sheetStories.forEach(story => {
+    if (story.slug && !postSlugs.has(story.slug)) {
+      posts.push({
+        slug: story.slug,
+        publishedAt: story.publishedAt
+      })
+      postSlugs.add(story.slug)
+    }
+
+    if (story.author?.slug && !authorSlugs.has(story.author.slug)) {
+      authors.push({ slug: story.author.slug })
+      authorSlugs.add(story.author.slug)
+    }
+
+    if (story.categories) {
+      story.categories.forEach((cat: any) => {
+        if (cat.slug && !categorySlugs.has(cat.slug)) {
+          categories.push({ slug: cat.slug })
+          categorySlugs.add(cat.slug)
+        }
+      })
+    }
+
+    if (story.tags) {
+      story.tags.forEach((tag: any) => {
+        if (tag.slug && !tagSlugs.has(tag.slug)) {
+          tags.push({ slug: tag.slug })
+          tagSlugs.add(tag.slug)
+        }
+      })
+    }
+  })
+
+  // 5. Build entries
   const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/search`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/photos`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/videos`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/podcasts`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.2,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.2,
-    },
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },
+    { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.5 },
+    { url: `${baseUrl}/photos`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${baseUrl}/videos`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${baseUrl}/podcasts`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
+    { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'yearly' as const, priority: 0.2 },
+    { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly' as const, priority: 0.2 },
   ]
 
   const postEntries = posts.map((post: any) => ({

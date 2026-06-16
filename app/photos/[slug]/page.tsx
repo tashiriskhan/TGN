@@ -17,41 +17,51 @@ import "@/app/styles/dark-photo-story.css"
 
 // Fetch single photo story by slug
 async function getPhotoStory(slug: string) {
-  return client.fetch(
-    `*[_type == "photoStory" && slug.current == $slug][0] {
-      title,
-      description,
-      mainImage,
-      gallery,
-      publishedAt,
-      "slug": slug.current,
-      "categories": categories[]->{ title, "slug": slug.current },
-      author->{
-        name,
-        bio,
-        avatar,
-        location,
-        socialLinks
-      },
-      "tags": tags[]->{ title, "slug": slug.current },
-      body
-    }`,
-    { slug }
-  )
+  try {
+    return await client.fetch(
+      `*[_type == "photoStory" && slug.current == $slug][0] {
+        title,
+        description,
+        mainImage,
+        gallery,
+        publishedAt,
+        "slug": slug.current,
+        "categories": categories[]->{ title, "slug": slug.current },
+        author->{
+          name,
+          bio,
+          avatar,
+          location,
+          socialLinks
+        },
+        "tags": tags[]->{ title, "slug": slug.current },
+        body
+      }`,
+      { slug }
+    )
+  } catch (err) {
+    console.error(`Failed to fetch photo story for slug ${slug}:`, err)
+    return null
+  }
 }
 
 // Fetch recommended photos
 async function getRecommendedPhotos(excludeSlug: string) {
-  return client.fetch(
-    `*[_type == "photoStory" && slug.current != $slug] | order(publishedAt desc)[0...4] {
-      title,
-      mainImage,
-      "slug": slug.current,
-      author->{ name },
-      publishedAt
-    }`,
-    { slug: excludeSlug }
-  )
+  try {
+    return await client.fetch(
+      `*[_type == "photoStory" && slug.current != $slug] | order(publishedAt desc)[0...4] {
+        title,
+        mainImage,
+        "slug": slug.current,
+        author->{ name },
+        publishedAt
+      }`,
+      { slug: excludeSlug }
+    )
+  } catch (err) {
+    console.error("Failed to fetch recommended photos:", err)
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

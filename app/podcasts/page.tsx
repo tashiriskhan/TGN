@@ -25,23 +25,33 @@ export default async function PodcastsPage({ searchParams }: any) {
   const start = (page - 1) * PAGE_SIZE
   const end = start + PAGE_SIZE
 
-  const podcasts = await client.fetch(
-    `*[_type == "podcast"]
-      | order(publishedAt desc)[$start...$end] {
-        title,
-        description,
-        duration,
-        thumbnail,
-        publishedAt,
-        "slug": slug.current,
-        author->{ name }
-      }`,
-    { start, end }
-  )
+  let podcasts = []
+  try {
+    podcasts = await client.fetch(
+      `*[_type == "podcast"]
+        | order(publishedAt desc)[$start...$end] {
+          title,
+          description,
+          duration,
+          thumbnail,
+          publishedAt,
+          "slug": slug.current,
+          author->{ name }
+        }`,
+      { start, end }
+    )
+  } catch (err) {
+    console.error("Failed to fetch podcasts from Sanity:", err)
+  }
 
-  const totalPodcasts = await client.fetch(
-    `count(*[_type == "podcast"])`
-  )
+  let totalPodcasts = 0
+  try {
+    totalPodcasts = await client.fetch(
+      `count(*[_type == "podcast"])`
+    )
+  } catch (err) {
+    console.error("Failed to fetch total podcasts count from Sanity:", err)
+  }
 
   const totalPages = Math.ceil(totalPodcasts / PAGE_SIZE)
 

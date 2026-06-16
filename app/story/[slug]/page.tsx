@@ -1,10 +1,8 @@
 // Revalidate every 60 seconds for fresh content with caching
 export const revalidate = 60;
 
-import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import SmartImage from "@/app/components/SmartImage"
-import { getRelatedPosts } from "@/sanity/lib/getRelatedPosts"
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
@@ -17,39 +15,22 @@ import ArticlePortableText from "@/app/components/PortableTextComponents"
 import TableOfContents from "@/app/components/TableOfContents"
 import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
-import { getStorySidebarData } from "@/sanity/lib/getSidebarData"
 import { truncateText } from "@/app/components/utils"
 import { siteConfig } from "@/config/site"
-
-// Shared query for post data (reduces duplication)
-const POST_FULL_QUERY = `*[_type == "post" && slug.current == $slug][0]{
-  title,
-  subtitle,
-  excerpt,
-  body,
-  publishedAt,
-  mainImage{
-    ...,
-    asset->{
-      _id,
-      metadata{
-        lqip,
-        dimensions
-      }
-    }
-  },
-  author->{
-    name,
-    bio,
-    "slug": slug.current,
-    image
-  },
-  categories[]->{ title, "slug": slug.current },
-  tags[]->{ title, "slug": slug.current }
-}`
+import { getStoryBySlug, getRelatedStories, getUnifiedSidebarData } from "@/app/lib/storyBridge"
 
 async function getPost(slug: string) {
-  return client.fetch(POST_FULL_QUERY, { slug })
+  return getStoryBySlug(slug)
+}
+
+function resolveImageUrl(image: any) {
+  if (!image) return "";
+  if (typeof image === "string") return image;
+  try {
+    return urlFor(image).width(1200).height(630).url();
+  } catch (e) {
+    return "";
+  }
 }
 
 export async function generateMetadata({ params }: any) {
@@ -75,7 +56,7 @@ export async function generateMetadata({ params }: any) {
       siteName: 'The Ground Narrative',
       images: post?.mainImage ? [
         {
-          url: urlFor(post.mainImage).width(1200).height(630).url(),
+          url: resolveImageUrl(post.mainImage),
           width: 1200,
           height: 630,
           alt: post.title,
@@ -85,13 +66,13 @@ export async function generateMetadata({ params }: any) {
       type: 'article',
       publishedTime: post?.publishedAt,
       authors: post?.author?.name ? [post.author.name] : [],
-      section: post?.category?.title,
+      section: post?.categories?.[0]?.title,
     },
     twitter: {
       card: 'summary_large_image',
       title: post?.title,
       description: description,
-      images: post?.mainImage ? [urlFor(post.mainImage).width(1200).height(630).url()] : [],
+      images: post?.mainImage ? [resolveImageUrl(post.mainImage)] : [],
     },
   }
 }
@@ -105,28 +86,27 @@ export default async function StoryPage({ params }: any) {
   // `categories` is an array of all categories this post is in. Pick the first for breadcrumbs and meta.
   const primaryCategory = post?.categories?.[0] || null
 
-  // Get related posts based on category and tags
-  const relatedPosts = await getRelatedPosts(
+  // Get related posts based on category and tags — now includes Google Sheet stories
+  const relatedPosts = await getRelatedStories(
     slug,
     primaryCategory?.slug,
     post?.tags?.map((tag: any) => tag.slug) || []
   )
 
-  // Fetch sidebar data from shared cache (60s revalidation, shared across pages)
-  // This replaces 2 separate queries (getTrending + inline recent stories fetch)
-  // with a single cached lookup. First request fetches; subsequent requests
-  // within 60s use cache.
-  const { trending, recentStories } = await getStorySidebarData(slug)
+  // Fetch sidebar data merged from Sanity + Google Sheets
+  const { trending, recentStories } = await getUnifiedSidebarData(slug)
 
-  // Calculate reading time from Portable Text
-  const bodyText = post?.body
-    ? post.body.map((block: any) => {
-        if (block._type === 'block' && block.children) {
-          return block.children.map((child: any) => child.text).join('');
-        }
-        return '';
-      }).join(' ')
-    : '';
+  // Calculate reading time from Portable Text or plain text string
+  const bodyText = typeof post?.body === 'string'
+    ? post.body
+    : Array.isArray(post?.body)
+      ? post.body.map((block: any) => {
+          if (block._type === 'block' && block.children) {
+            return block.children.map((child: any) => child.text).join('');
+          }
+          return '';
+        }).join(' ')
+      : '';
   const readingTime = calculateReadingTime(bodyText);
 
   // Create JSON-LD structured data
@@ -138,7 +118,7 @@ export default async function StoryPage({ params }: any) {
     "@type": "NewsArticle",
     "headline": post.title,
     "description": post.excerpt || post.subtitle || (bodyText ? bodyText.slice(0, 150) : undefined),
-    "image": post.mainImage ? urlFor(post.mainImage).width(1200).height(630).url() : undefined,
+    "image": post.mainImage ? resolveImageUrl(post.mainImage) : undefined,
     "datePublished": post.publishedAt,
     "dateModified": post.publishedAt,
     "author": {
@@ -281,8 +261,8 @@ export default async function StoryPage({ params }: any) {
                   >
                     {relatedPost.mainImage && (
                       <div className="more-article-image">
-                        <Image
-                          src={urlFor(relatedPost.mainImage).width(200).height(150).url()}
+                        <SmartImage
+                          image={relatedPost.mainImage}
                           alt={relatedPost.title}
                           width={200}
                           height={150}

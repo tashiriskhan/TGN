@@ -44,22 +44,27 @@ export const metadata: Metadata = {
 }
 
 export default async function VideosPage() {
-  const videoStories = await client.fetch(`
-    *[_type == "videoStory"] | order(publishedAt desc) {
-      title,
-      "slug": slug.current,
-      description,
-      videoUrl,
-      videoType,
-      isShort,
-      thumbnail,
-      publishedAt,
+  let videoStories = []
+  try {
+    videoStories = await client.fetch(`
+      *[_type == "videoStory"] | order(publishedAt desc) {
+        title,
+        "slug": slug.current,
+        description,
+        videoUrl,
+        videoType,
+        isShort,
+        thumbnail,
+        publishedAt,
 
-      author->{ name, "slug": slug.current, image },
-      categories[]->{ title, "slug": slug.current },
-      tags[]->{ title, "slug": slug.current }
-    }
-  `)
+        author->{ name, "slug": slug.current, image },
+        categories[]->{ title, "slug": slug.current },
+        tags[]->{ title, "slug": slug.current }
+      }
+    `)
+  } catch (err) {
+    console.error("Failed to fetch video stories from Sanity:", err)
+  }
 
   // Separate short videos and regular videos
   const shortVideos = videoStories.filter((v: any) => v.isShort)

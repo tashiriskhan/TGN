@@ -105,9 +105,23 @@ const portableTextComponents: PortableTextComponents = {
 
 // Reusable ArticlePortableText component
 interface ArticlePortableTextProps {
-  value: any[];
+  value: any;
 }
 
 export default function ArticlePortableText({ value }: ArticlePortableTextProps) {
+  if (typeof value === "string") {
+    // Basic conversion to render string paragraphs or html safely
+    return (
+      <div 
+        className="plain-text-body"
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+    );
+  }
+
+  if (!Array.isArray(value)) {
+    return null;
+  }
+
   return <PortableText value={value} components={portableTextComponents} />;
 }
