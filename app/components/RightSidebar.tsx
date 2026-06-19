@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { truncateText } from "./utils";
 import { urlFor } from "@/sanity/lib/image";
+import SmartImage from "./SmartImage";
 
 interface RightSidebarProps {
   hideMostRead?: boolean;
@@ -41,8 +41,8 @@ export default function RightSidebar({
               >
                 {story.mainImage && (
                   <div className="recent-story-sidebar-thumb">
-                    <Image
-                      src={urlFor(story.mainImage).width(180).height(140).url()}
+                    <SmartImage
+                      image={story.mainImage}
                       alt={story.title}
                       width={90}
                       height={70}

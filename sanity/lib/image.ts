@@ -28,6 +28,20 @@ builderProto.url = function (this: any) {
 }
 
 export function urlFor(source: any) {
+  if (typeof source === 'string') {
+    const mockBuilder = {
+      width: () => mockBuilder,
+      height: () => mockBuilder,
+      auto: () => mockBuilder,
+      url: () => source,
+      fit: () => mockBuilder,
+      format: () => mockBuilder,
+      quality: () => mockBuilder,
+      blur: () => mockBuilder,
+      rect: () => mockBuilder,
+    };
+    return mockBuilder as any;
+  }
   return builder.image(source)
 }
 
@@ -46,6 +60,9 @@ export function getBlurPlaceholder(image: any): string | null {
 
 // Build image URL with options
 export function buildImageUrl(image: any, options: { width?: number; height?: number } = {}) {
+  if (typeof image === 'string') {
+    return image;
+  }
   let urlBuilder = builder.image(image)
 
   if (options.width) {
@@ -57,3 +74,4 @@ export function buildImageUrl(image: any, options: { width?: number; height?: nu
 
   return urlBuilder.auto('format').url()
 }
+
