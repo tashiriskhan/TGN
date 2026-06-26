@@ -186,8 +186,8 @@ export default async function CategoryPage({ params, searchParams }: any) {
             )}
 
             <div className="category-grid-container">
-              {posts.map((post: any) => (
-                <article key={post.slug} className="category-card">
+              {posts.map((post: any, index: number) => (
+                <article key={`${post.slug}-${index}`} className="category-card">
                   <Link href={`/story/${post.slug}`} className="cat-link">
 
                     <div className="category-image-wrapper">

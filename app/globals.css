@@ -1353,6 +1353,7 @@ html[data-theme="photos-dark"] body .tgn-header * {
 
   .mobile-recent-thumb img {
     object-fit: cover;
+    object-position: center;
     width: 100%;
     height: 100%;
   }
@@ -3129,6 +3130,7 @@ html[data-theme="photos-dark"] body .tgn-nav-list a:hover {
 
   .mobile-recent-thumb img {
     object-fit: cover;
+    object-position: center;
     width: 100%;
     height: 100%;
   }
@@ -6717,10 +6719,9 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 
   /* ===== MORE STORIES GRID ===== */
   .stories-grid-smaller {
-    display: flex !important;
-    flex-direction: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
-    overflow-x: auto !important;
     padding-bottom: 4px;
     position: relative;
   }
@@ -6740,7 +6741,6 @@ html[data-theme="photos-dark"] body .footer-link:hover {
   }
 
   .story-card-smaller {
-    flex: 0 0 calc(50% - 5px);
     border-radius: 4px;
     background: #f8f8f8;
     padding-bottom: 4px;
@@ -6765,6 +6765,7 @@ html[data-theme="photos-dark"] body .footer-link:hover {
     width: 100%;
     height: 70px;
     object-fit: cover;
+    object-position: center;
   }
 
   .story-content-smaller {
@@ -6795,10 +6796,9 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 
   /* ===== SPECIAL REPORTS ===== */
   .special-grid-smaller {
-    display: flex !important;
-    flex-direction: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
-    overflow-x: auto !important;
     padding-bottom: 4px;
     position: relative;
     border-left: none;
@@ -6820,7 +6820,6 @@ html[data-theme="photos-dark"] body .footer-link:hover {
   }
 
   .special-card-smaller {
-    flex: 0 0 calc(50% - 5px);
     border-radius: 4px;
     background: #f8f8f8;
     padding-bottom: 4px;
@@ -7318,23 +7317,29 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 
   /* Stories grid on mobile */
   .stories-grid-smaller {
-    grid-template-columns: 1fr !important;
-    gap: 16px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
   }
 
   .story-card-smaller {
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
+    display: block;
+    border-radius: 4px;
+    background: #f8f8f8;
+    padding-bottom: 4px;
   }
 
   .story-image-smaller {
-    width: 100px;
-    min-width: 100px;
-    height: 70px;
+    position: relative;
+    width: 100%;
+    padding-top: 57%;
+    height: auto;
   }
 
   .story-image-smaller img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -7351,27 +7356,32 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 
   /* Special grid on mobile - COMPACT */
   .special-grid-smaller {
-    display: flex !important;
-    flex-direction: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
-    overflow-x: auto !important;
     padding-bottom: 4px;
     border-left: none;
     padding-left: 0;
   }
 
   .special-card-smaller {
-    flex: 0 0 calc(50% - 6px);
     border-radius: 6px;
     overflow: hidden;
   }
 
   .special-image-smaller {
-    height: 80px;
+    position: relative;
+    width: 100%;
+    padding-top: 57%;
+    height: auto;
   }
 
   .special-image-smaller img {
-    height: 80px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
@@ -8456,7 +8466,7 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 /* ========== SMALLER STORY CARDS ========== */
 .stories-grid-smaller {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
   position: relative;
 }
@@ -8542,7 +8552,7 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 /* ========== SMALLER SPECIAL CARDS ========== */
 .special-grid-smaller {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
   position: relative;
 }
@@ -8667,7 +8677,7 @@ html[data-theme="photos-dark"] body .footer-link:hover {
 
   .stories-grid-smaller,
   .special-grid-smaller {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

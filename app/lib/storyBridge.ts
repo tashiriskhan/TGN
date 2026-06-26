@@ -179,7 +179,7 @@ export async function getBreakingNews(): Promise<UnifiedStory[]> {
 
 // 4. Opinion pieces
 export async function getOpinion(): Promise<UnifiedStory[]> {
-  const query = `*[_type == "post" && isOpinion == true] | order(publishedAt desc)[0...5]{
+  const query = `*[_type == "post" && isOpinion == true] | order(publishedAt desc)[0...8]{
     title,
     excerpt,
     mainImage,
@@ -193,12 +193,12 @@ export async function getOpinion(): Promise<UnifiedStory[]> {
     ...data.sanity,
     ...data.sheet.filter((s: any) => s.isOpinion)
   ]
-  return merged.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+  return merged.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 8)
 }
 
 // 5. In Depth
 export async function getAllInDepth(): Promise<UnifiedStory[]> {
-  const query = `*[_type == "post" && isInDepth == true] | order(publishedAt desc)[0...6]{
+  const query = `*[_type == "post" && isInDepth == true] | order(publishedAt desc)[0...8]{
     title,
     excerpt,
     mainImage,
@@ -212,12 +212,12 @@ export async function getAllInDepth(): Promise<UnifiedStory[]> {
     ...data.sanity,
     ...data.sheet.filter((s: any) => s.isInDepth)
   ]
-  return merged.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+  return merged.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 8)
 }
 
 // 6. Special
 export async function getAllSpecial(): Promise<UnifiedStory[]> {
-  const query = `*[_type == "post" && isSpecial == true] | order(publishedAt desc)[0...6]{
+  const query = `*[_type == "post" && isSpecial == true] | order(publishedAt desc)[0...8]{
     title,
     excerpt,
     mainImage,
@@ -231,7 +231,7 @@ export async function getAllSpecial(): Promise<UnifiedStory[]> {
     ...data.sanity,
     ...data.sheet.filter((s: any) => s.isSpecial)
   ]
-  return merged.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+  return merged.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 8)
 }
 
 // 7. Get single story detail by slug (fallback matching)

@@ -17,7 +17,7 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
   const moreDropdownRef = useRef<HTMLLIElement>(null)
 
   // Preferred order for categories
-  const preferredOrder = ['world', 'politics', 'science', 'tech', 'technology', 'culture', 'business']
+  const preferredOrder = ['opinion', 'health', 'politics', 'technology', 'culture', 'business', 'science', 'sports', 'world']
   
   const sortedCategories = [...categories].sort((a, b) => {
     const indexA = preferredOrder.indexOf(a.slug || '')

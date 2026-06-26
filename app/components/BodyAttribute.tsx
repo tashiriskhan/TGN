@@ -23,19 +23,22 @@ export default function BodyAttribute() {
       pageType = 'video';
       document.documentElement.setAttribute('data-theme', 'video-dark');
     } else {
-      // Default pages - remove dark themes
-      document.documentElement.removeAttribute('data-theme');
+      // Default pages - restore regular theme from localStorage
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute('data-theme', savedTheme);
     }
 
     // Set body attribute
     document.body.setAttribute('data-page', pageType);
 
-    // Cleanup function to reset when component unmounts
+    // Cleanup function
     return () => {
       document.body.setAttribute('data-page', 'default');
-      document.documentElement.removeAttribute('data-theme');
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute('data-theme', savedTheme);
     };
   }, [pathname]);
 
   return null;
 }
+
