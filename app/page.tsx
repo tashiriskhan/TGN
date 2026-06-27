@@ -230,7 +230,7 @@ export default async function HomePage() {
             <section className="content-section-compact">
               <h2 className="section-title-compact">In Depth</h2>
               <div className="stories-grid-smaller">
-                {inDepthList?.filter((post: any) => post.mainImage).slice(0, 4).map((post: any) => (
+                {inDepthList?.filter((post: any) => post.mainImage).slice(0, 8).map((post: any) => (
                   <article key={post.slug} className="story-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       {post.mainImage && (
@@ -257,7 +257,7 @@ export default async function HomePage() {
             <section className="content-section-compact">
               <h2 className="section-title-compact">Special Reports</h2>
               <div className="special-grid-smaller">
-                {specialList?.filter((post: any) => post.mainImage).slice(0, 4).map((post: any) => (
+                {specialList?.filter((post: any) => post.mainImage).slice(0, 8).map((post: any) => (
                   <article key={post.slug} className="special-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       <div className="special-image-smaller">

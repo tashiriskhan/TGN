@@ -7385,6 +7385,12 @@ html[data-theme="photos-dark"] body .footer-link:hover {
     object-fit: cover;
   }
 
+  /* Limit mobile display to exactly 4 items (2x2 grid) by hiding items 5 through 8 */
+  .stories-grid-smaller .story-card-smaller:nth-child(n+5),
+  .special-grid-smaller .special-card-smaller:nth-child(n+5) {
+    display: none !important;
+  }
+
   .special-badge-compact {
     font-size: 8px;
     padding: 2px 6px;
