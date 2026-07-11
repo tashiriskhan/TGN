@@ -94,6 +94,11 @@ export const metadata: Metadata = {
     maximumScale: 5,
   },
   category: 'news',
+  verification: {
+    other: {
+      "msvalidate.01": "8EC0446DA8A168A3125EFBE98FF834D0"
+    }
+  }
 };
 
 export default function RootLayout({
