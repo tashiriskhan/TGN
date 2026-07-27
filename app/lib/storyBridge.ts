@@ -119,9 +119,12 @@ export async function getCombinedStories(sanityQuery: string, sanityParams: any 
     slug: story.slug?.current || story.slug || ''
   }))
 
+  const finalSanity = normalizedSanity.filter((s: any) => s.slug && s.title)
+  const finalSheet = sheetResults.filter((s: any) => s.slug && s.title)
+
   return {
-    sanity: normalizedSanity,
-    sheet: sheetResults
+    sanity: finalSanity,
+    sheet: finalSheet
   } as any
 }
 
@@ -367,7 +370,7 @@ export async function getRelatedStories(currentSlug: string, categorySlug?: stri
   const merged = [
     ...data.sanity,
     ...data.sheet.filter((s: any) => s.slug !== currentSlug)
-  ]
+  ].filter((s: any) => s.slug && s.title)
 
   // Filter by matching category or tags to simulate relevance
   const filtered = merged.filter((s: any) => {

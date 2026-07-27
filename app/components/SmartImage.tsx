@@ -32,8 +32,8 @@ export default function SmartImage({
         alt={alt}
         className={className}
         style={{
-          width: fill ? "100%" : (width ? "100%" : undefined),
-          height: fill ? "100%" : (height ? "100%" : undefined),
+          width: "100%",
+          height: "100%",
           objectFit: "cover",
           objectPosition: "center",
           display: "block",
