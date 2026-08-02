@@ -1,5 +1,5 @@
 // Revalidate every 60 seconds for fresh content with caching
-export const revalidate = 60;
+export const revalidate = 3600; // 1 hour ISR - reduces Netlify serverless compute costs
 
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"

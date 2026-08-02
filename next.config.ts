@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // NOTE: Do NOT add custom Cache-Control headers for page routes.
+  // Next.js ISR (revalidate) automatically sets the correct cache headers.
+  // Adding max-age=0 here would disable Netlify CDN caching and massively
+  // increase serverless function calls and billing costs.
 };
 
 export default nextConfig;
