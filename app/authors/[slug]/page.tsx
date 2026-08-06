@@ -16,6 +16,19 @@ import { siteConfig } from "@/config/site"
 
 const PAGE_SIZE = 10;
 
+export async function generateStaticParams() {
+  try {
+    const query = `*[_type == "author"]{ "slug": slug.current }`;
+    const authors = await client.fetch(query) as any[];
+    return authors.map((a: any) => ({ slug: a.slug }));
+  } catch (e) {
+    console.error("Error generating static params for authors:", e);
+    return [];
+  }
+}
+
+export const dynamicParams = true;
+
 const formatSocialUrl = (url: string, platform: 'x' | 'instagram' | 'linkedin') => {
   if (!url) return '';
   if (url.startsWith('http')) return url;

@@ -17,7 +17,24 @@ import ReadingProgressBar from "@/app/components/ReadingProgressBar"
 import BackToTop from "@/app/components/BackToTop"
 import { truncateText } from "@/app/components/utils"
 import { siteConfig } from "@/config/site"
-import { getStoryBySlug, getRelatedStories, getUnifiedSidebarData } from "@/app/lib/storyBridge"
+import { getStoryBySlug, getRelatedStories, getUnifiedSidebarData, getCombinedStories } from "@/app/lib/storyBridge"
+
+export async function generateStaticParams() {
+  try {
+    const query = `*[_type == "post"] | order(publishedAt desc)[0...50]{ "slug": slug.current }`;
+    const data = await getCombinedStories(query) as any;
+    const paths = [
+      ...(data.sanity || []).map((s: any) => ({ slug: s.slug })),
+      ...(data.sheet || []).map((s: any) => ({ slug: s.slug }))
+    ];
+    return paths;
+  } catch (e) {
+    console.error("Error generating static params for stories:", e);
+    return [];
+  }
+}
+
+export const dynamicParams = true; // Support generating remaining ones on-demand
 
 async function getPost(slug: string) {
   return getStoryBySlug(slug)

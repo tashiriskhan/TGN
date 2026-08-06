@@ -12,6 +12,19 @@ import { getCategoryStories } from "@/app/lib/storyBridge"
 
 const PAGE_SIZE = 9
 
+export async function generateStaticParams() {
+  try {
+    const query = `*[_type == "category"]{ "slug": slug.current }`;
+    const categories = await client.fetch(query) as any[];
+    return categories.map((c: any) => ({ slug: c.slug }));
+  } catch (e) {
+    console.error("Error generating static params for categories:", e);
+    return [];
+  }
+}
+
+export const dynamicParams = true;
+
 // Reserved route names that should not be treated as categories
 const RESERVED_ROUTES = [
   'story',

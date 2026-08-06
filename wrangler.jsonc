@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "groundnarrative",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2024-11-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_INC_CACHE_KV",
+      "id": "b4f87e77c6a0495ea0fd7c04e21b9d89"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

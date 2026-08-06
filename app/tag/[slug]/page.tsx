@@ -13,6 +13,19 @@ import Pagination from "@/app/components/Pagination"
 import { getTagStories, getUnifiedSidebarData } from "@/app/lib/storyBridge"
 import { siteConfig } from "@/config/site"
 
+export async function generateStaticParams() {
+  try {
+    const query = `*[_type == "tag"] | order(title asc)[0...100]{ "slug": slug.current }`;
+    const tags = await client.fetch(query) as any[];
+    return tags.map((t: any) => ({ slug: t.slug }));
+  } catch (e) {
+    console.error("Error generating static params for tags:", e);
+    return [];
+  }
+}
+
+export const dynamicParams = true;
+
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const p = await params
   const slug = p.slug

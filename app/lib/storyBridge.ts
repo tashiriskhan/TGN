@@ -31,10 +31,7 @@ export interface UnifiedStory {
 export async function fetchSheetStories(): Promise<UnifiedStory[]> {
   try {
     const res = await fetch(CSV_URL, { 
-      next: { revalidate: 60 },
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
+      next: { revalidate: 3600 }
     })
     if (!res.ok) throw new Error(`CSV fetch status: ${res.status}`)
     const csvText = await res.text()
