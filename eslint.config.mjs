@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Sanity Studio build output — minified bundles are not linted.
+    "dist/**",
+    ".open-next/**",
+    ".sanity/**",
   ]),
 ]);
 

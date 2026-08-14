@@ -5,11 +5,16 @@ import { useState, useRef, useEffect } from "react"
 import ThemeToggle from "./ThemeToggle"
 import SocialIcons from "./SocialIcons"
 import { useTheme } from "./ThemeProvider"
-import { getFormattedTodayDate, getFormattedHijriDate } from "@/app/lib/dateHelper"
 import { usePathname } from "next/navigation"
 import { navRoutes, imageConfig, siteConfig } from "@/config/site"
 
-export default function HeaderClient({ categories }: { categories: Array<{title: string, slug: string}> }) {
+interface HeaderClientProps {
+  categories: Array<{ title: string; slug: string }>
+  todayDate: string
+  hijriDate: string
+}
+
+export default function HeaderClient({ categories, todayDate, hijriDate }: HeaderClientProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false)
   const { theme } = useTheme()
@@ -95,9 +100,9 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           {/* Right: Date (swapped with social icons) */}
           <div className="header-date">
             <div className="date-display">
-              <div className="gregorian-date">{getFormattedTodayDate()}</div>
+              <div className="gregorian-date">{todayDate}</div>
               <div className="date-separator">----------------------</div>
-              <div className="hijri-date">{getFormattedHijriDate()}</div>
+              <div className="hijri-date">{hijriDate}</div>
             </div>
           </div>
         </div>
@@ -141,9 +146,9 @@ export default function HeaderClient({ categories }: { categories: Array<{title:
           {/* RIGHT SIDE - Date (Mobile Only) */}
           <div className="header-date mobile-nav-date mobile-only">
             <div className="date-display">
-              <div className="gregorian-date">{getFormattedTodayDate()}</div>
+              <div className="gregorian-date">{todayDate}</div>
               <div className="date-separator">----------------------</div>
-              <div className="hijri-date">{getFormattedHijriDate()}</div>
+              <div className="hijri-date">{hijriDate}</div>
             </div>
           </div>
 

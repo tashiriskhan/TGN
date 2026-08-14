@@ -1,9 +1,5 @@
-"use client";
-
-import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { truncateText } from "./utils";
-import { urlFor } from "@/sanity/lib/image";
 import SmartImage from "./SmartImage";
 
 interface RightSidebarProps {

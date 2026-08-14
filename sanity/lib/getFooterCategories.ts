@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { client } from "./sanity"
 import { FOOTER_CATEGORIES_QUERY } from "./queries"
 
@@ -15,7 +16,8 @@ export const STATIC_NAV_CATEGORIES = [
   { title: "Sports", slug: "sports" },
 ]
 
-export async function getFooterCategories() {
+// Wrapped in React cache() so Header and Footer share a single Sanity query per request.
+export const getFooterCategories = cache(async () => {
   try {
     const categories = await client.fetch(FOOTER_CATEGORIES_QUERY)
     // If Sanity returns a non-empty array, use it; otherwise fall back to static list
@@ -27,4 +29,4 @@ export async function getFooterCategories() {
     console.error("Failed to fetch footer categories from Sanity, using fallbacks:", err)
     return STATIC_NAV_CATEGORIES
   }
-}
+})

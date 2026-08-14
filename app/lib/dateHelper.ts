@@ -1,5 +1,3 @@
-import moment from 'moment-hijri'
-
 /**
  * Format today's date in a human-readable format
  * Example: "Saturday, 6 December 2025"
@@ -15,20 +13,27 @@ export function getFormattedTodayDate(): string {
   return `${dayName}, ${dayNumber} ${monthName} ${year}`
 }
 
+const hijriMonths = [
+  'Muharram', 'Safar', "Rabi' Al-Awwal", 'Rabi\' Al-Thani',
+  'Jumada Al-Awwal', 'Jumada Al-Thani', 'Rajab', 'Sha\'ban',
+  'Ramadan', 'Shawwal', 'Dhu Al-Qi\'dah', 'Dhu Al-Hijjah'
+]
+
 /**
- * Format today's Hijri date
+ * Format today's Hijri date using the native Intl Islamic (tabular) calendar.
+ * No external dependencies — replaces the previous moment-hijri implementation.
  * Example: "17 Jumada Al-Akhirah 1447 AH"
  */
 export function getFormattedHijriDate(): string {
-  const hijriMonths = [
-    'Muharram', 'Safar', "Rabi' Al-Awwal", 'Rabi\' Al-Thani',
-    'Jumada Al-Awwal', 'Jumada Al-Thani', 'Rajab', 'Sha\'ban',
-    'Ramadan', 'Shawwal', 'Dhu Al-Qi\'dah', 'Dhu Al-Hijjah'
-  ]
+  const parts = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn', {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+  }).formatToParts(new Date())
 
-  const day = moment().iDate()
-  const monthIndex = moment().iMonth()
-  const year = moment().iYear()
+  const day = Number(parts.find(p => p.type === 'day')?.value || 1)
+  const month = Number(parts.find(p => p.type === 'month')?.value || 1)
+  const year = Number(parts.find(p => p.type === 'year')?.value || new Date().getFullYear())
 
-  return `${day} ${hijriMonths[monthIndex]} ${year} AH`
+  return `${day} ${hijriMonths[month - 1] || ''} ${year} AH`
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent } from "react";
 
 // Replace with your Google Apps Script Web App URL for newsletter
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwKxfrXXtwd2k9y1kdfXdS3rJ231dP7cXjMvzAGWcHIvWigTCvZk1w432jNz6L6DYq/exec";
@@ -10,21 +10,6 @@ export default function NewsletterForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [userIP, setUserIP] = useState("");
-
-  // Get user IP on mount
-  useEffect(() => {
-    const getIP = async () => {
-      try {
-        const response = await fetch("https://api.ipify.org?format=json");
-        const data = await response.json();
-        setUserIP(data.ip);
-      } catch {
-        setUserIP("Unknown");
-      }
-    };
-    getIP();
-  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -38,7 +23,6 @@ export default function NewsletterForm() {
       const formBody = new URLSearchParams({
         email: email,
         timestamp: new Date().toISOString(),
-        ip: userIP,
       });
 
       await fetch(GOOGLE_SCRIPT_URL, {

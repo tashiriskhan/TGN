@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { client as sanityClient } from '@/sanity/lib/client'
 import Papa from 'papaparse'
 
@@ -27,8 +28,10 @@ export interface UnifiedStory {
   body?: any
 }
 
-// Fetch and parse the Google Sheet CSV
-export async function fetchSheetStories(): Promise<UnifiedStory[]> {
+// Fetch and parse the Google Sheet CSV.
+// Wrapped in React cache() so the CSV is downloaded and parsed at most once
+// per request, even when multiple storyBridge functions call it.
+export const fetchSheetStories = cache(async (): Promise<UnifiedStory[]> => {
   try {
     const res = await fetch(CSV_URL, { 
       next: { revalidate: 3600 }
@@ -96,7 +99,7 @@ export async function fetchSheetStories(): Promise<UnifiedStory[]> {
     console.error("Failed to load or parse Google Sheets CSV:", err)
     return []
   }
-}
+})
 
 // Generic filter & fetch to combine Sanity and Sheets
 export async function getCombinedStories(sanityQuery: string, sanityParams: any = {}): Promise<UnifiedStory[]> {
@@ -327,7 +330,7 @@ export async function getTagStories(tagSlug: string): Promise<UnifiedStory[]> {
 
 // 10. Search Stories
 export async function searchStories(searchQuery: string): Promise<UnifiedStory[]> {
-  const query = `*[_type == "post" && (title match $searchQuery || excerpt match $searchQuery)] | order(publishedAt desc) {
+  const query = `*[_type == "post" && (title match $searchQuery || excerpt match $searchQuery)] | order(publishedAt desc)[0...50] {
     title,
     subtitle,
     mainImage,
