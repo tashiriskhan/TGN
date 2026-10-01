@@ -6,14 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 
-import { 
-  getFeaturedStories, 
-  getTrending, 
-  getBreakingNews, 
-  getOpinion, 
-  getAllInDepth, 
-  getAllSpecial 
-} from "@/app/lib/storyBridge";
+import { getHomePageData } from "@/app/lib/storyBridge";
 
 import { urlFor } from "@/sanity/lib/image";
 import SmartImage from "@/app/components/SmartImage";
@@ -29,25 +22,16 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  // Fetch all data in parallel
-  // Note: getAllPhotoStories() was removed — the variable was destructured but
-  // never used in the JSX. The "Watch & Listen" section only links to /photos
-  // and /videos, it doesn't render individual photo/video cards.
-  const [
+  // Fetch every section in a single Sanity round-trip (+ one cached Sheet read)
+  // instead of six separate parallel queries.
+  const {
     featuredStories,
     trending,
     breaking,
     opinion,
-    inDepthList,
-    specialList
-  ] = await Promise.all([
-    getFeaturedStories(),
-    getTrending(),
-    getBreakingNews(),
-    getOpinion(),
-    getAllInDepth(),
-    getAllSpecial()
-  ]);
+    inDepth: inDepthList,
+    special: specialList,
+  } = await getHomePageData();
 
   if (!featuredStories || featuredStories.length === 0) {
     return <div>No featured stories found</div>;
@@ -55,6 +39,12 @@ export default async function HomePage() {
 
   const mainStory = featuredStories[0];
   const recentStories = featuredStories.slice(1, 5);
+
+  // Pre-filter once so empty sections can be skipped entirely instead of
+  // rendering a heading followed by a blank block.
+  const inDepthItems = inDepthList?.filter((post) => post.mainImage).slice(0, 8) || [];
+  const specialItems = specialList?.filter((post) => post.mainImage).slice(0, 8) || [];
+  const opinionItems = opinion?.filter((post) => post.mainImage).slice(0, 8) || [];
 
   return (
     <>
@@ -227,10 +217,11 @@ export default async function HomePage() {
         <div className="container">
           <div className="main-content">
             {/* IN DEPTH */}
+            {inDepthItems.length > 0 && (
             <section className="content-section-compact">
               <h2 className="section-title-compact">In Depth</h2>
               <div className="stories-grid-smaller">
-                {inDepthList?.filter((post: any) => post.mainImage).slice(0, 8).map((post: any) => (
+                {inDepthItems.map((post) => (
                   <article key={post.slug} className="story-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       {post.mainImage && (
@@ -252,12 +243,14 @@ export default async function HomePage() {
                 ))}
               </div>
             </section>
+            )}
 
             {/* SPECIAL REPORTS */}
+            {specialItems.length > 0 && (
             <section className="content-section-compact">
               <h2 className="section-title-compact">Special Reports</h2>
               <div className="special-grid-smaller">
-                {specialList?.filter((post: any) => post.mainImage).slice(0, 8).map((post: any) => (
+                {specialItems.map((post) => (
                   <article key={post.slug} className="special-card-smaller">
                     <Link href={`/story/${post.slug}`}>
                       <div className="special-image-smaller">
@@ -278,12 +271,14 @@ export default async function HomePage() {
                 ))}
               </div>
             </section>
+            )}
 
             {/* OPINION */}
+            {opinionItems.length > 0 && (
             <section className="content-section-compact">
               <h2 className="section-title-compact">Opinion</h2>
               <div className="opinion-grid-compact">
-                {opinion?.filter((post: any) => post.mainImage).slice(0, 8).map((post: any) => (
+                {opinionItems.map((post) => (
                   <article key={post.slug} className="opinion-card-compact">
                     <Link href={`/story/${post.slug}`}>
                       {post.mainImage && (
@@ -305,6 +300,7 @@ export default async function HomePage() {
                 ))}
               </div>
             </section>
+            )}
           </div>
         </div>
       </section>

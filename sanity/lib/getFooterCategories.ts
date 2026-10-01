@@ -1,4 +1,5 @@
 import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 import { client } from "./sanity"
 import { FOOTER_CATEGORIES_QUERY } from "./queries"
 
@@ -16,17 +17,26 @@ export const STATIC_NAV_CATEGORIES = [
   { title: "Sports", slug: "sports" },
 ]
 
-// Wrapped in React cache() so Header and Footer share a single Sanity query per request.
-export const getFooterCategories = cache(async () => {
-  try {
-    const categories = await client.fetch(FOOTER_CATEGORIES_QUERY)
-    // If Sanity returns a non-empty array, use it; otherwise fall back to static list
-    if (Array.isArray(categories) && categories.length > 0) {
-      return categories
+// Cross-request cache: nav categories are identical for every visitor on every
+// page. React cache() only dedupes within a single request, so we also wrap the
+// query in unstable_cache with a long TTL and a tag the Sanity webhook can bust.
+const getCachedFooterCategories = unstable_cache(
+  async () => {
+    try {
+      const categories = await client.fetch(FOOTER_CATEGORIES_QUERY)
+      // If Sanity returns a non-empty array, use it; otherwise fall back to static list
+      if (Array.isArray(categories) && categories.length > 0) {
+        return categories
+      }
+      return STATIC_NAV_CATEGORIES
+    } catch (err) {
+      console.error("Failed to fetch footer categories from Sanity, using fallbacks:", err)
+      return STATIC_NAV_CATEGORIES
     }
-    return STATIC_NAV_CATEGORIES
-  } catch (err) {
-    console.error("Failed to fetch footer categories from Sanity, using fallbacks:", err)
-    return STATIC_NAV_CATEGORIES
-  }
-})
+  },
+  ['footer-categories'],
+  { revalidate: 86400, tags: ['categories'] }
+)
+
+// Header and Footer share a single cached query per request via React cache().
+export const getFooterCategories = cache(getCachedFooterCategories)

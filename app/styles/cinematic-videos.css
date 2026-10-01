@@ -1317,3 +1317,16 @@
     flex: 0 0 220px;
   }
 }
+
+/* Compact empty state on small screens (was 4rem of dead space) */
+@media (max-width: 640px) {
+  .cinematic-empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .cinematic-empty-state svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.75rem;
+  }
+}

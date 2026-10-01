@@ -22,13 +22,21 @@ export default function SmartImage({
   className,
   sizes,
 }: SmartImageProps) {
-  // Support direct string URLs from Google Sheets to bypass Next.js domain whitelist limitations
+  // Support direct string URLs from Google Sheets to bypass Next.js domain
+  // whitelist limitations. These bypass Sanity's CDN resizing, so at minimum
+  // defer offscreen loading, decode async, and give the browser intrinsic
+  // dimensions to reserve space (avoids layout shift).
   if (typeof image === "string") {
     return (
       <img
         src={image}
         alt={alt}
         className={className}
+        width={width}
+        height={height}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={priority ? "high" : undefined}
         style={{
           width: "100%",
           height: "100%",

@@ -5,15 +5,33 @@
  */
 
 import { notFound } from "next/navigation"
+import dynamic from "next/dynamic"
 import { client } from "@/sanity/lib/sanity"
 import { urlFor } from "@/sanity/lib/image"
 import type { Metadata } from "next"
 import HeroPhoto from "./HeroPhoto"
-import PhotoGallery from "./PhotoGallery"
 import RecommendedPhotos from "./RecommendedPhotos"
 import PhotographerBio from "./PhotographerBio"
 import NewsletterCard from "./NewsletterCard"
 import "@/app/styles/dark-photo-story.css"
+
+// The gallery sits below the hero; load its chunk lazily.
+const PhotoGallery = dynamic(() => import("./PhotoGallery"))
+
+export const revalidate = 3600; // 1 hour ISR - cache photo detail pages
+export const dynamicParams = true; // Generate remaining slugs on-demand
+
+export async function generateStaticParams() {
+  try {
+    const photos = await client.fetch(
+      `*[_type == "photoStory" && defined(slug.current)] | order(publishedAt desc)[0...100]{ "slug": slug.current }`
+    )
+    return (photos || []).map((p: any) => ({ slug: p.slug }))
+  } catch (e) {
+    console.error("Error generating static params for photos:", e)
+    return []
+  }
+}
 
 // Fetch single photo story by slug
 async function getPhotoStory(slug: string) {

@@ -25,6 +25,21 @@ import { client } from "@/sanity/lib/sanity"
 import type { Metadata } from "next"
 import "@/app/styles/cinematic-videos.css"
 
+export const revalidate = 3600; // 1 hour ISR - cache video detail pages
+export const dynamicParams = true; // Generate remaining slugs on-demand
+
+export async function generateStaticParams() {
+  try {
+    const videos = await client.fetch(
+      `*[_type == "videoStory" && defined(slug.current)] | order(publishedAt desc)[0...100]{ "slug": slug.current }`
+    )
+    return (videos || []).map((v: any) => ({ slug: v.slug }))
+  } catch (e) {
+    console.error("Error generating static params for videos:", e)
+    return []
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const videoStory = await getVideoStoryBySlug(slug)

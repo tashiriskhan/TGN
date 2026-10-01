@@ -1,7 +1,9 @@
 import { Metadata } from "next";
-import ContactForm from "@/app/components/ContactForm";
+import dynamic from "next/dynamic";
 import SocialIcons from "@/app/components/SocialIcons";
 import { siteConfig } from "@/config/site";
+
+const ContactForm = dynamic(() => import("@/app/components/ContactForm"));
 
 export const metadata: Metadata = {
   title: "Contact Us",

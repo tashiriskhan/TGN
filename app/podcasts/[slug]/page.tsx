@@ -4,7 +4,23 @@ import Link from "next/link"
 import { getPodcastBySlug } from "@/sanity/lib/getPodcastBySlug"
 import { urlFor } from "@/sanity/lib/image"
 import { timeAgo } from "@/sanity/lib/timeAgo"
+import { client } from "@/sanity/lib/sanity"
 import type { Metadata } from "next"
+
+export const revalidate = 3600; // 1 hour ISR - cache podcast detail pages
+export const dynamicParams = true; // Generate remaining slugs on-demand
+
+export async function generateStaticParams() {
+  try {
+    const podcasts = await client.fetch(
+      `*[_type == "podcast" && defined(slug.current)] | order(publishedAt desc)[0...100]{ "slug": slug.current }`
+    )
+    return (podcasts || []).map((p: any) => ({ slug: p.slug }))
+  } catch (e) {
+    console.error("Error generating static params for podcasts:", e)
+    return []
+  }
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params

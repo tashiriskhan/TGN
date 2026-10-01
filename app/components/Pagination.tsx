@@ -5,17 +5,33 @@ interface PaginationProps {
   totalPages: number
   basePath: string
   queryParams?: Record<string, string>
+  /**
+   * 'path' (default): page 1 = /basePath, page N = /basePath/page/N
+   * 'query': page 1 = /basePath, page N = /basePath?page=N (for dynamic
+   * routes such as /search that must read searchParams).
+   */
+  mode?: 'path' | 'query'
 }
 
-export default function Pagination({ currentPage, totalPages, basePath, queryParams = {} }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, basePath, queryParams = {}, mode = 'path' }: PaginationProps) {
   const createPageUrl = (page: number) => {
     const params = new URLSearchParams(queryParams)
+    const base = `/${basePath}`
 
-    if (page === 1) {
-      return `/${basePath}${params.toString() ? `?${params.toString()}` : ''}`
+    if (mode === 'query') {
+      if (page === 1) {
+        return `${base}${params.toString() ? `?${params.toString()}` : ''}`
+      }
+      params.set('page', page.toString())
+      return `${base}?${params.toString()}`
     }
-    params.set('page', page.toString())
-    return `/${basePath}?${params.toString()}`
+
+    // Path mode
+    const qs = params.toString()
+    if (page === 1) {
+      return qs ? `${base}?${qs}` : base
+    }
+    return qs ? `${base}/page/${page}?${qs}` : `${base}/page/${page}`
   }
 
   if (totalPages <= 1) return null

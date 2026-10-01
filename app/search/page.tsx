@@ -97,6 +97,7 @@ export default async function SearchPage({ searchParams }: any) {
               totalPages={totalPages}
               basePath="search"
               queryParams={{ q: query }}
+              mode="query"
             />
           )}
         </div>

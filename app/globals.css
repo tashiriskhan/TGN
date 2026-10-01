@@ -9593,3 +9593,135 @@ textarea {
   }
 
 }
+
+/* ============================================================
+   MOBILE LAYOUT FIXES
+   Consolidated overrides for small screens. Kept at the end of
+   the file so they win the cascade over the duplicated mobile
+   blocks defined earlier.
+   ============================================================ */
+
+/* A. "Watch & Listen" cards no longer overflow on small phones.
+   The base `.media-card-compact { min-width: 120px }` was never
+   reset, so 3 cards + gaps were wider than the viewport and the
+   centered flex row pushed the first card off-screen (labels were
+   clipped at <=360px). */
+@media (max-width: 640px) {
+  .media-cards-compact,
+  .media-strip-compact .media-cards-compact {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+  }
+
+  .media-card-compact,
+  .media-strip-compact .media-card-compact {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .media-card-compact span {
+    white-space: normal;
+  }
+}
+
+/* B. "More from <category>" is compact on mobile.
+   The base layout stacked 3 full-width cards each with a large
+   16:9 image (~1111px tall on a 390px screen). Below the 768px
+   sidebar breakpoint use horizontal list rows instead. */
+@media (max-width: 767px) {
+  .more-from-category {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+  }
+
+  .more-articles-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .more-article-card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .more-article-image {
+    width: 112px;
+    flex: 0 0 112px;
+    padding-top: 0;
+    min-height: 84px;
+    align-self: stretch;
+  }
+
+  .more-article-content {
+    padding: 10px 12px;
+    justify-content: center;
+  }
+
+  .more-article-title {
+    font-size: 14px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .more-article-meta {
+    margin-top: 0;
+    font-size: 11px;
+  }
+}
+
+/* C. Breadcrumbs: don't repeat the full article headline on mobile.
+   The story page passes the post title as the last crumb, which
+   wrapped onto its own line directly above the identical H1. */
+@media (max-width: 767px) {
+  .breadcrumb-item:last-child {
+    display: none;
+  }
+
+  .breadcrumb-item:nth-last-child(2) .breadcrumb-separator {
+    display: none;
+  }
+}
+
+/* E. The homepage "In Depth / Special Reports / Opinion" sections
+   were flush against the screen edge (2px) while the rest of the
+   page is inset 16px. */
+@media (max-width: 640px) {
+  .main-content-full .container {
+    padding: 0 16px !important;
+  }
+}
+
+/* G. Opinion cards were laid out as half-width, horizontally
+   scrolling flex items on mobile, which squeezed the text into a
+   ~85px column once the section had content. Use full-width rows. */
+@media (max-width: 640px) {
+  .opinion-grid-compact {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    overflow-x: visible !important;
+  }
+
+  .opinion-card-compact {
+    flex: initial !important;
+    width: 100% !important;
+  }
+}
+
+/* F. Slightly larger header dates on small phones (were 8px/7px). */
+@media (max-width: 400px) {
+  .gregorian-date {
+    font-size: 9px;
+  }
+
+  .hijri-date {
+    font-size: 8px;
+  }
+}

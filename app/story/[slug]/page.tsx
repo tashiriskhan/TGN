@@ -1,6 +1,8 @@
 // Revalidate every 60 seconds for fresh content with caching
 export const revalidate = 3600; // 1 hour ISR - reduces Netlify serverless compute costs
 
+import { cache } from "react"
+import dynamic from "next/dynamic"
 import { urlFor } from "@/sanity/lib/image"
 import SmartImage from "@/app/components/SmartImage"
 import Link from "next/link"
@@ -8,16 +10,19 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { timeAgo } from "@/sanity/lib/timeAgo"
 import { calculateReadingTime } from "@/sanity/lib/readingTime"
-import SocialShare from "@/app/components/SocialShare"
 import RightSidebar from "@/app/components/RightSidebar"
 import Breadcrumb from "@/app/components/Breadcrumb"
 import ArticlePortableText from "@/app/components/PortableTextComponents"
-import TableOfContents from "@/app/components/TableOfContents"
-import ReadingProgressBar from "@/app/components/ReadingProgressBar"
-import BackToTop from "@/app/components/BackToTop"
 import { truncateText } from "@/app/components/utils"
 import { siteConfig } from "@/config/site"
 import { getStoryBySlug, getRelatedStories, getUnifiedSidebarData, getCombinedStories } from "@/app/lib/storyBridge"
+
+// Below-the-fold / non-critical UI is split into its own chunks so it doesn't
+// compete with the article body for initial hydration bandwidth.
+const SocialShare = dynamic(() => import("@/app/components/SocialShare"))
+const TableOfContents = dynamic(() => import("@/app/components/TableOfContents"))
+const ReadingProgressBar = dynamic(() => import("@/app/components/ReadingProgressBar"))
+const BackToTop = dynamic(() => import("@/app/components/BackToTop"))
 
 export async function generateStaticParams() {
   try {
@@ -36,9 +41,8 @@ export async function generateStaticParams() {
 
 export const dynamicParams = true; // Support generating remaining ones on-demand
 
-async function getPost(slug: string) {
-  return getStoryBySlug(slug)
-}
+// React cache() dedupes the fetch shared by generateMetadata and the page body.
+const getPost = cache(async (slug: string) => getStoryBySlug(slug))
 
 function resolveImageUrl(image: any) {
   if (!image) return "";

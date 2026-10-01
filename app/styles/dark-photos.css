@@ -681,3 +681,16 @@
     display: none;
   }
 }
+
+/* Compact empty state on small screens (was 5rem of dead space) */
+@media (max-width: 640px) {
+  .photo-empty-state {
+    padding: 2.5rem 1rem;
+  }
+
+  .photo-empty-state svg {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 1rem;
+  }
+}
