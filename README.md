@@ -7,6 +7,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 [![Report ad](https://gitads.cosmicstack.org/report-ad-flag.svg)](https://gitads.cosmicstack.org/report-ad?source=tashiriskhan%2Ftgn%40github "Report this advertisement")
 
+[![Sponsored by GitAds](https://gitads.cosmicstack.org/v1/ad-serve?source=tashiriskhan%2Ftgn%40github&report=1)](https://gitads.cosmicstack.org/v1/ad-track?source=tashiriskhan%2Ftgn%40github)
+
+[![Report ad](https://gitads.cosmicstack.org/report-ad-flag.svg)](https://gitads.cosmicstack.org/report-ad?source=tashiriskhan%2Ftgn%40github "Report this advertisement")
+
+
 
 
 First, run the development server:
